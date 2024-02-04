@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="flex flex-col lg:flex-row w-full sm:justify-between justify-center items-center gap-10 sm:gap-10">
           <div className="flex flex-col sm:flex-row sm:gap-8 gap-4  text-white w-[350px] items-center">
             <p className="text-2xl font-medium">3legant.</p>
-            <p className={"rotate-90 m-auto"}>|</p>
+            <p className="lg:rotate-90 m-auto">|</p>
             <p className="text-sm font-normal text-[#E8ECEF]">
               Gift & Decoration Store
             </p>

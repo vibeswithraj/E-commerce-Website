@@ -8,6 +8,7 @@ const UserProvider = ({ children }) => {
   const [count, setCount] = useState(0);
   const [user, setUser] = useState([]);
   const [image, setImage] = useState(null);
+  const [loading,setLoading] = useState(false);
 
   return (
     <userContext.Provider
@@ -20,6 +21,8 @@ const UserProvider = ({ children }) => {
         setCount,
         count,
         setSearch,
+        loading,
+        setLoading,
       }}
     >
       {children}

@@ -16,7 +16,7 @@ const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState({});
   const [num, setNum] = useState(1);
 
-  const { setUser } = useContext(userContext);
+  const { setUser, setLoading } = useContext(userContext);
   //const dispatch = useDispatch();
 
   // const initialState = {
@@ -118,7 +118,6 @@ const ProductProvider = ({ children }) => {
   // };
   // const [state, dispatch] = useReducer(reducer, initialState);
 
-  
   useEffect(() => {
     const getMainSubTotal = () => {
       const totalPrice = addToCart.reduce((total, item) => {
@@ -130,20 +129,28 @@ const ProductProvider = ({ children }) => {
   }, [addToCart]);
 
   useEffect(() => {
-    const fetchProductsAndUser = () => {
-      axios
-        .get("http://localhost:5050/data",{withCredentials:true})
-        .then((res) => setProducts(res.data.products))
-        .catch((err) => console.log(err));
-    };
-    fetchProductsAndUser();
-    const addtocart = localStorage.getItem("addtocart");
-    const wlist = localStorage.getItem("wishlist");
-    const user = localStorage.getItem("user");
-    setAddToCart(JSON.parse(addtocart));
-    setWishlist(JSON.parse(wlist));
-    setUser(JSON.parse(user));
-  }, [setUser]);
+    try {
+      setLoading(true);
+      const fetchProductsAndUser = () => {
+        axios
+          .get("http://localhost:5050/data", { withCredentials: true })
+          .then((res) => {
+            setProducts(res.data.products);
+            setLoading(false);
+          })
+          .catch((err) => console.log(err));
+      };
+      fetchProductsAndUser();
+      const addtocart = localStorage.getItem("addtocart");
+      const wlist = localStorage.getItem("wishlist");
+      const user = localStorage.getItem("user");
+      setAddToCart(JSON.parse(addtocart));
+      setWishlist(JSON.parse(wlist));
+      setUser(JSON.parse(user));
+    } catch (error) {
+      console.log(error);
+    }
+  }, [setUser,setLoading]);
 
   // useEffect(() => {
   //   const fetchAuth = () => {

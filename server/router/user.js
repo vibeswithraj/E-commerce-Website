@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
-import { atcid, delatcp,productData, delwlp, login, logout, register, updatePass, wishlist, checkoutdetails, } from "../controller/user.js";
+import { atcid,productData, login, logout, register, updatePass, wishlist, checkoutdetails, } from "../controller/user.js";
 import { checkAuth } from "../helpers/userAuth.js";
 router.use(
   cors({
@@ -29,12 +29,6 @@ router.get("/logout", logout);
 
 router.get("/addtocart/:id",checkAuth, atcid);
 router.get("/wishlist/:id",checkAuth, wishlist);
-router.get("/delAtcp/:id", delatcp);
-router.delete("/delWlp/:id", delwlp);
-
 router.post("/checkoutdetails",checkoutdetails);
-
-
-
 
 export default router;

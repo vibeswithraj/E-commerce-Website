@@ -136,36 +136,6 @@ export const myProfile = (req, res) => {
   });
 };
 
-export const atcData = (req, res) => {};
-
-export const delatcp = async (req, res) => {
-  //const id = +req.params.id;
-  // const findProductIndex = addToCartProducts.find((i) => i.id === id);
-  // addToCartProducts.splice(findProductIndex, 1);
-  // res.send(product);
-  // const removeProduct = addToCartProducts.filter((i) => {
-  //   return i.id !== id;
-  // });
-  // addToCartProducts(removeProduct);
-  // res.send(addToCartProducts);
-
-  const id = +req.params.id;
-  const findProductIndex = userData.addToCart.find((i) => i.id === id);
-  if (!findProductIndex) {
-    return res.json({ error: "product not found!" });
-  }
-  await userData.addToCart.findOneAndDelete(findProductIndex);
-  // const newData = await userData.findOneAndDelete(findProductIndex);
-  //userData = newData.save();
-};
-
-export const delwlp = (req, res) => {
-  // const id = +req.params.id;
-  // const findProductIndex = wishlistProducts.find((i) => i.id === id);
-  // const wishlistProductsList = wishlistProducts.splice(findProductIndex, 1);
-  // res.send(wishlistProductsList);
-};
-
 export const checkoutdetails = async (req, res) => {
   const productID = [];
   try {
