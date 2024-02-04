@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* import banner from "../images/Image Placeholder header.png"; */
+
+
+::-webkit-scrollbar{
+    display: none;
+}
+
+/* *{
+    border: 2px solid black;
+} */
+
+#search{
+    margin-top: -120px;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+#search.search{
+    margin-top: 20px;
+   visibility: visible;
+   transition: all 0.3s ease;
+}
+#search-btn{
+    display: none;
+    transition: all 0.3s ease;
+}
+#search-btn.search-btn{
+ display: block;
+ transition: all 0.3s ease;
+}
+
+.btn{
+    visibility:hidden;
+}
+
+.addToCart:hover .btn{
+    bottom: 72.5px;
+    transition: all 0.5s ease;
+    visibility: visible;
+}
+
+.dontShow{
+    /* display: block; */
+    visibility: hidden;
+}
+
+.menu.burger{
+    left: 0;
+}
+.pqps{
+    visibility: hidden;
+}
+.atcList{
+    margin-top: -100px;
+}
+
+.sticky-nav{
+    position: fixed;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    transition: ease-in-out all;
+    transition-duration: 300ms;    
+}
+
+@media (min-width: 1025px) {
+    .showMenu {
+        display: none;
+    }
+    .addtocart {
+        gap: 0;
+    }
+    .atcList{
+        height: 437px;
+        margin-top: 0;
+    }
+    .pqps{
+        visibility: visible;
+        /* display: block; */
+    }
+}
