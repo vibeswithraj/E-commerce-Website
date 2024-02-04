@@ -171,8 +171,8 @@ const AddToCart = () => {
             <p>Price</p>
             <p>Subtotal</p>
           </div>
-          <div className="w-full h-auto overflow-y-scroll atcList m-auto">
-            {addToCart?.map((item) => (
+          <div className={addToCart.length !== 0 ? "w-full h-auto overflow-y-scroll atcList m-auto" :"w-full h-auto overflow-y-scroll atcList m-auto flex flex-col justify-center items-center"}>
+            {addToCart.length === 0 ? <div className="flex justify-center items-center">Cart is empty</div> : addToCart?.map((item) => (
               <div
                 className="w-full sm:h-[144px] md:h-[180px] items-center grid grid-rows-2 sm:grid-cols-5 py-3 m-auto"
                 key={item?.id}

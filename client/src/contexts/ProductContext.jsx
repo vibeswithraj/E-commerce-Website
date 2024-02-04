@@ -131,7 +131,7 @@ const ProductProvider = ({ children }) => {
   useEffect(() => {
     try {
       setLoading(true);
-      const fetchProductsAndUser = () => {
+      setTimeout(() => {
         axios
           .get("http://localhost:5050/data", { withCredentials: true })
           .then((res) => {
@@ -139,8 +139,7 @@ const ProductProvider = ({ children }) => {
             setLoading(false);
           })
           .catch((err) => console.log(err));
-      };
-      fetchProductsAndUser();
+        }, 3000);
       const addtocart = localStorage.getItem("addtocart");
       const wlist = localStorage.getItem("wishlist");
       const user = localStorage.getItem("user");

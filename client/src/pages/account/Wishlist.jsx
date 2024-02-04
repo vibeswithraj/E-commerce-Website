@@ -40,8 +40,8 @@ const Wishlist = () => {
               Action
             </p>
           </div>
-          <div className="w-full h-[400px] overflow-y-scroll mt-6 sm:m-0">
-            {wishlist?.map((item) => (
+          <div className={wishlist.length !== 0 ? "w-full h-[400px] overflow-y-scroll mt-6 sm:m-0" : "w-full h-[400px] overflow-y-scroll mt-6 sm:m-0 flex flex-col justify-center items-center"}>
+            {wishlist.length === 0 ? <div className="flex justify-center items-center">Wishlist is empty</div> : wishlist?.map((item) => (
               <div
                 className="sm:w-[707px] w-full sm:h-[120px] h-auto py-6 grid grid-cols-4 gap-4 justify-between items-center"
                 key={item?.id}
