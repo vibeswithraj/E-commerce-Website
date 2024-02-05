@@ -20,7 +20,7 @@ const Shop = () => {
     wishlist,
     setWishlist,
   } = useContext(productContext);
-  const { search, setCount,loading } = useContext(userContext);
+  const { setCount,loading } = useContext(userContext);
 
   const handleAddToCart = (pid) => {
     addCart(addToCart, setAddToCart, setCount, pid);
@@ -47,11 +47,11 @@ const Shop = () => {
         {loading
           ? <Loader w_full={w_full}/>
           : allProducts
-              ?.filter((items) =>
-                search.toLowerCase() === ""
-                  ? items
-                  : items.title.toLowerCase().includes(search)
-              )
+              // ?.filter((items) =>
+              //   search.toLowerCase() === ""
+              //     ? items
+              //     : items.title.toLowerCase().includes(search)
+              // )
               .map((items) => (
                 <Link
                   key={items?.id}

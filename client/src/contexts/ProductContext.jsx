@@ -16,7 +16,7 @@ const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState({});
   const [num, setNum] = useState(1);
 
-  const { setUser, setLoading } = useContext(userContext);
+  const { setUser, setLoading, search } = useContext(userContext);
   //const dispatch = useDispatch();
 
   // const initialState = {
@@ -129,17 +129,21 @@ const ProductProvider = ({ children }) => {
   }, [addToCart]);
 
   useEffect(() => {
+    const controller = new AbortController();
     try {
       setLoading(true);
-      setTimeout(() => {
-        axios
-          .get("http://localhost:5050/data", { withCredentials: true })
-          .then((res) => {
-            setProducts(res.data.products);
-            setLoading(false);
-          })
-          .catch((err) => console.log(err));
-        }, 3000);
+      //setTimeout(() => {
+      axios
+        .get(`http://localhost:5050/products?search=${search}`, {
+          withCredentials: true,
+          signal: controller.signal,
+        })
+        .then((res) => {
+          setProducts(res.data);
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+      //}, 3000);
       const addtocart = localStorage.getItem("addtocart");
       const wlist = localStorage.getItem("wishlist");
       const user = localStorage.getItem("user");
@@ -147,9 +151,16 @@ const ProductProvider = ({ children }) => {
       setWishlist(JSON.parse(wlist));
       setUser(JSON.parse(user));
     } catch (error) {
+      if (axios.isCancel(error)) {
+        console.log("request is cancelled", error);
+        return;
+      }
       console.log(error);
     }
-  }, [setUser,setLoading]);
+    return () => {
+      controller.abort();
+    }
+  }, [setUser, setLoading, search]);
 
   // useEffect(() => {
   //   const fetchAuth = () => {

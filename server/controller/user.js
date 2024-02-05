@@ -1,16 +1,10 @@
-import fs from "fs";
 // import { atcdata, wishlistData } from "../models/user.js";
 import { checkoutDetails, userData } from "../models/user.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { errorHandler, setCookies } from "../helpers/userAuth.js";
+import { products } from "./products.js";
 dotenv.config({ path: "./config.env" });
-const data = JSON.parse(fs.readFileSync("./data.json", "utf-8"));
-const products = data.products;
-
-export const productData = (req, res) => {
-  res.json(data);
-};
 
 export const atcid = async (req, res) => {
   try {

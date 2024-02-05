@@ -42,7 +42,7 @@ const Login = () => {
         </div>
         <div className="flex sm:w-[707px] w-full flex-col gap-10">
           <form
-            className="sm:w-[707px] w-full h-[325px] sm:px-[72px] px-0"
+            className="w-full justify-center h-[325px]"
             action=""
             method="post"
             onSubmit={handleLogin}

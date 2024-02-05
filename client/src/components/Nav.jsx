@@ -30,8 +30,8 @@ const Nav = () => {
   const [change, setChange] = useState(false);
 
   const handleSearch = () => {
-    const search = document.getElementById("search");
-    search.classList.toggle("search");
+    const searchBar = document.getElementById("search");
+    searchBar.classList.toggle("search");
   };
   const handleBurger = () => {
     const burger = document.getElementById("burger");
