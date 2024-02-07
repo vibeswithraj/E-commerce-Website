@@ -64,15 +64,15 @@ const Nav = () => {
           </div>
           <div className="font-medium text-2xl">3legant</div>
         </div>
-        <div className="flex gap-10">
+        <div className="flex gap-4">
           {navLinks?.map((item) => (
             <ul className="hidden md:block" key={item?.id}>
               <li>
                 <NavLink
                   className={(navClass) =>
                     navClass.isActive
-                      ? "text-sm font-medium text-black"
-                      : "text-sm font-medium text-[#6C7275] hover:text-black duration-300"
+                      ? "text-sm font-medium text-black border-black border-b-2 py-5 px-5 transition-all ease-in duration-75"
+                      : "text-sm font-medium text-[#6C7275] hover:text-black py-5 px-5 transition-all border-black border-b-2 border-hidden duration-300"
                   }
                   to={item?.path}
                 >
