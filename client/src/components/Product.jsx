@@ -4,37 +4,43 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useState } from "react";
 import productContext from "../contexts/ProductContext";
 import hotToast from "react-hot-toast";
-import { addCart, addToWishlist, dicrise, incrise } from "../logics";
-import userContext from "../contexts/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addtocart,
+  addtowishlist,
+  dicrise,
+  incrise,
+} from "../contexts/productSlice";
 
 const Product = () => {
-  const { product, addToCart, setAddToCart, wishlist, setWishlist } =
-    useContext(productContext);
-  const { count, setCount } = useContext(userContext);
-  const [num, setNum] = useState(1);
 
-  const addtocart = async (pid) => {
-    addCart(addToCart, setAddToCart, setCount, pid);
+  const { product } = useContext(productContext);
+  const addToCart = useSelector((state) => state.addToCart);
+  const dispatch = useDispatch();
+  const [num, setNum] = useState(1); 
+
+  const addcart = async (pid) => {
+    dispatch(addtocart(pid));
   };
 
   const addWishlist = async (pid) => {
-    addToWishlist(wishlist, setWishlist, pid);
+    dispatch(addtowishlist(pid));
   };
 
-  const incri = (pid) => {
-    const findP = addToCart.find((i) => i.id === pid);
+  const incri = async (pid) => {
+    const findP = await addToCart.find((i) => i.id === pid);
     if (!findP) {
       return hotToast.error("first add to cart!");
     }
     setNum(num + 1);
-    incrise(addToCart,setAddToCart,pid);
+    dispatch(incrise(pid));
   };
 
   const dicri = (pid) => {
     if (num > 1) {
       setNum(num - 1);
     }
-    dicrise(addToCart,setAddToCart,count,setCount,pid);
+    dispatch(dicrise(pid));
   };
 
   return (
@@ -67,7 +73,6 @@ const Product = () => {
       </div>
       <div className="sm:w-[508px] w-full h-auto flex items-center sm:items-start flex-col">
         <div className="sm:w-[508px] w-full flex flex-col h-auto gap-2 sm:gap-4">
-          {/*h-248px*/}
           <div className="gap-[10px] flex items-center">
             <div className="flex">
               <FaStar size={16} />
@@ -168,7 +173,7 @@ const Product = () => {
           </div>
           <button
             className="text-lg font-medium text-white w-full bg-black rounded-lg h-[52px]"
-            onClick={() => addtocart(product.id)}
+            onClick={() => addcart(product.id)}
           >
             Add to Cart
           </button>

@@ -14,11 +14,14 @@ const MyAcoount = () => {
   const [oldPass, setOldPassword] = useState("");
   const [newPass, setNewPassword] = useState("");
   const [repeatPass, setRepeatPassword] = useState("");
+  const [show, setShow] = useState(false);
+  const [otp, setOtp] = useState("");
   const navigate = useNavigate();
   const { user } = useContext(userContext);
 
   const signin = async (e) => {
     e.preventDefault();
+    setShow(true);
     try {
       const { data } = await axios.post(
         "http://localhost:5050/register",
@@ -35,10 +38,38 @@ const MyAcoount = () => {
       } else {
         //toast.success(data.message);
         hotToast.success(data.message);
-        navigate("/accountdetail/login");
+        //navigate("/accountdetail/login");
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const handleOtp = async () => {
+    try {
+      if (!otp) {
+        toast.error("Enter OTP!");
+      }
+      const { data } = await axios.post(
+        "http://localhost:5050/checkOtp",
+        { email, otp },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        //toast.success(data.message);
+        hotToast.success(data.message);
+        navigate("/accountdetail/login");
+      }
+      setShow(false);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -56,7 +87,6 @@ const MyAcoount = () => {
         toast.error(data.error);
       } else {
         toast.success(data.message);
-        
       }
     } catch (err) {
       console.log(err);
@@ -64,13 +94,56 @@ const MyAcoount = () => {
   };
 
   return (
-    <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto">
+    <div
+      className={
+        show
+          ? "mt-10 w-full h-screen relative sm:px-40 md:px-20 px-8 m-auto"
+          : "mt-10 w-full sm:px-40 md:px-20 px-8 m-auto"
+      }
+    >
       <p className="text-[54px] font-medium text-center my-20">My Account</p>
       <div className="flex w-full flex-col justify-evenly sm:flex-row gap-10 mb-20">
         <div>
           <Profile />
         </div>
         <div className="flex sm:w-[707px] w-full flex-col gap-10">
+          <div
+            className={
+              show
+                ? "absolute flex justify-center items-center visible top-0 left-0 w-full h-screen bg-otp"
+                : "hidden"
+            }
+          >
+            <div
+              className={
+                show
+                  ? "flex w-[400px] visible bg-white p-10 shadow-lg rounded-md flex-col justify-center items-center"
+                  : "hidden"
+              }
+            >
+              <p className="text-xl font-semibold text-black text-center">
+                Enter Your OTP
+              </p>
+              <div className="border-[#CBCBCB] border sm:w-[200px] w-full h-10 rounded-md flex items-center mt-10">
+                <input
+                  type="text"
+                  min={4}
+                  max={6}
+                  placeholder="otp"
+                  name="otp"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="px-4 w-full bg-transparent m-auto text-center text-base font-normal text-black outline-none border-none"
+                />
+              </div>
+              <button
+                className="w-[140px] h-[40px] mt-7 bg-[#141718] rounded-lg text-white"
+                onClick={() => handleOtp()}
+              >
+                Next
+              </button>
+            </div>
+          </div>
           <form
             className="w-full justify-center h-[416px]"
             action=""

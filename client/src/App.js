@@ -7,10 +7,13 @@ import { DetailsProvider } from "./contexts/DetailsContext";
 import { UserProvider } from "./contexts/UserContext";
 import { ProductProvider } from "./contexts/ProductContext";
 import { Toaster } from "react-hot-toast";
+import { Provider } from "react-redux";
+import { store } from "./contexts/store";
 function App() {
 
   return (
     <>
+    <Provider store={store}>
       <DetailsProvider>
         <UserProvider>
           <ProductProvider>
@@ -19,6 +22,7 @@ function App() {
         </UserProvider>
       </DetailsProvider>
       <ToastContainer />
+    </Provider>
       <Toaster/>
     </>
   );

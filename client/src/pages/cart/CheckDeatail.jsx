@@ -1,19 +1,15 @@
 import { BsCreditCard2Front } from "react-icons/bs";
-import { useContext, useState } from "react";
-import productContext from "../../contexts/ProductContext.jsx";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCheck } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import hotToast from "react-hot-toast";
-import { dicrise, incrise } from "../../logics.js";
-import userContext from "../../contexts/UserContext.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { dicrise, incrise } from "../../contexts/productSlice.js";
 
 const CheckDeatail = () => {
-  const { addToCart,setAddToCart } = useContext(productContext);
-  const { count, setCount } = useContext(userContext);
-
   const [change, setChange] = useState(true);
   const [changeTwo, setChangeTwo] = useState(false);
   const [changeThree, setChangeThree] = useState(false);
@@ -28,12 +24,14 @@ const CheckDeatail = () => {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
 
+  const addToCart = useSelector((state) => state.AddToCart);
+  const dispatch = useDispatch();
 
   const incri = (pid) => {
-    incrise(addToCart,setAddToCart,pid);
+    dispatch(incrise(pid));
   };
   const decri = (pid) => {
-    dicrise(addToCart,setAddToCart,count,setCount,pid);
+    dispatch(dicrise(pid));
   };
 
   const handleNavLinks = async (e) => {

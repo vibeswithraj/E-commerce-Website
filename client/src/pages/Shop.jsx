@@ -8,25 +8,24 @@ import Hero from "../components/Hero";
 import BannerFooter from "../components/BannerFooter";
 import userContext from "../contexts/UserContext.jsx";
 import { FaPlus } from "react-icons/fa6";
-import { addCart, addToWishlist } from "../logics.js";
 import Loader from "../components/Loader.jsx";
+import { useDispatch } from "react-redux";
+import { addtocart, addtowishlist } from "../contexts/productSlice.js";
 
 const Shop = () => {
   let {
     allProducts,
     setProduct,
-    addToCart,
-    setAddToCart,
-    wishlist,
-    setWishlist,
   } = useContext(productContext);
-  const { setCount,loading } = useContext(userContext);
+
+  const dispatch = useDispatch();
+  const { loading } = useContext(userContext);
 
   const handleAddToCart = (pid) => {
-    addCart(addToCart, setAddToCart, setCount, pid);
+    dispatch(addtocart(pid))
   };
   const handleAddToWishlist = (pid) => {
-    addToWishlist(wishlist, setWishlist, pid);
+    dispatch(addtowishlist(pid))
   };
 
   const handleProduct = async (id) => {

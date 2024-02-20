@@ -12,29 +12,32 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setUser } = useContext(userContext);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        "http://localhost:5050/login",
-        { email, password },
-        { withCredentials: true }
-      );
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        //toast.success(data.message);
-        hotToast.success(data.message);
-        setUser(data.oneUser);
-        localStorage.setItem("user",JSON.stringify(data.oneUser));
-        navigate("/shop");
-      }
+    const { data } = await axios.post(
+      "http://localhost:5050/login",
+      { email, password },
+      { withCredentials: true }
+    );
+    if (data.error) {
+      toast.error(data.error);
+    } else {
+      //toast.success(data.message);
+      hotToast.success(data.message);
+      setUser(data.oneUser);
+      localStorage.setItem("user", JSON.stringify(data.oneUser));
+      navigate("/shop");
+    }
     } catch (err) {
-      console.log(err);
+    console.log(err);
     }
   };
+ 
   return (
-    <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto">
+    <div
+      className="mt-10 w-full h-auto sm:px-40 md:px-20 px-8 m-auto">
       <p className="text-[54px] font-medium text-center my-20">My Account</p>
       <div className="flex w-full flex-col justify-evenly sm:flex-row gap-10 mb-20">
         <div>

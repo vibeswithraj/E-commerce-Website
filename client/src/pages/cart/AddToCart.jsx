@@ -6,20 +6,16 @@ import productContext from "../../contexts/ProductContext.jsx";
 import deatilsContext from "../../contexts/DetailsContext.jsx";
 import { FaCheck } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import { delAtcp, dicrise, incrise } from "../../logics.js";
-import userContext from "../../contexts/UserContext.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { dicrise, incrise, remove } from "../../contexts/productSlice.js";
 
 const AddToCart = () => {
   const navigate = useNavigate();
-  const {
-    allProducts,
-    setProduct,
-    addToCart,
-    setAddToCart,
-    mainSubTotal,
-  } = useContext(productContext);
-
-  const {count,setCount} = useContext(userContext);
+  const { allProducts, setProduct } = useContext(productContext);
+  const addToCart = useSelector((state) => state.AddToCart);
+  const count = useSelector((state) => state.count);
+  const mainSubTotal = useSelector((state) => state.mainSubTotal);
+  const dispatch = useDispatch();
 
   const { express, setExpress, free, setFree, pickup, setPickUp } =
     useContext(deatilsContext);
@@ -29,15 +25,15 @@ const AddToCart = () => {
   const [changeThree, setChangeThree] = useState(false);
 
   const incri = (pid) => {
-    incrise(addToCart,setAddToCart,pid);
-  }
+    dispatch(incrise(pid));
+  };
   const dicri = (pid) => {
-    dicrise(addToCart,setAddToCart,count,setCount,pid);
-  }
-  const remove = (pid) => {
-    delAtcp(addToCart,setAddToCart,setCount,pid);
-  }
-  
+    dispatch(dicrise(pid));
+  };
+  const delProduct = (pid) => {
+    dispatch(remove(pid));
+  };
+
   let p = 15;
   const handleExpress = () => {
     setExpress(mainSubTotal + p);
@@ -171,52 +167,71 @@ const AddToCart = () => {
             <p>Price</p>
             <p>Subtotal</p>
           </div>
-          <div className={addToCart.length !== 0 ? "w-full h-auto overflow-y-scroll atcList m-auto" :"w-full h-auto overflow-y-scroll atcList m-auto flex flex-col justify-center items-center"}>
-            {addToCart.length === 0 ? <div className="flex justify-center items-center">Cart is empty</div> : addToCart?.map((item) => (
-              <div
-                className="w-full sm:h-[144px] md:h-[180px] items-center grid grid-rows-2 sm:grid-cols-5 py-3 m-auto"
-                key={item?.id}
-              >
-                <div className="sm:col-span-2 col-span-3 m-auto flex gap-4">
-                  <Link to={"/product"} onClick={() => handleProduct(item?.id)}>
-                    <img className="w-20 h-24 -z-10" src={item?.image} alt="" />
-                  </Link>
-                  <div className="flex items-center sm:items-start sm:flex-col flex-row gap-2 sm:w-[145px] w-full">
-                    <p className="text-base font-semibold">{item?.title}</p>
-                    <p className="text-xs font-normal text-[#6C7275]">
-                      {item?.brand}
+          <div
+            className={
+              count !== 0
+                ? "w-full h-auto overflow-y-scroll atcList m-auto"
+                : "w-full h-auto overflow-y-scroll atcList m-auto flex flex-col justify-center items-center"
+            }
+          >
+            {count === 0 ? (
+              <div className="flex justify-center items-center">
+                Cart is empty
+              </div>
+            ) : (
+              addToCart?.map((item) => (
+                <div
+                  className="w-full sm:h-[144px] md:h-[180px] items-center grid grid-rows-2 sm:grid-cols-5 py-3 m-auto"
+                  key={item?.id}
+                >
+                  <div className="sm:col-span-2 col-span-3 m-auto flex gap-4">
+                    <Link
+                      to={"/product"}
+                      onClick={() => handleProduct(item?.id)}
+                    >
+                      <img
+                        className="w-20 h-24 -z-10"
+                        src={item?.image}
+                        alt=""
+                      />
+                    </Link>
+                    <div className="flex items-center sm:items-start sm:flex-col flex-row gap-2 sm:w-[145px] w-full">
+                      <p className="text-base font-semibold">{item?.title}</p>
+                      <p className="text-xs font-normal text-[#6C7275]">
+                        {item?.brand}
+                      </p>
+                      <button
+                        className="text-[#605F5F] flex justify-start items-center gap-1 hover:text-red-500"
+                        onClick={() => delProduct(item?.id)}
+                      >
+                        <RxCross2 className="hover:text-red-500" /> Remove
+                      </button>
+                    </div>
+                  </div>
+                  <div className="w-20 h-8 flex justify-center items-center rounded">
+                    <button
+                      className="w-[26px] text-lg outline-none border-none bg-[#6C7275] text-white flex justify-center items-center cursor-pointer"
+                      onClick={() => dicri(item?.id)}
+                    >
+                      -
+                    </button>
+                    <p className="text-sm w-[26px] h-[30px] bg-white flex justify-center items-center">
+                      {item?.quantity}
                     </p>
                     <button
-                      className="text-[#605F5F] flex justify-start items-center gap-1 hover:text-red-500"
-                      onClick={() => remove(item?.id)}
+                      className="w-[26px] text-lg outline-none border-none bg-[#6C7275] text-white flex justify-center items-center cursor-pointer"
+                      onClick={() => incri(item?.id)}
                     >
-                      <RxCross2 className="hover:text-red-500" /> Remove
+                      +
                     </button>
                   </div>
+                  <div className="sm:block hidden">${item?.price}</div>
+                  <div className="col-span-2 sm:col-span-1">
+                    ${item?.subtotal}
+                  </div>
                 </div>
-                <div className="w-20 h-8 flex justify-center items-center rounded">
-                  <button
-                    className="w-[26px] text-lg outline-none border-none bg-[#6C7275] text-white flex justify-center items-center cursor-pointer"
-                    onClick={() => dicri(item?.id)}
-                  >
-                    -
-                  </button>
-                  <p className="text-sm w-[26px] h-[30px] bg-white flex justify-center items-center">
-                    {item?.quantity}
-                  </p>
-                  <button
-                    className="w-[26px] text-lg outline-none border-none bg-[#6C7275] text-white flex justify-center items-center cursor-pointer"
-                    onClick={() => incri(item?.id)}
-                  >
-                    +
-                  </button>
-                </div>
-                <div className="sm:block hidden">${item?.price}</div>
-                <div className="col-span-2 sm:col-span-1">
-                  ${item?.subtotal}
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
         <div className="sm:w-[413px] m-auto w-full h-[476px] p-6 border border-slate-500 rounded-md">
@@ -259,7 +274,7 @@ const AddToCart = () => {
           </div>
           <div className="sm:w-[365px] w-full h-[52px] py-[13px] flex justify-between mb-8">
             <p className="text-xl font-semibold">Total</p>
-            <p>${express || free || pickup}</p>
+            <p>${express || free || pickup || 0}</p>
           </div>
           <button
             className={

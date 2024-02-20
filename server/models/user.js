@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
       select: false,
       required: true,
     },
+    userOtp:{
+      type: String,
+      required: true,
+      select: false,
+    }
   },
   { timestamps: true }
 );

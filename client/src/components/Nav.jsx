@@ -7,7 +7,7 @@ import { useContext } from "react";
 import userContext from "../contexts/UserContext.jsx";
 import { RxCross2 } from "react-icons/rx";
 import { FiMenu } from "react-icons/fi";
-import productContext from "../contexts/ProductContext.jsx";
+import { useSelector } from "react-redux";
 
 const Nav = () => {
   const navLinks = [
@@ -25,9 +25,9 @@ const Nav = () => {
     { id: 2, icon: <BsHandbag size={24} />, path: "/addtocart" },
   ];
 
-  const { search, setSearch, count } = useContext(userContext);
-  const { addToCart } = useContext(productContext);
   const [change, setChange] = useState(false);
+  const { search, setSearch } = useContext(userContext);
+  const count = useSelector((state) => state.count);
 
   const handleSearch = () => {
     const searchBar = document.getElementById("search");
@@ -101,9 +101,9 @@ const Nav = () => {
               {item?.icon}
             </NavLink>
           ))}
-          {count || addToCart.length ? (
+          {count ? (
             <div className="w-5 h-5 absolute cursor-pointer -right-2 bottom-2 rounded-full flex justify-center items-center bg-black text-white text-xs font-bold">
-              {count || addToCart.length}
+              {count}
             </div>
           ) : (
             ""

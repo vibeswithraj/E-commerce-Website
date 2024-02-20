@@ -1,12 +1,10 @@
 import { FaCheck } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import { useContext, useState } from "react";
-import userContext from "../../contexts/UserContext";
-import productContext from "../../contexts/ProductContext";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const OrderComplete = () => {
-  const {count, setCount } = useContext(userContext);
-  const { addToCart, setAddToCart } = useContext(productContext);
+  const addToCart = useSelector((state) => state.AddToCart);
   const [change, setChange] = useState(true);
   const [changeTwo, setChangeTwo] = useState(true);
   const [changeThree, setChangeThree] = useState(false);
@@ -21,12 +19,8 @@ const OrderComplete = () => {
     setChange(true);
     setChangeTwo(true);
     setChangeThree(true);
-    setCount(addToCart.length);
     localStorage.clear();
-    addToCart.length = 0;
-    setCount(count - count);
-    setAddToCart(addToCart);
-    // addtocart.splice(0,addtocart.length);
+    addToCart.splice(0, addToCart.length);
   };
 
   return (

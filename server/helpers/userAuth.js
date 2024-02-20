@@ -10,7 +10,7 @@ export const setCookies = async (res, user, message) => {
       process.env.JWT_SCRETE
     );
     const oneUser = await userData
-      .findOne({email: user.email})
+      .findOne({ email: user.email })
       .select("-createdAt -_id -updatedAt -__v -email");
     res
       .cookie("token", token, {
@@ -32,8 +32,8 @@ export const checkAuth = async (req, res, next) => {
       res.json({ error: "Login first!" });
     }
     const decoded = await Jwt.verify(token, process.env.JWT_SCRETE);
-    const {email} = decoded;
-    const findUser = await userData.findOne({email});
+    const { email } = decoded;
+    const findUser = await userData.findOne({ email });
     if (!findUser) {
       return res.json({ error: "user not found!" });
     }
@@ -48,4 +48,26 @@ export const errorHandler = (err, statusCode, res) => {
     success: false,
     error: err,
   });
+};
+
+export const checkOtp = async (req, res) => {
+  try {
+    const {email,otp} =  req.body;
+    otp.toString();
+    const findUser = await userData.findOne({email}).select("+userOtp");
+    const {userOtp} = findUser;
+    if (!otp) {
+      res.json({ error: "Enter OTP!" });
+    }
+    if (otp) {
+      if (userOtp !== otp) {
+        res.json({ error: "Wrong OTP!" });
+      }
+    }
+    if (userOtp === otp) {
+      res.json({ message: "Register Successfully!" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };

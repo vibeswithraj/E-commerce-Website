@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import { errorHandler, setCookies } from "../helpers/userAuth.js";
 import { products } from "./products.js";
 dotenv.config({ path: "./config.env" });
+import nodemailer from "nodemailer";
+import { read } from "fs";
 
 export const atcid = async (req, res) => {
   try {
@@ -58,13 +60,34 @@ export const register = async (req, res) => {
     console.log(err);
   }
   const hasedPass = await bcrypt.hash(password, 10);
+
+  let generatedOtp = Math.floor(Math.random() * 999999);
+  generatedOtp.toString();
+
+  const transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    auth: {
+      user: "wilson.johnson32@ethereal.email",
+      pass: "jTHSbdSCDhzVSfJNaa",
+    },
+  });
+
+  const info = await transporter.sendMail({
+    from: '"3legant E-commerce" <3legant@gmail.com>', // sender address
+    to: `${email}`, // list of receivers
+    subject: "OTP Verification", // Subject line
+    text: `Hello ${firstName}.`, // plain text body
+    html: `<b>Your OTP is ${generatedOtp}</b>`, // html body
+  });
+  console.log("Message sent: %s", info.messageId);
   userData.create({
     firstName,
     lastName,
     email,
     password: hasedPass,
+    userOtp: generatedOtp,
   });
-  res.json({ message: "Register Successfully!" });
 };
 
 export const login = async (req, res, next) => {

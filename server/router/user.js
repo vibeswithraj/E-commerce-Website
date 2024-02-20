@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
 import { atcid, login, logout, register, updatePass, wishlist, checkoutdetails, } from "../controller/user.js";
-import { checkAuth } from "../helpers/userAuth.js";
+import { checkAuth, checkOtp } from "../helpers/userAuth.js";
 import { productData, search } from "../controller/products.js";
 router.use(
   cors({
@@ -25,6 +25,7 @@ router.get("/products?",search);
 
 router.get("/me", checkAuth);
 router.post("/register", register);
+router.post("/checkOtp", checkOtp);
 router.post("/login", login);
 router.post("/updatePass", updatePass);
 router.get("/logout", logout);
