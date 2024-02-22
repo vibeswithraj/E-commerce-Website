@@ -8,11 +8,17 @@ const UserProvider = ({ children }) => {
   const [count, setCount] = useState(0);
   const [user, setUser] = useState([]);
   const [image, setImage] = useState(null);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [otp, setOtp] = useState("");
 
   return (
     <userContext.Provider
       value={{
+        otp,
+        setOtp,
+        show,
+        setShow,
         image,
         setImage,
         user,

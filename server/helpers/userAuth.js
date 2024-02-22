@@ -56,9 +56,6 @@ export const checkOtp = async (req, res) => {
     otp.toString();
     const findUser = await userData.findOne({email}).select("+userOtp");
     const {userOtp} = findUser;
-    if (!otp) {
-      res.json({ error: "Enter OTP!" });
-    }
     if (otp) {
       if (userOtp !== otp) {
         res.json({ error: "Wrong OTP!" });

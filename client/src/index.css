@@ -64,7 +64,7 @@
 }
 
 .bg-otp{
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.255);
     /* background-color: rgba(255, 255, 255, 0.5); */
     /* filter: blur(2px); */
 }
@@ -83,5 +83,10 @@
     .pqps{
         visibility: visible;
         /* display: block; */
+    }
+}
+@media (min-width: 1024px) {
+    .myAccount{
+        height: 100vh;
     }
 }

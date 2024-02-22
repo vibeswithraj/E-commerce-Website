@@ -16,6 +16,9 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      if (!email || !password) {
+        return toast.error("Enter your email and password!");
+      }
     const { data } = await axios.post(
       "http://localhost:5050/login",
       { email, password },
@@ -37,7 +40,7 @@ const Login = () => {
  
   return (
     <div
-      className="mt-10 w-full h-auto sm:px-40 md:px-20 px-8 m-auto">
+      className="pt-10 w-full h-auto sm:px-40 md:px-20 px-8 m-auto login">
       <p className="text-[54px] font-medium text-center my-20">My Account</p>
       <div className="flex w-full flex-col justify-evenly sm:flex-row gap-10 mb-20">
         <div>
@@ -89,7 +92,7 @@ const Login = () => {
                 </div>
               </li>
             </ul>
-            <button className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white">
+            <button className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white text-lg">
               Login
             </button>
             <div className="flex gap-3 text-lg mt-2">

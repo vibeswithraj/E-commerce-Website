@@ -3,8 +3,11 @@ import Profile from "../../components/Profile";
 import axios from "axios";
 import { toast } from "react-toastify";
 import hotToast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import userContext from "../../contexts/UserContext.jsx";
+import { LoaderIcon } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import Loader from "../../components/Loader.jsx";
 
 const MyAcoount = () => {
   const [firstName, setFirstName] = useState("");
@@ -14,15 +17,27 @@ const MyAcoount = () => {
   const [oldPass, setOldPassword] = useState("");
   const [newPass, setNewPassword] = useState("");
   const [repeatPass, setRepeatPassword] = useState("");
-  const [show, setShow] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [showOtp, setShowOtp] = useState("");
   const navigate = useNavigate();
-  const { user } = useContext(userContext);
+  const { user, show, setShow, otp, setOtp, loading, setLoading } =
+    useContext(userContext);
 
   const signin = async (e) => {
     e.preventDefault();
-    setShow(true);
+    setLoading(true);
     try {
+      if (!firstName) {
+        return toast.error("Enter your name");
+      }
+      if (!lastName) {
+        return toast.error("Enter your last name");
+      }
+      if (!email) {
+        return toast.error("Enter your email");
+      }
+      if (!password) {
+        return toast.error("Enter your password");
+      }
       const { data } = await axios.post(
         "http://localhost:5050/register",
         { firstName, lastName, email, password },
@@ -36,9 +51,12 @@ const MyAcoount = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
-        //toast.success(data.message);
-        hotToast.success(data.message);
-        //navigate("/accountdetail/login");
+        setShow(true);
+        if (data.message) {
+          hotToast.success(data.message);
+        }
+        setShowOtp(data.otp);
+        setLoading(false);
       }
     } catch (err) {
       console.log(err);
@@ -46,10 +64,10 @@ const MyAcoount = () => {
   };
 
   const handleOtp = async () => {
+    if (!otp) {
+      toast.error("Enter OTP!");
+    }
     try {
-      if (!otp) {
-        toast.error("Enter OTP!");
-      }
       const { data } = await axios.post(
         "http://localhost:5050/checkOtp",
         { email, otp },
@@ -63,8 +81,9 @@ const MyAcoount = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
-        //toast.success(data.message);
-        hotToast.success(data.message);
+        if (data.message) {
+          hotToast.success(data.message);
+        }
         navigate("/accountdetail/login");
       }
       setShow(false);
@@ -92,12 +111,12 @@ const MyAcoount = () => {
       console.log(err);
     }
   };
-
+  const color = "white";
   return (
     <div
       className={
-        show
-          ? "mt-10 w-full h-screen relative sm:px-40 md:px-20 px-8 m-auto"
+        show || loading
+          ? "pt-10 w-full h-auto relative sm:px-40 md:px-20 px-8 m-auto myAccount"
           : "mt-10 w-full sm:px-40 md:px-20 px-8 m-auto"
       }
     >
@@ -109,40 +128,50 @@ const MyAcoount = () => {
         <div className="flex sm:w-[707px] w-full flex-col gap-10">
           <div
             className={
-              show
+              show || loading
                 ? "absolute flex justify-center items-center visible top-0 left-0 w-full h-screen bg-otp"
                 : "hidden"
             }
           >
-            <div
-              className={
-                show
-                  ? "flex w-[400px] visible bg-white p-10 shadow-lg rounded-md flex-col justify-center items-center"
-                  : "hidden"
-              }
-            >
-              <p className="text-xl font-semibold text-black text-center">
-                Enter Your OTP
-              </p>
-              <div className="border-[#CBCBCB] border sm:w-[200px] w-full h-10 rounded-md flex items-center mt-10">
-                <input
-                  type="text"
-                  min={4}
-                  max={6}
-                  placeholder="otp"
-                  name="otp"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="px-4 w-full bg-transparent m-auto text-center text-base font-normal text-black outline-none border-none"
-                />
-              </div>
-              <button
-                className="w-[140px] h-[40px] mt-7 bg-[#141718] rounded-lg text-white"
-                onClick={() => handleOtp()}
+            {loading ? (
+              <Loader color={color} />
+            ) : (
+              <div
+                className={
+                  show
+                    ? "flex w-[400px] visible bg-white p-10 shadow-lg rounded-md flex-col justify-evenly items-center"
+                    : "hidden"
+                }
               >
-                Next
-              </button>
-            </div>
+                <p className="text-xl font-semibold text-black text-center">
+                  Enter Your OTP
+                </p>
+                <p className="text-sm font-semibold text-black mt-1 text-center">
+                  check your email please
+                </p>
+                <p className="text-sm font-semibold text-green-400 mt-2 text-center">
+                  {showOtp}
+                </p>
+                <div className="border-[#CBCBCB] border sm:w-[200px] w-full h-10 rounded-md flex items-center mt-10">
+                  <input
+                    type="text"
+                    placeholder="otp"
+                    name="otp"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    className="w-full bg-transparent m-auto text-center text-base font-normal text-black outline-none border-none"
+                  />
+                </div>
+                <button
+                  className={!otp ?
+                    "w-[140px] h-[40px] mt-7 bg-[#141718] opacity-75 flex justify-center items-center rounded-lg text-white" : "w-[140px] h-[40px] mt-7 bg-[#141718] opacity-100 flex justify-center items-center rounded-lg text-white"
+                  }
+                  onClick={() => handleOtp()}
+                >
+                  {!otp ? <LoaderIcon className="p-2" /> : "Next"}
+                </button>
+              </div>
+            )}
           </div>
           <form
             className="w-full justify-center h-[416px]"
@@ -225,7 +254,7 @@ const MyAcoount = () => {
                 </div>
               </li>
             </ul>
-            <button className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white">
+            <button className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white text-lg">
               Sign Up
             </button>
             <div className="flex gap-3 text-lg mt-2">

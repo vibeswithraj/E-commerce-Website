@@ -38,13 +38,14 @@ const Shop = () => {
       console.log(err);
     }
   };
-  const w_full = "col-span-3";
+  const col_span_3 = "col-span-3";
+  const color = "lightgray";
   return (
     <>
       <Hero />
       <div className="mt-10 w-full lg:px-0 md:px-20 sm:px-4 px-1 m-auto h-auto grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 lg:gap-14 md:gap-10 justify-center items-center">
         {loading
-          ? <Loader w_full={w_full}/>
+          ? <Loader col_span_3={col_span_3} color={color}/>
           : allProducts
               // ?.filter((items) =>
               //   search.toLowerCase() === ""
