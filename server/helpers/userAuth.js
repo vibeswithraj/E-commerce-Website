@@ -1,11 +1,11 @@
 import Jwt from "jsonwebtoken";
-import { userData } from "../models/user.js";
+import { checkoutDetails, userData } from "../models/user.js";
 import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
 
 export const setCookies = async (res, user, message) => {
   try {
-    const token = await Jwt.sign(
+    const token = Jwt.sign(
       { email: user.email, id: user._id },
       process.env.JWT_SCRETE
     );
@@ -16,7 +16,7 @@ export const setCookies = async (res, user, message) => {
       .cookie("token", token, {
         httpOnly: true,
         // secure: false,
-        // maxAge: new Date(Date.now() + 60 * 1000),
+        maxAge: 10000000,
         // expires: new Date(Date.now() + 60 * 1000),
       })
       .json({ message, success: true, oneUser });
@@ -31,12 +31,13 @@ export const checkAuth = async (req, res, next) => {
     if (!token) {
       res.json({ error: "Login first!" });
     }
-    const decoded = await Jwt.verify(token, process.env.JWT_SCRETE);
+    const decoded = Jwt.verify(token, process.env.JWT_SCRETE);
     const { email } = decoded;
-    const findUser = await userData.findOne({ email });
-    if (!findUser) {
+    const user = await userData.findOne({ email });
+    if (!user) {
       return res.json({ error: "user not found!" });
     }
+    req.user = await checkoutDetails.findOne({email});
     next();
   } catch (err) {
     console.log(err);

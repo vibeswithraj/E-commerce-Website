@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { errorHandler, setCookies } from "../helpers/userAuth.js";
 import { products } from "./products.js";
 dotenv.config({ path: "./config.env" });
-import nodemailer from "nodemailer";
+//import nodemailer from "nodemailer";
 
 export const atcid = async (req, res) => {
   try {
@@ -26,7 +26,8 @@ export const wishlist = async (req, res) => {
     const pid = +req.params.id;
     // const {userEmail} = req.body;
     const product = products.find((i) => i.id === pid);
-    res.json(product);
+    const newProduct = { ...product, like: true };
+    res.json(newProduct);
     // const {id,title,category,description,image,price,rating} = product;
     // await wishlistData.create({id,title,category,description,image,price,rating,userEmail});
   } catch (err) {
@@ -55,28 +56,28 @@ export const register = async (req, res) => {
       return errorHandler("user alredy exist!", 200, res);
     }
     const hasedPass = await bcrypt.hash(password, 10);
-  
+
     let generatedOtp = Math.floor(Math.random() * 999999);
     generatedOtp.toString();
-  
-    const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      auth: {
-        user: "wilson.johnson32@ethereal.email",
-        pass: "jTHSbdSCDhzVSfJNaa",
-      },
-    });
-  
-    const info = await transporter.sendMail({
-      from: '"3legant E-commerce" <3legant@gmail.com>', // sender address
-      to: `${email}`, // list of receivers
-      subject: "OTP Verification", // Subject line
-      text: `Hello ${firstName}.`, // plain text body
-      html: `<b>Your OTP is ${generatedOtp}</b>`, // html body
-    });
-    console.log("Message sent: %s", info.messageId);
-    res.json({otp: generatedOtp});
+
+    // const transporter = nodemailer.createTransport({
+    //   host: "smtp.ethereal.email",
+    //   port: 587,
+    //   auth: {
+    //     user: "wilson.johnson32@ethereal.email",
+    //     pass: "jTHSbdSCDhzVSfJNaa",
+    //   },
+    // });
+
+    // const info = await transporter.sendMail({
+    //   from: '"3legant E-commerce" <3legant@gmail.com>', // sender address
+    //   to: `${email}`, // list of receivers
+    //   subject: "OTP Verification", // Subject line
+    //   text: `Hello ${firstName}.`, // plain text body
+    //   html: `<b>Your OTP is ${generatedOtp}</b>`, // html body
+    // });
+    // console.log("Message sent: %s", info.messageId);
+    res.json({ otp: generatedOtp });
     userData.create({
       firstName,
       lastName,
@@ -153,7 +154,7 @@ export const myProfile = (req, res) => {
 };
 
 export const checkoutdetails = async (req, res) => {
-  const productID = [];
+  const orderId = Math.floor(Math.random() * 90000);
   try {
     const {
       firstName,
@@ -166,10 +167,12 @@ export const checkoutdetails = async (req, res) => {
       zipCode,
       country,
       addToCart,
+      payment,
+      mainSubTotal,
+      status,
+      cardNumber,
+      shipping,
     } = req.body;
-    addToCart.map((item) => {
-      productID.push(item.id);
-    });
     const finduser = await userData.findOne({ email });
     if (!finduser) {
       return res.json({ error: "user not found!" });
@@ -184,7 +187,13 @@ export const checkoutdetails = async (req, res) => {
       state,
       zipCode,
       country,
-      productID,
+      addToCart,
+      payment,
+      shipping,
+      mainSubTotal,
+      status,
+      cardNumber,
+      orderId,
     });
     cd.save();
     res.json({ message: "order succsessfull!" });

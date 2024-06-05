@@ -4,27 +4,42 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useState } from "react";
 import productContext from "../contexts/ProductContext";
 import hotToast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addtocart,
-  addtowishlist,
-  dicrise,
-  incrise,
-} from "../contexts/productSlice";
+// import { useDispatch, useSelector } from "react-redux";
+// import {
+//   addtocart,
+//   addtowishlist,
+//   dicrise,
+//   incrise,
+// } from "../contexts/productSlice";
+import { FiArrowLeft } from "react-icons/fi";
+import { addCart, addToWishlist, dicrise, incrise } from "../logics";
+import userContext from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Product = () => {
-
-  const { product } = useContext(productContext);
-  const addToCart = useSelector((state) => state.addToCart);
-  const dispatch = useDispatch();
-  const [num, setNum] = useState(1); 
+  const {
+    allProducts,
+    setProduct,
+    addToCart,
+    setAddToCart,
+    wishlist,
+    setWishlist,
+    productDetail,
+  } = useContext(productContext);
+  const { count, setCount } = useContext(userContext);
+  const navigate = useNavigate();
+  //const addToCart = useSelector((state) => state.addToCart);
+  // const dispatch = useDispatch();
+  const [num, setNum] = useState(1);
 
   const addcart = async (pid) => {
-    dispatch(addtocart(pid));
+    // dispatch(addtocart(pid));
+    addCart(addToCart, setAddToCart, setCount, pid);
   };
 
   const addWishlist = async (pid) => {
-    dispatch(addtowishlist(pid));
+    // dispatch(addtowishlist(pid));
+    addToWishlist(wishlist, setWishlist, allProducts, setProduct, pid);
   };
 
   const incri = async (pid) => {
@@ -33,117 +48,108 @@ const Product = () => {
       return hotToast.error("first add to cart!");
     }
     setNum(num + 1);
-    dispatch(incrise(pid));
+    // dispatch(incrise(pid));
+    incrise(addToCart, setAddToCart, pid);
   };
 
   const dicri = (pid) => {
     if (num > 1) {
       setNum(num - 1);
     }
-    dispatch(dicrise(pid));
+    // dispatch(dicrise(pid));
+    dicrise(addToCart, setAddToCart, count, setCount, pid);
   };
 
   return (
-    <div className="w-full mt-10 py-6 xlg:h-[986px] h-auto flex flex-wrap sm:flex-row justify-evenly lg:px-20 px-10 my-10 lg:gap-10 gap-10">
-      <div className="md:w-[548px] w-[311px] h-auto flex flex-col gap-6 cursor-pointer">
-        <div className="md:w-[548px] w-[548px] md:h-[729px] h-[414px]">
+    <div className="w-full py-6 h-screen flex flex-wrap justify-evenly items-center px-10 relative">
+      <div className="absolute top-4 left-4 cursor-pointer p-1 bg-gray-200 rounded-full" onClick={()=> navigate("/shop")}>
+        <FiArrowLeft size={27} />
+      </div>
+      <div className="w-auto h-auto flex flex-col items-center gap-12 cursor-pointer">
+        <div className="w-auto h-auto flex justify-center items-center">
           <img
-            src={product.image}
-            className="md:w-[548px] w-[311px] md:h-[729px] h-[414px]"
-            alt=""
+            src={productDetail?.image || ""}
+            className="w-[300px] h-[350px]"
+            width={300}
+            height={350}
+            alt="product img"
           />
         </div>
         <div className="w-full h-[167px] flex justify-center items-center sm:gap-6 gap-2">
           <img
-            src={product.image}
-            className="sm:w-[167px] w-[140px] sm:h-[167px] h-[140px]"
-            alt=""
+            src={productDetail?.image}
+            className="w-[140px] h-[140px]"
+            alt="product images"
           />
           <img
-            src={product.image}
-            className="sm:w-[167px] w-[140px] sm:h-[167px] h-[140px]"
-            alt=""
+            src={productDetail?.image}
+            className="w-[140px] h-[140px]"
+            alt="product images"
           />
           <img
-            src={product.image}
-            className="sm:w-[167px] w-[140px] sm:h-[167px] h-[140px]"
-            alt=""
+            src={productDetail?.image}
+            className="w-[140px] h-[140px]"
+            alt="product images"
           />
         </div>
       </div>
-      <div className="sm:w-[508px] w-full h-auto flex items-center sm:items-start flex-col">
-        <div className="sm:w-[508px] w-full flex flex-col h-auto gap-2 sm:gap-4">
+      <div className="w-auto h-auto flex items-center sm:items-start flex-col">
+        <div className="max-w-[508px] w-full flex flex-col h-auto gap-2 sm:gap-4">
           <div className="gap-[10px] flex items-center">
-            <div className="flex">
-              <FaStar size={16} />
-              <FaStar size={16} />
-              <FaStar size={16} />
-              <FaStar size={16} />
-              <FaStar size={16} />
+            <div className="flex gap-[1px]">
+              <FaStar size={16} color="orange" />
+              <FaStar size={16} color="orange" />
+              <FaStar size={16} color="orange" />
+              <FaStar size={16} color="lightgray" />
+              <FaStar size={16} color="lightgray" />
             </div>
             <div>
               <p className="text-xs font-normal text-[#141718]">
-                {100 || product.rating.count} Reviews
+                {100 || productDetail.rating.count} Reviews
               </p>
             </div>
           </div>
           <div>
             <p className="md:text-[40px] text-[24px] font-medium text-[#141718]">
-              {product.title}
+              {productDetail?.title}
             </p>
           </div>
           <div>
             <p className="text-base font-normal text-[#6C7275]">
-              {product.description}
+              {productDetail?.description}
             </p>
           </div>
           <div className="gap-3 flex items-center">
             <p className="text-[28px] font-medium text-[#121212]">
-              ${product.price}
+              ₹{productDetail?.price}
             </p>
             <p className="text-xl font-medium text-[#6C7275] line-through">
-              $400.00
+              ₹400.00
             </p>
           </div>
         </div>
-        <div className="lg:h-[200px] h-auto py-6 flex flex-col gap-6">
+        <div className="h-auto py-6 flex flex-col gap-6">
           <div className="flex flex-col gap-[18px]">
             <div className="w-[134px] flex flex-col gap-2">
               <p className="text-base font-semibold text-[#6C7275]">
                 Choose Color<span className="ml-4">{">"}</span>
               </p>
-              <p className="text-xl font-normal">Black</p>
+              {/* <p className="text-xl font-normal">Black</p> */}
             </div>
             <div className="flex items-center gap-4">
-              <img
-                src={product.image}
-                className="w-[72px] h-[72px] border cursor-pointer"
-                alt=""
-              />
-              <img
-                src={product.image}
-                className="w-[72px] h-[72px] border cursor-pointer"
-                alt=""
-              />
-              <img
-                src={product.image}
-                className="w-[72px] h-[72px] border cursor-pointer"
-                alt=""
-              />
-              <img
-                src={product.image}
-                className="w-[72px] h-[72px] border cursor-pointer"
-                alt=""
-              />
+              <div className="w-[62px] h-[62px] border cursor-pointer bg-black rounded-lg ring-2 ring-offset-4 ring-orange-300"></div>
+              <div className="w-[62px] h-[62px] border cursor-pointer bg-white/10 rounded-lg hover:ring-2 ring-offset-4 ring-orange-300"></div>
+              <div className="w-[62px] h-[62px] border cursor-pointer bg-orange-500 rounded-lg hover:ring-2 ring-offset-4 ring-orange-300"></div>
+              <div className="w-[62px] h-[62px] border cursor-pointer bg-gray-200 rounded-lg hover:ring-2 ring-offset-4 ring-orange-300"></div>
             </div>
           </div>
         </div>
-        <div className="h-[184px] w-full flex flex-col gap-4 py-8">
+        <div className="h-[184px] w-full flex flex-col pt-4 gap-4">
           <div className="flex gap-6">
             <div className="w-[127px] h-[52px] flex justify-center items-center rounded">
               <button
-                className="w-[42px] h-[52px] text-2xl outline-non rounded-l border-none bg-[#6C7275] text-white flex justify-center items-center cursor-pointer"
-                onClick={() => dicri(product.id)}
+                className="w-[38px] h-[38px] text-2xl outline-non rounded-l border-none bg-[#6C7275] text-white flex justify-center items-center cursor-pointer"
+                onClick={() => dicri(productDetail?.id)}
               >
                 -
               </button>
@@ -151,15 +157,15 @@ const Product = () => {
                 {num}
               </p>
               <button
-                className="w-[42px] h-[52px] text-2xl outline-none rounded-r border-none bg-[#6C7275] text-white flex justify-center items-center cursor-pointer"
-                onClick={() => incri(product.id)}
+                className="w-[38px] h-[38px] text-2xl outline-none rounded-r border-none bg-[#6C7275] text-white flex justify-center items-center cursor-pointer"
+                onClick={() => incri(productDetail?.id)}
               >
                 +
               </button>
             </div>
             <button
               className="text-lg font-medium text-[#141718] w-full h-[52px] group flex justify-center items-center rounded-lg border-[#141718] border-2"
-              onClick={() => addWishlist(product.id)}
+              onClick={() => addWishlist(productDetail?.id)}
             >
               <span className="flex items-center mr-2">
                 <FontAwesomeIcon
@@ -173,7 +179,7 @@ const Product = () => {
           </div>
           <button
             className="text-lg font-medium text-white w-full bg-black rounded-lg h-[52px]"
-            onClick={() => addcart(product.id)}
+            onClick={() => addcart(productDetail?.id)}
           >
             Add to Cart
           </button>

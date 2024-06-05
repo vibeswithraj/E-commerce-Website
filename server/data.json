@@ -10,6 +10,8 @@
       "price": 109.95,
       "subtotal": 109.95,
       "like": false,
+      "sales": 1269,
+      "stock": 100,
       "rating": {
         "count": 120,
         "rate": 3.9
@@ -25,6 +27,8 @@
       "price": 22.3,
       "subtotal": 22.3,
       "like": false,
+      "sales": 1269,
+      "stock": 10,
       "rating": {
         "count": 259,
         "rate": 4.1
@@ -40,6 +44,8 @@
       "price": 55.99,
       "subtotal": 55.99,
       "like": false,
+      "sales": 1269,
+      "stock": 100,
       "rating": {
         "count": 500,
         "rate": 4.7
@@ -55,6 +61,8 @@
       "price": 15.99,
       "subtotal": 15.99,
       "like": false,
+      "sales": 1269,
+      "stock": 20,
       "rating": {
         "count": 430,
         "rate": 2.1
@@ -70,6 +78,8 @@
       "price": 695,
       "subtotal": 695,
       "like": false,
+      "sales": 1269,
+      "stock": 90,
       "rating": {
         "count": 400,
         "rate": 4.6
@@ -85,6 +95,8 @@
       "price": 168,
       "subtotal": 168,
       "like": false,
+      "sales": 1269,
+      "stock": 30,
       "rating": {
         "count": 70,
         "rate": 3.9
@@ -100,6 +112,8 @@
       "price": 9.99,
       "subtotal": 9.99,
       "like": false,
+      "sales": 1269,
+      "stock": 80,
       "rating": {
         "count": 400,
         "rate": 3
@@ -115,6 +129,8 @@
       "price": 10.99,
       "subtotal": 10.99,
       "like": false,
+      "sales": 1269,
+      "stock": 40,
       "rating": {
         "count": 100,
         "rate": 1.9
@@ -130,6 +146,8 @@
       "price": 64,
       "subtotal": 64,
       "like": false,
+      "sales": 1269,
+      "stock": 60,
       "rating": {
         "count": 203,
         "rate": 3.3
@@ -145,6 +163,8 @@
       "price": 109,
       "subtotal": 109,
       "like": false,
+      "sales": 1269,
+      "stock": 70,
       "rating": {
         "count": 470,
         "rate": 2.9
@@ -160,6 +180,8 @@
       "price": 109,
       "subtotal": 109,
       "like": false,
+      "sales": 1269,
+      "stock": 50,
       "rating": {
         "count": 319,
         "rate": 4.8
@@ -175,6 +197,8 @@
       "price": 114,
       "subtotal": 114,
       "like": false,
+      "sales": 1269,
+      "stock": 60,
       "rating": {
         "count": 400,
         "rate": 4.8
@@ -190,6 +214,8 @@
       "price": 599,
       "subtotal": 599,
       "like": false,
+      "sales": 1269,
+      "stock": 40,
       "rating": {
         "count": 250,
         "rate": 2.9
@@ -205,6 +231,8 @@
       "price": 999.99,
       "subtotal": 999.99,
       "like": false,
+      "sales": 1269,
+      "stock": 70,
       "rating": {
         "count": 140,
         "rate": 2.2
@@ -220,6 +248,8 @@
       "price": 56.99,
       "subtotal": 56.99,
       "like": false,
+      "sales": 1269,
+      "stock": 30,
       "rating": {
         "count": 235,
         "rate": 2.6
@@ -235,6 +265,8 @@
       "price": 29.95,
       "like": false,
       "subtotal": 29.95,
+      "sales": 1269,
+      "stock": 80,
       "rating": {
         "count": 340,
         "rate": 2.9
@@ -250,6 +282,8 @@
       "price": 39.99,
       "like": false,
       "subtotal": 39.99,
+      "sales": 1269,
+      "stock": 20,
       "rating": {
         "count": 679,
         "rate": 3.8
@@ -265,6 +299,8 @@
       "price": 9.85,
       "like": false,
       "subtotal": 9.85,
+      "sales": 1269,
+      "stock": 90,
       "rating": {
         "count": 130,
         "rate": 4.7
@@ -280,6 +316,8 @@
       "price": 7.95,
       "like": false,
       "subtotal": 7.95,
+      "sales": 1269,
+      "stock": 10,
       "rating": {
         "count": 146,
         "rate": 4.5
@@ -295,6 +333,8 @@
       "price": 12.99,
       "like": false,
       "subtotal": 12.99,
+      "sales": 1269,
+      "stock": 100,
       "rating": {
         "count": 145,
         "rate": 3.6

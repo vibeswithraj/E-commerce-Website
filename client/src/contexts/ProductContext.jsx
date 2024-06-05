@@ -2,30 +2,40 @@ import React, { useState, useEffect, useContext } from "react";
 import { createContext } from "react";
 import axios from "axios";
 import userContext from "./UserContext";
-// import { mainsubTotal } from "./productSlice";
-import {  useSelector } from "react-redux";
+import deatilsContext from "./DetailsContext";
+//import { mainsubTotal } from "./productSlice";
+//import {  useSelector } from "react-redux";
 
 const productContext = createContext();
 
 const ProductProvider = ({ children }) => {
+  const [catName, setCatName] = useState("all");
+  const [date, setDate] = useState();
+  const [open, setOpen] = useState(true);
+  const [subTotal, setSubTotal] = useState(0);
+  const [addToCart, setAddToCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   const [allProducts, setProducts] = useState([]);
   const [product, setProduct] = useState({});
   const [num, setNum] = useState(1);
+  const [productDetail, setProductDetail] = useState();
   const { setUser, setLoading, search } = useContext(userContext);
-  const addToCart = useSelector(state=>state.addToCart)
-  const wishlist = useSelector(state=>state.wishlist)
+  const { setMainSubTotal } = useContext(deatilsContext);
+  // const addToCart = useSelector(state=>state.addToCart)
+  // const wishlist = useSelector(state=>state.wishlist)
   //const dispatch = useDispatch();
 
-  //useEffect(() => {
-    // const getMainSubTotal = () => {
-    //   const totalPrice = addToCart.reduce((total, item) => {
-    //     return total + item.price * item.quantity;
-    //   }, 0);
-    //   setMainSubTotal(totalPrice);
-    // };
-    // getMainSubTotal();
+  useEffect(() => {
+    const getMainSubTotal = () => {
+      const totalPrice = addToCart.reduce((total, item) => {
+        return total + item.price * item.quantity;
+      }, 0);
+      setMainSubTotal(totalPrice);
+      setSubTotal(totalPrice);
+    };
+    getMainSubTotal();
     //dispatch(mainsubTotal())
-  //}, [addToCart,dispatch]);
+  }, [addToCart, setMainSubTotal]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -45,10 +55,10 @@ const ProductProvider = ({ children }) => {
       //}, 3000);
       // const addtocart = localStorage.getItem("addtocart");
       // const wlist = localStorage.getItem("wishlist");
-      const user = localStorage.getItem("user");
+      // const user = localStorage.getItem("user");
       // setAddToCart(JSON.parse(addtocart));
       // setWishlist(JSON.parse(wlist));
-      setUser(JSON.parse(user));
+      // setUser(JSON.parse(user));
     } catch (error) {
       if (axios.isCancel(error)) {
         console.log("request is cancelled", error);
@@ -58,18 +68,18 @@ const ProductProvider = ({ children }) => {
     }
     return () => {
       controller.abort();
-    }
+    };
   }, [setUser, setLoading, search]);
 
-  // useEffect(() => {
-  //   const fetchAuth = () => {
-  //     axios
-  //       .get("http://localhost:5050/me",{withCredentials: true})
-  //       .then((res) => console.log(res.data))
-  //       .catch((err) => console.log(err));
-  //   };
-  //   fetchAuth();
-  // }, []);
+  useEffect(() => {
+    const fetchAuth = () => {
+      axios
+        .get("http://localhost:5050/me", { withCredentials: true })
+        .then((res) => setUser(res.data.user))
+        .catch((err) => console.log(err));
+    };
+    fetchAuth();
+  }, [setUser]);
 
   useEffect(() => {
     localStorage.setItem("addtocart", JSON.stringify(addToCart));
@@ -79,11 +89,25 @@ const ProductProvider = ({ children }) => {
   return (
     <productContext.Provider
       value={{
+        productDetail,
+        setProductDetail,
+        subTotal,
         allProducts,
+        setProducts,
         num,
         setNum,
         product,
         setProduct,
+        addToCart,
+        setAddToCart,
+        wishlist,
+        setWishlist,
+        catName,
+        setCatName,
+        date,
+        setDate,
+        open,
+        setOpen,
       }}
     >
       {children}

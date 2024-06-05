@@ -20,11 +20,11 @@ const userSchema = new mongoose.Schema(
       select: false,
       required: true,
     },
-    userOtp:{
+    userOtp: {
       type: String,
       required: true,
       select: false,
-    }
+    },
   },
   { timestamps: true }
 );
@@ -106,7 +106,31 @@ const checkoutdetails = new mongoose.Schema(
       type: String,
       required: true,
     },
-    productID: [],
+    payment: {
+      type: String,
+      required: true,
+    },
+    addToCart: Array,
+    shipping: {
+      type: String,
+      required: true,
+    },
+    mainSubTotal: {
+      type: Number,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+    },
+    cardNumber: {
+      type: Number,
+      required: true,
+    },
+    orderId: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -115,3 +139,4 @@ export const checkoutDetails = mongoose.model(
   "checkoutDetails",
   checkoutdetails
 );
+

@@ -1,0 +1,22 @@
+::-webkit-scrollbar {
+    display: none;
+    /* scroll-behavior: smooth; */
+}
+
+.sb { 
+    display: flex;
+    overflow-x: scroll;
+}
+.circle::before{
+    content: "";
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    border-radius: 100%;
+    outline: none;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    background-color:#FAFAFA;
+    transition: all 400ms ease;
+}

@@ -4,7 +4,7 @@ import banner from "../images/Image Placeholder header.png";
 const Hero = () => {
   return (
       <div className="relative flex justify-center items-center w-full img">
-        <img src={banner} className="w-full h-[392px] bg-cover" alt="" />
+        <img src={banner} className="w-full h-[392px] object-cover" alt="" />
         <div className="absolute flex flex-col gap-3 text-center px-2">
           <p className="text-[#605F5F]">Home {">"} Shop</p>
           <p className="sm:text-[54px] text-[27px] font-medium">Shop page</p>

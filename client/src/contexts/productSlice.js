@@ -41,10 +41,16 @@ export const productSlice = createSlice({
         const alreadyAdded = await state.addToCart.find(
           (i) => i.id === action.payload
         );
+        console.log(alreadyAdded)
         if (!alreadyAdded) {
           // const cart = state.addToCart.push([...state.addToCart,data]);
           //state.addToCart.push([...state.addToCart,data]);
-          return { ...state, addToCart: state.addToCart.push([...state.addToCart,data]), count: state.count + 1 };
+          console.log(data);
+          return {
+            ...state,
+            addToCart: state.addToCart.push([...state.addToCart, data]),
+            count: state.count + 1,
+          };
         } else {
           toast.error("Already added!");
         }
@@ -104,13 +110,11 @@ export const productSlice = createSlice({
     },
 
     remove: (state, action) => {
-      const newcart = state.addToCart.filter(
-        (i) => i.id !== action.payload
-      );
+      const newcart = state.addToCart.filter((i) => i.id !== action.payload);
       return { ...state, addToCart: newcart, count: state.count - 1 };
     },
 
-    mainsubTotal: (state,action) => {
+    mainsubTotal: (state, action) => {
       const mainSub = state.addToCart.reduce((total, item) => {
         return total + item.price * item.quantity;
       }, 0);

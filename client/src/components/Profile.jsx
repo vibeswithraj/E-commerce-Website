@@ -43,7 +43,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className="sm:w-[262px] w-full m-auto h-[498px] bg-[#F3F5F7] rounded-lg flex justify-center items-center flex-col gap-10">
+      <div className="sm:w-[262px] w-full m-auto h-[498px] border bg-gray-100 rounded-lg flex justify-center items-center flex-col gap-10">
         <div
           className="w-[131px] h-[120px] relative flex flex-col gap-2 justify-center items-center"
           onClick={handleImage}
@@ -84,8 +84,8 @@ const Profile = () => {
                 key={index}
                 className={(navClass) =>
                   navClass.isActive
-                    ? "w-full h-[42px] py-2 border-b-2 border-black"
-                    : "w-full h-[42px] py-2"
+                    ? "w-full h-[42px] py-2 border-b-2 text-lg font-normal border-black"
+                    : "w-full h-[42px] py-2 text-lg font-normal"
                 }
               >
                 <li>{item.name}</li>

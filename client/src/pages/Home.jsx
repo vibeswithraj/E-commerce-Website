@@ -1,4 +1,3 @@
-import Nav from "../components/Nav";
 import AddToCart from "./cart/AddToCart";
 import Blog from "./Blog";
 import ContactUs from "./ContactUs";
@@ -10,32 +9,97 @@ import Order from "./account/Order";
 import Address from "./account/Address";
 import Shop from "./Shop";
 import CheckDeatail from "./cart/CheckDeatail";
-import Footer from "../components/Footer";
 import Login from "./account/Login";
 import OrderComplete from "./cart/OrderComplete";
 import Product from "../components/Product";
+import Dashboard from "./Dashboard";
+import AllProducts from "./AllProducts";
+import OrderList from "./OrderList";
+import OrderDetails from "../components/OrderDetails";
+import AddNewProduct from "../components/AddNewProduct";
 
 const Home = () => {
+  const allLinks = [
+    {
+      element: <Dashboard />,
+      path: "/admin/dashboard",
+    },
+    {
+      element: <AllProducts />,
+      path: "/admin/allproducts",
+    },
+    {
+      element: <OrderList />,
+      path: "/admin/orderlist",
+    },
+    {
+      element: <OrderDetails />,
+      path: "/admin/orderlist/orderdetails",
+    },
+    {
+      element: <AddNewProduct />,
+      path: "/admin/allproducts/addnewproduct",
+    },
+    {
+      element: <Shop />,
+      path: "/shop",
+    },
+    {
+      element: <Product />,
+      path: "/product",
+    },
+    {
+      element: <Blog />,
+      path: "/blog",
+    },
+    {
+      element: <ContactUs />,
+      path: "/contact us",
+    },
+    {
+      element: <AddToCart />,
+      path: "/addtocart",
+    },
+    {
+      element: <CheckDeatail />,
+      path: "/checkoutdetails",
+    },
+    {
+      element: <OrderComplete />,
+      path: "/ordercomplete",
+    },
+    {
+      element: <MyAcoount />,
+      path: "/accountdetail/account",
+    },
+    {
+      element: <Logout />,
+      path: "/accountdetail/logout",
+    },
+    {
+      element: <Wishlist />,
+      path: "/accountdetail/yourwishlist",
+    },
+    {
+      element: <Order />,
+      path: "/accountdetail/orderhistory",
+    },
+    {
+      element: <Address />,
+      path: "/accountdetail/address",
+    },
+    {
+      element: <Login />,
+      path: "/accountdetail/login",
+    },
+  ];
   return (
     <>
-      <Nav />
-      <Routes>
-        <Route path="/" element={<Shop />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/contact us" element={<ContactUs />} />
-        <Route path="/addtocart" element={<AddToCart />} />
-        <Route path="/checkoutdetails" element={<CheckDeatail />} />
-        <Route path="/ordercomplete" element={<OrderComplete />} />
-        <Route path="/accountdetail/account" element={<MyAcoount />} />
-        <Route path="/accountdetail/logout" element={<Logout />} />
-        <Route path="/accountdetail/yourwishlist" element={<Wishlist />} />
-        <Route path="/accountdetail/orderhistory" element={<Order />} />
-        <Route path="/accountdetail/address" element={<Address />} />
-        <Route path="/accountdetail/login" element={<Login />} />
-      </Routes>
-      <Footer />
+      {allLinks.map((item, index) => (
+        <Routes key={index}>
+          <Route path={item?.path} element={item?.element} />
+        </Routes>
+      ))}
     </>
   );
 };

@@ -7,7 +7,7 @@ import { useContext } from "react";
 import userContext from "../contexts/UserContext.jsx";
 import { RxCross2 } from "react-icons/rx";
 import { FiMenu } from "react-icons/fi";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const Nav = () => {
   const navLinks = [
@@ -26,8 +26,8 @@ const Nav = () => {
   ];
 
   const [change, setChange] = useState(false);
-  const { search, setSearch } = useContext(userContext);
-  const count = useSelector((state) => state.count);
+  const { search, setSearch, count } = useContext(userContext);
+  // const count = useSelector((state) => state.count);
 
   const handleSearch = () => {
     const searchBar = document.getElementById("search");
@@ -58,8 +58,11 @@ const Nav = () => {
       id="nav"
     >
       <div className="w-full h-[60px] flex justify-between items-center">
-        <div className="flex gap-3 justify-center items-center">
-          <div onClick={() => handleBurger()} className="showMenu">
+        <div className={"flex gap-3 justify-center items-center"}>
+          <div
+            onClick={() => handleBurger()}
+            className={"showMenu visible md:hidden"}
+          >
             <FiMenu size={26} />
           </div>
           <div className="font-medium text-2xl">3legant</div>
@@ -71,8 +74,8 @@ const Nav = () => {
                 <NavLink
                   className={(navClass) =>
                     navClass.isActive
-                      ? "text-sm font-medium text-black border-black border-b-2 py-5 px-5 transition-all ease-in duration-75"
-                      : "text-sm font-medium text-[#6C7275] hover:text-black py-5 px-5 transition-all border-black border-b-2 border-hidden duration-300"
+                      ? "text-base font-medium text-black border-black border-b-2 py-5 px-5 transition-all ease-in duration-75"
+                      : "text-base font-medium text-[#6C7275] hover:text-black py-5 px-5 transition-all border-black border-b-2 border-hidden duration-300"
                   }
                   to={item?.path}
                 >
@@ -138,7 +141,7 @@ const Nav = () => {
         >
           <RxCross2
             size={35}
-            className="cursor-pointer text-slate-500 float-right hover:text-black duration-300 search-icon"
+            className="cursor-pointer text-slate-200 float-right hover:text-black duration-300 search-icon"
           />
         </div>
         <div className="flex w-full flex-col gap-8">

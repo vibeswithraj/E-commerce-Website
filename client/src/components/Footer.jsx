@@ -6,12 +6,12 @@ import { FiYoutube } from "react-icons/fi";
 
 const Footer = () => {
   return (
-    <div className="w-full h-[#249] sm:px-[160px] px-8 py-[80px] flex justify-center items-center bg-black">
+    <footer className="w-full h-auto sm:px-[160px] px-8 py-[80px] flex justify-center items-center bg-black">
       <div className='w-full flex flex-col justify-between items-center gap-[49px]'>
         <div className="flex flex-col lg:flex-row w-full sm:justify-between justify-center items-center gap-10 sm:gap-10">
           <div className="flex flex-col sm:flex-row sm:gap-8 gap-4  text-white w-[350px] items-center">
             <p className="text-2xl font-medium">3legant.</p>
-            <p className="lg:rotate-90 m-auto">|</p>
+            <p className="sm:invisible md:visible m-auto">|</p>
             <p className="text-sm font-normal text-[#E8ECEF]">
               Gift & Decoration Store
             </p>
@@ -51,7 +51,7 @@ const Footer = () => {
             </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
