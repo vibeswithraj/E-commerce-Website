@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="flex flex-col lg:flex-row w-full sm:justify-between justify-center items-center gap-10 sm:gap-10">
           <div className="flex flex-col sm:flex-row sm:gap-8 gap-4  text-white w-[350px] items-center">
             <p className="text-2xl font-medium">3legant.</p>
-            <p className="sm:invisible md:visible m-auto">|</p>
+            <p className="sm:visible rotate-90 sm:rotate-0 m-auto">|</p>
             <p className="text-sm font-normal text-[#E8ECEF]">
               Gift & Decoration Store
             </p>
@@ -36,7 +36,7 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="flex flex-col-reverse sm:flex-row w-full justify-between items-center gap-8 sm:gap-0">
+        <div className="flex flex-col-reverse sm:flex-row w-full justify-evenly sm:justify-between items-center gap-8 sm:gap-0">
             <div className='text-white flex flex-col-reverse lg:flex-row gap-7'>
                 <p className='text-xs font-normal'>Copyright © 2023 3legant. All rights reserved</p>
                 <div className="flex sm:flex-row justify-between w-[200px] sm:w-auto sm:gap-7 m-auto sm:m-0">

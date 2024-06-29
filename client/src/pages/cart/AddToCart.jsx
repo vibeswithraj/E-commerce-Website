@@ -48,9 +48,6 @@ const AddToCart = () => {
   const [change, setChange] = useState(false);
   const [changeTwo, setChangeTwo] = useState(false);
   const [changeThree, setChangeThree] = useState(false);
-  // const [free, setFree] = useState(false);
-  // const [express, setExpress] = useState(false);
-  // const [pickUp, setPickUp] = useState(false);
 
   const incri = (pid) => {
     // dispatch(incrise(pid));
@@ -65,19 +62,6 @@ const AddToCart = () => {
     // dispatch(remove(pid));
   };
 
-  // const handleFreeShipping = (name) => {
-  //   setShipping(name);
-  //   setFree(!free);
-  // };
-  // const handleExpressShipping = (name) => {
-  //   setShipping(name);
-  //   setExpress(!express);
-  // };
-  // const handlePickUpShipping = (name) => {
-  //   setShipping(name);
-  //   setPickUp(!pickUp);
-  // };
-
   const handleNavLinks = () => {
     const colorChange = document.getElementById("colorChange");
     const borderChange = document.getElementById("borderChange");
@@ -88,7 +72,7 @@ const AddToCart = () => {
     setChange(true);
     setChangeTwo(false);
     setChangeThree(false);
-    navigate("/checkoutdetails");
+    navigate("/cart/checkoutdetails");
   };
   const handleProduct = async (id) => {
     try {
@@ -101,8 +85,10 @@ const AddToCart = () => {
     }
   };
   return (
-    <>
-      <Nav />
+    <div className="w-full h-auto">
+      <div className="w-full h-auto">
+        <Nav />
+      </div>
       <div className="mt-10 h-auto w-full sm:px-40 md:px-20 px-8 m-auto overflow-x-hidden">
         <p className="text-[54px] font-medium text-center">Cart</p>
         <div className="w-[832px] grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
@@ -273,39 +259,69 @@ const AddToCart = () => {
           <div className="sm:w-[413px] m-auto w-full h-[476px] p-6 border border-slate-500 rounded-md">
             <p className="text-xl font-medium text-[#141718]">Cart summary</p>
             <div className="flex flex-col gap-3 my-4">
-              <div className="flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718]">
-                <div className="flex gap-2 cursor-pointer">
+              <div
+                className={
+                  shipping === "Free shipping"
+                    ? "flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718] bg-gray-200"
+                    : "flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718] hover:bg-gray-100"
+                }
+              >
+                <div className="flex items-center gap-3 cursor-pointer">
                   <input
                     onClick={() => setShipping("Free shipping")}
                     type="radio"
                     checked={shipping === "Free shipping"}
                     name="radio"
+                    className="peer/draft"
+                    style={{ width: 17, height: 17 }}
                   />
-                  <p>Free shipping</p>
+                  <p className="peer-checked/draft:font-semibold">
+                    Free shipping
+                  </p>
                 </div>
                 <p>₹0</p>
               </div>
-              <div className="flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718]">
-                <div className="flex gap-2 cursor-pointer">
+              <div
+                className={
+                  shipping === "Express shipping"
+                    ? "flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718] bg-gray-200"
+                    : "flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718] hover:bg-gray-100"
+                }
+              >
+                <div className="flex gap-3 items-center cursor-pointer">
                   <input
                     onClick={() => setShipping("Express shipping")}
                     type="radio"
                     checked={shipping === "Express shipping"}
                     name="radio"
+                    className="peer/draft"
+                    style={{ width: 17, height: 17 }}
                   />
-                  <p>Express shipping</p>
+                  <p className="peer-checked/draft:font-semibold">
+                    Express shipping
+                  </p>
                 </div>
                 <p>+₹15</p>
               </div>
-              <div className="flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718]">
-                <div className="flex gap-2 cursor-pointer">
+              <div
+                className={
+                  shipping === "Pick Up shipping"
+                    ? "flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718] bg-gray-200"
+                    : "flex justify-between items-center cursor-pointer sm:w-[365px] w-full h-[52px] py-[13px] px-4 rounded border border-[#141718] hover:bg-gray-100"
+                }
+              >
+                <div className="flex gap-3 items-center cursor-pointer">
                   <input
                     onClick={() => setShipping("Pick Up shipping")}
                     type="radio"
                     checked={shipping === "Pick Up shipping"}
                     name="radio"
+                    className="peer/draft"
+                    style={{ width: 17, height: 17 }}
                   />
-                  <p>Pick Up shipping</p>
+                  <p className="peer-checked/draft:font-semibold">
+                    Pick Up shipping
+                  </p>
                 </div>
                 <p>+₹21</p>
               </div>
@@ -316,7 +332,7 @@ const AddToCart = () => {
             </div>
             <div className="sm:w-[365px] w-full h-[52px] py-[13px] flex justify-between mb-8">
               <p className="text-xl font-semibold">Total</p>
-              <p>
+              <p className="text-xl font-semibold">
                 ₹{shipping === "Free shipping" ? mainSubTotal : ""}
                 {shipping === "Express shipping" ? mainSubTotal + 15 : ""}
                 {shipping === "Pick Up shipping" ? mainSubTotal + 21 : ""}
@@ -327,7 +343,7 @@ const AddToCart = () => {
               className={
                 count > 0
                   ? "sm:w-[365px] w-full h-[52px] bg-[#141718] rounded-lg text-white text-center cursor-pointer"
-                  : "sm:w-[365px] w-full h-[52px] bg-[#141718] rounded-lg text-white text-center cursor-not-allowed"
+                  : "sm:w-[365px] w-full h-[52px] bg-[#141718] rounded-lg text-white text-center cursor-not-allowed disabled:bg-slate-500"
               }
               onClick={() => handleNavLinks()}
             >
@@ -337,7 +353,7 @@ const AddToCart = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

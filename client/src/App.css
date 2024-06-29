@@ -1,13 +1,13 @@
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     display: none;
-    /* scroll-behavior: smooth; */
-}
+} */
 
-.sb { 
+.sb {
     display: flex;
     overflow-x: scroll;
 }
-.circle::before{
+
+.circle::before {
     content: "";
     position: absolute;
     width: 75px;
@@ -17,6 +17,22 @@
     /* display: flex;
     justify-content: center;
     align-items: center; */
-    background-color:#FAFAFA;
+    background-color: #FAFAFA;
     transition: all 400ms ease;
 }
+/* 
+#banner {
+    animation: swipe 5000ms linear infinite;
+}
+#wrapper:hover{
+    animation-play-state: paused;
+}
+
+@keyframes swipe {
+    0%{
+        transform: translateX(0);
+    }
+    100%{
+        transform: translateX(-100%);
+    }
+} */

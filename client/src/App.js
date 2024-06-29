@@ -8,23 +8,24 @@ import { UserProvider } from "./contexts/UserContext";
 import { ProductProvider } from "./contexts/ProductContext";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
-import { store } from "./contexts/store";
-function App() {
+import store from "./contexts/store";
+import { AdminProvider } from "./contexts/AdminProvider";
 
+function App() {
   return (
-    <>
     <Provider store={store}>
-      <DetailsProvider>
-        <UserProvider>
-          <ProductProvider>
-            <Home />
-          </ProductProvider>
-        </UserProvider>
-      </DetailsProvider>
+      <AdminProvider>
+        <DetailsProvider>
+          <UserProvider>
+            <ProductProvider>
+              <Home />
+            </ProductProvider>
+          </UserProvider>
+        </DetailsProvider>
+      </AdminProvider>
       <ToastContainer />
+      <Toaster />
     </Provider>
-      <Toaster/>
-    </>
   );
 }
 

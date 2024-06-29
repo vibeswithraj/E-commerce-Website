@@ -5,13 +5,12 @@ import { FaFileAlt } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
-import productsContext from "../contexts/ProductContext";
 import { FiMenu } from "react-icons/fi";
-import deatilsContext from "../contexts/DetailsContext";
+import adminContext from "../contexts/AdminProvider";
 
 const Aside = () => {
   const [open, setOpen] = useState(false);
-  const { asideOpen, setAsideOpen } = useContext(deatilsContext);
+  const { setCatName, asideOpen, setAsideOpen } = useContext(adminContext);
 
   const allLinks = [
     {
@@ -68,8 +67,6 @@ const Aside = () => {
     },
   ];
 
-  const { setCatName } = useContext(productsContext);
-
   return (
     <aside
       className={
@@ -89,7 +86,7 @@ const Aside = () => {
         </div>
       </div>
       <div className="mt-12">
-        {allLinks.map((item) => (
+        {allLinks?.map((item) => (
           <NavLink
             key={item.name}
             to={item.path}

@@ -7,8 +7,8 @@ import card from "../images/card.png";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext, useState } from "react";
 import userContext from "../contexts/UserContext";
-import axios from "axios";
 import AdminNav from "./AdminNav";
+import axios from "axios";
 
 const OrderDetails = () => {
   const { orderDetail, setOrderList } = useContext(userContext);
@@ -23,6 +23,7 @@ const OrderDetails = () => {
       },
       { withCredentials: true }
     );
+    console.log(data);
     setOrderList(data);
   };
 

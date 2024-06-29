@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
 import { connectMongoDb } from "./data/database.js";
 import cookieParser from "cookie-parser";
-import router from "./router/user.js";
+import userRouter from "./router/user.js";
+import adminRouter from "./router/admin.js";
 import cors from "cors";
 
 app.use(cookieParser());
@@ -18,7 +19,8 @@ app.use(
     credentials: true,
   })
 );
-app.use("/", router);
+app.use("/", userRouter);
+app.use("/", adminRouter);
 
 connectMongoDb();
 

@@ -106,8 +106,10 @@ const CheckDeatail = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-auto">
+    <div className="w-full h-auto">
       <Nav />
+      </div>
       <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto overflow-x-hidden">
         <p className="text-[54px] m-auto font-medium text-center">Cart</p>
         <div className="w-[832px] grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
@@ -214,16 +216,16 @@ const CheckDeatail = () => {
                   >
                     first name
                   </label>
-                  <div className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                    <input
-                      type="text"
-                      placeholder="First name"
-                      name="firstName"
-                      className="outline-none border-none w-full"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                  </div>
+                  <input
+                    id="first name"
+                    type="text"
+                    placeholder="First name"
+                    name="firstName"
+                    className="w-full px-4 sm:w-[285px] md:w-full lg:w-full h-[40px] py-0 border border-[#CBCBCB] flex items-center rounded-md"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    autoFocus
+                  />
                 </li>
                 <li className="flex flex-col gap-3">
                   <label
@@ -232,16 +234,15 @@ const CheckDeatail = () => {
                   >
                     last name
                   </label>
-                  <div className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                    <input
-                      type="text"
-                      placeholder="Last name"
-                      name="lastName"
-                      className="outline-none border-none w-full"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </div>
+                  <input
+                    id="last name"
+                    type="text"
+                    placeholder="Last name"
+                    name="lastName"
+                    className="border sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border-[#CBCBCB] flex items-center rounded-md"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
                 </li>
               </ul>
               <div className="mt-6 flex flex-col gap-3">
@@ -251,34 +252,32 @@ const CheckDeatail = () => {
                 >
                   Phone Number
                 </label>
-                <div className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                  <input
-                    type="text"
-                    placeholder="Phone number"
-                    name="phoneNumber"
-                    className="outline-none border-none w-full"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </div>
+                <input
+                  id="phone number"
+                  type="text"
+                  placeholder="Phone number"
+                  name="phoneNumber"
+                  className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
               </div>
               <div className="mt-6 flex flex-col gap-3">
                 <label
-                  htmlFor="phone number"
+                  htmlFor="email"
                   className="uppercase text-xs font-bold text-[#6C7275]"
                 >
                   Email address
                 </label>
-                <div className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    name="email"
-                    className="outline-none border-none w-full"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Your email"
+                  name="email"
+                  className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
             </div>
             <div className="w-full h-[480px] px-6 py-10 border border-[#6C7275] rounded">
@@ -291,16 +290,16 @@ const CheckDeatail = () => {
                   >
                     Street Address *
                   </label>
-                  <div className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                    <input
-                      type="text"
-                      placeholder="Street Address"
-                      name="StreetAddress"
-                      className="outline-none border-none w-full"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                  </div>
+                  <input
+                    id="Street Address"
+                    type="text"
+                    placeholder="Street Address"
+                    name="StreetAddress"
+                    required
+                    className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
                 </li>
                 <li className="flex flex-col gap-3 mt-6">
                   <label
@@ -309,44 +308,43 @@ const CheckDeatail = () => {
                   >
                     Country *
                   </label>
-                  <div className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                    <select
-                      id="country"
-                      name="country"
-                      className="w-full text-black cursor-pointer outline-none border-none"
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                    >
-                      <option></option>
-                      <option>Afghanistan</option>
-                      <option>Bangladesh</option>
-                      <option>Canada</option>
-                      <option>Denmark</option>
-                      <option>Denmark</option>
-                      <option>Egypt</option>
-                      <option>France</option>
-                      <option>Germany</option>
-                      <option>Haiti</option>
-                      <option>India</option>
-                      <option>Jamaica</option>
-                      <option>Kazakhstan</option>
-                      <option>Kazakhstan</option>
-                      <option>Lithuania</option>
-                      <option>Malaysia</option>
-                      <option>New Zealand</option>
-                      <option>Oman</option>
-                      <option>Philippines</option>
-                      <option>Qatar</option>
-                      <option>Russia</option>
-                      <option>Saudi Arabia</option>
-                      <option>Thailand</option>
-                      <option>Thailand</option>
-                      <option>Uganda</option>
-                      <option>Vietnam</option>
-                      <option>Yemen</option>
-                      <option>Zambia</option>
-                    </select>
-                  </div>
+                  <select
+                    id="country"
+                    name="country"
+                    className="w-full text-black cursor-pointer h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md"
+                    value={country}
+                    required
+                    onChange={(e) => setCountry(e.target.value)}
+                  >
+                    <option>country</option>
+                    <option>Afghanistan</option>
+                    <option>Bangladesh</option>
+                    <option>Canada</option>
+                    <option>Denmark</option>
+                    <option>Denmark</option>
+                    <option>Egypt</option>
+                    <option>France</option>
+                    <option>Germany</option>
+                    <option>Haiti</option>
+                    <option>India</option>
+                    <option>Jamaica</option>
+                    <option>Kazakhstan</option>
+                    <option>Kazakhstan</option>
+                    <option>Lithuania</option>
+                    <option>Malaysia</option>
+                    <option>New Zealand</option>
+                    <option>Oman</option>
+                    <option>Philippines</option>
+                    <option>Qatar</option>
+                    <option>Russia</option>
+                    <option>Saudi Arabia</option>
+                    <option>Thailand</option>
+                    <option>Thailand</option>
+                    <option>Uganda</option>
+                    <option>Vietnam</option>
+                    <option>Yemen</option>
+                    <option>Zambia</option>
+                  </select>
                 </li>
                 <li className="flex flex-col gap-3 mt-6">
                   <label
@@ -355,16 +353,16 @@ const CheckDeatail = () => {
                   >
                     Town / City *
                   </label>
-                  <div className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                    <input
-                      type="text"
-                      placeholder="Town / City"
-                      name="Town / City"
-                      className="outline-none border-none w-full"
-                      value={townCity}
-                      onChange={(e) => setTownCity(e.target.value)}
-                    />
-                  </div>
+                  <input
+                    id="Town / City"
+                    type="text"
+                    placeholder="Town / City"
+                    name="Town / City"
+                    required
+                    className="w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-m"
+                    value={townCity}
+                    onChange={(e) => setTownCity(e.target.value)}
+                  />
                 </li>
               </ul>
               <ul className="w-full grid grid-cols-2 mt-6 gap-2">
@@ -375,16 +373,15 @@ const CheckDeatail = () => {
                   >
                     State
                   </label>
-                  <div className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                    <input
-                      type="text"
-                      placeholder="State"
-                      name="state"
-                      className="outline-none border-none w-full"
-                      value={state}
-                      onChange={(e) => setState(e.target.value)}
-                    />
-                  </div>
+                  <input
+                    id="State"
+                    type="text"
+                    placeholder="State"
+                    name="state"
+                    className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                  />
                 </li>
                 <li className="flex flex-col gap-3">
                   <label
@@ -393,16 +390,15 @@ const CheckDeatail = () => {
                   >
                     Zip Code
                   </label>
-                  <div className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md">
-                    <input
-                      type="text"
-                      placeholder="Zip Code"
-                      name="zipCode"
-                      className="outline-none border-none w-full"
-                      value={zipCode}
-                      onChange={(e) => setZipCode(e.target.value)}
-                    />
-                  </div>
+                  <input
+                    id="Zip Code"
+                    type="text"
+                    placeholder="Zip Code"
+                    name="zipCode"
+                    className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md"
+                    value={zipCode}
+                    onChange={(e) => setZipCode(e.target.value)}
+                  />
                 </li>
               </ul>
             </div>
@@ -416,9 +412,11 @@ const CheckDeatail = () => {
                       name="card"
                       value={payByCard}
                       onClick={(e) => setPayByCard(e.target.value)}
-                      className="text-base font-normal mr-3 w-[18px] h-[18px] cursor-pointer"
+                      className="text-base font-normal mr-3 w-[18px] h-[18px] cursor-pointer peer/draft"
                     />
-                    <p>Pay by Card Credit</p>
+                    <p className="peer-checked/draft:font-semibold">
+                      Pay by Card Credit
+                    </p>
                   </div>
                   <BsCreditCard2Front size={20} />
                 </li>
@@ -428,9 +426,9 @@ const CheckDeatail = () => {
                     name="card"
                     value={paypal}
                     onClick={(e) => setPaypal(e.target.value)}
-                    className="text-base font-normal mr-3 w-[18px] h-[18px] cursor-pointer"
+                    className="text-base font-normal mr-3 peer/draft w-[18px] h-[18px] cursor-pointer"
                   />
-                  Paypal
+                  <p className="peer-checked/draft:font-semibold">Paypal</p>
                 </li>
               </ul>
               <div className="mt-6 flex flex-col gap-3">
@@ -440,17 +438,16 @@ const CheckDeatail = () => {
                 >
                   Card Number
                 </label>
-                <div className="px-4 w-full h-[52px] flex items-center border border-[#6C7275] rounded">
-                  <input
-                    type="text"
-                    maxLength={12}
-                    placeholder="1234 1234 1234"
-                    name="card number"
-                    value={cardNumber}
-                    onChange={(e) => setCardNumber(e.target.value)}
-                    className="outline-none border-none text-base font-normal text-[#6C7275] w-full"
-                  />
-                </div>
+                <input
+                  id="Card Number"
+                  type="text"
+                  maxLength={12}
+                  placeholder="1234 1234 1234"
+                  name="card number"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                  className="text-base font-normal text-[#6C7275] w-full px-4 h-[52px] flex items-center border border-[#6C7275] rounded"
+                />
               </div>
               <ul className="w-full grid grid-cols-2 mt-6 gap-5">
                 <li className="flex flex-col gap-3">
@@ -460,13 +457,12 @@ const CheckDeatail = () => {
                   >
                     Expiration date
                   </label>
-                  <div className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#6C7275] flex items-center rounded-md">
-                    <input
-                      type="date"
-                      name="ExpirationDate"
-                      className="outline-none border-none w-full cursor-pointer text-[#6C7275]"
-                    />
-                  </div>
+                  <input
+                    id="Expiration date"
+                    type="date"
+                    name="ExpirationDate"
+                    className="cursor-pointer text-[#6C7275] sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#6C7275] flex items-center rounded-md"
+                  />
                 </li>
                 <li className="flex flex-col gap-3">
                   <label
@@ -475,14 +471,13 @@ const CheckDeatail = () => {
                   >
                     CVC
                   </label>
-                  <div className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#6C7275] flex items-center rounded-md">
-                    <input
-                      type="text"
-                      placeholder="CVC code"
-                      name="CVC"
-                      className="outline-none border-none w-full"
-                    />
-                  </div>
+                  <input
+                    id="CVC"
+                    type="text"
+                    placeholder="CVC code"
+                    name="CVC"
+                    className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#6C7275] flex items-center rounded-md"
+                  />
                 </li>
               </ul>
             </div>
@@ -549,7 +544,7 @@ const CheckDeatail = () => {
                   {shipping === "Pick Up shipping" ? "₹21" : ""}
                 </p>
                 <p className="text-2xl font-semibold mt-1">
-                  ₹{shipping === "Express shipping" ? mainSubTotal +15 : ""}
+                  ₹{shipping === "Express shipping" ? mainSubTotal + 15 : ""}
                   {shipping === "Free shipping" ? mainSubTotal : ""}
                   {shipping === "Pick Up shipping" ? mainSubTotal + 21 : ""}
                 </p>
@@ -565,7 +560,7 @@ const CheckDeatail = () => {
         </button>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

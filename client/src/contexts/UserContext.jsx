@@ -6,7 +6,8 @@ import axios from "axios";
 const userContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("All");
+  let [checkbox, setCheckbox] = useState({ id: 0, price: "All price" });
   const [count, setCount] = useState(0);
   const [user, setUser] = useState([]);
   const [image, setImage] = useState();
@@ -51,11 +52,13 @@ const UserProvider = ({ children }) => {
       }
     };
     getDetails();
-  });
+  },[]);
 
   return (
     <userContext.Provider
       value={{
+        checkbox,
+        setCheckbox,
         //change,
         orderDetail,
         setOrderDetail,

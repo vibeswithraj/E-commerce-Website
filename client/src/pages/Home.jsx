@@ -1,106 +1,72 @@
-import AddToCart from "./cart/AddToCart";
-import Blog from "./Blog";
-import ContactUs from "./ContactUs";
 import { Route, Routes } from "react-router-dom";
-import MyAcoount from "./account/MyAcoount";
-import Logout from "./account/Logout";
-import Wishlist from "./account/Wishlist";
-import Order from "./account/Order";
-import Address from "./account/Address";
-import Shop from "./Shop";
-import CheckDeatail from "./cart/CheckDeatail";
-import Login from "./account/Login";
-import OrderComplete from "./cart/OrderComplete";
-import Product from "../components/Product";
-import Dashboard from "./Dashboard";
-import AllProducts from "./AllProducts";
-import OrderList from "./OrderList";
-import OrderDetails from "../components/OrderDetails";
-import AddNewProduct from "../components/AddNewProduct";
+import { Suspense, lazy } from "react";
+import { Backdrop, CircularProgress } from "@mui/material";
+
+const MainPage = lazy(() => import("../pages/MainPage.jsx"));
+const AllProducts = lazy(() => import("../pages/AllProducts.jsx"));
+const Blog = lazy(() => import("../pages/Blog.jsx"));
+const ContactUs = lazy(() => import("../pages/ContactUs.jsx"));
+const Dashboard = lazy(() => import("../pages/Dashboard.jsx"));
+const OrderList = lazy(() => import("../pages/OrderList.jsx"));
+const Shop = lazy(() => import("../pages/Shop.jsx"));
+const SignIn = lazy(() => import("../pages/SignIn.jsx"));
+const SignUp = lazy(() => import("../pages/SignUp.jsx"));
+const MyAcoount = lazy(() => import("./account/MyAcoount.jsx"));
+const Address = lazy(() => import("./account/Address.jsx"));
+const Login = lazy(() => import("./account/Login.jsx"));
+const Logout = lazy(() => import("./account/Logout.jsx"));
+const Order = lazy(() => import("./account/Order.jsx"));
+const Wishlist = lazy(() => import("./account/Wishlist.jsx"));
+const AddToCart = lazy(() => import("./cart/AddToCart.jsx"));
+const CheckDeatail = lazy(() => import("./cart/CheckDeatail.jsx"));
+const OrderComplete = lazy(() => import("./cart/OrderComplete.jsx"));
+const AddNewProduct = lazy(() => import("../components/AddNewProduct.jsx"));
+const OrderDetails = lazy(() => import("../components/OrderDetails.jsx"));
+const Product = lazy(() => import("../components/Product.jsx"));
 
 const Home = () => {
-  const allLinks = [
-    {
-      element: <Dashboard />,
-      path: "/admin/dashboard",
-    },
-    {
-      element: <AllProducts />,
-      path: "/admin/allproducts",
-    },
-    {
-      element: <OrderList />,
-      path: "/admin/orderlist",
-    },
-    {
-      element: <OrderDetails />,
-      path: "/admin/orderlist/orderdetails",
-    },
-    {
-      element: <AddNewProduct />,
-      path: "/admin/allproducts/addnewproduct",
-    },
-    {
-      element: <Shop />,
-      path: "/shop",
-    },
-    {
-      element: <Product />,
-      path: "/product",
-    },
-    {
-      element: <Blog />,
-      path: "/blog",
-    },
-    {
-      element: <ContactUs />,
-      path: "/contact us",
-    },
-    {
-      element: <AddToCart />,
-      path: "/addtocart",
-    },
-    {
-      element: <CheckDeatail />,
-      path: "/checkoutdetails",
-    },
-    {
-      element: <OrderComplete />,
-      path: "/ordercomplete",
-    },
-    {
-      element: <MyAcoount />,
-      path: "/accountdetail/account",
-    },
-    {
-      element: <Logout />,
-      path: "/accountdetail/logout",
-    },
-    {
-      element: <Wishlist />,
-      path: "/accountdetail/yourwishlist",
-    },
-    {
-      element: <Order />,
-      path: "/accountdetail/orderhistory",
-    },
-    {
-      element: <Address />,
-      path: "/accountdetail/address",
-    },
-    {
-      element: <Login />,
-      path: "/accountdetail/login",
-    },
-  ];
   return (
-    <>
-      {allLinks.map((item, index) => (
-        <Routes key={index}>
-          <Route path={item?.path} element={item?.element} />
-        </Routes>
-      ))}
-    </>
+    <Suspense
+      fallback={
+        <Backdrop
+          sx={{ color: "#fff" }}
+          open={true}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      }
+    >
+      <Routes>
+        <Route path={"/"} element={<SignUp />} />
+        <Route path={"/signup"} element={<SignUp />} />
+        <Route path={"/signin"} element={<SignIn />} />
+        <Route path={"/home"} element={<MainPage />} />
+        <Route path={"/shop"} element={<Shop />} />
+        <Route path={"/blog"} element={<Blog />} />
+        <Route path={"/contactus"} element={<ContactUs />} />
+        <Route path={"/accountdetail/orderhistory"} element={<Order />} />
+        <Route path={"/accountdetail/account"} element={<MyAcoount />} />
+        <Route path={"/product/:id"} element={<Product />} />
+        <Route path={"/admin/dashboard"} element={<Dashboard />} />
+        <Route path={"/admin/allproducts"} element={<AllProducts />} />
+        <Route path={"/admin/orderlist"} element={<OrderList />} />
+        <Route
+          path={"/admin/orderlist/orderdetails"}
+          element={<OrderDetails />}
+        />
+        <Route path={"/cart/ordercomplete"} element={<OrderComplete />} />
+        <Route path={"/accountdetail/address"} element={<Address />} />
+        <Route
+          path={"/admin/allproducts/addnewproduct"}
+          element={<AddNewProduct />}
+        />
+        <Route path={"/cart/addtocart"} element={<AddToCart />} />
+        <Route path={"/accountdetail/login"} element={<Login />} />
+        <Route path={"/accountdetail/logout"} element={<Logout />} />
+        <Route path={"/accountdetail/yourwishlist"} element={<Wishlist />} />
+        <Route path={"/cart/checkoutdetails"} element={<CheckDeatail />} />
+      </Routes>
+    </Suspense>
   );
 };
 

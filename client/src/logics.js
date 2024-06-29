@@ -37,12 +37,14 @@ export const dicrise = (addToCart, setAddToCart, count, setCount, pid) => {
 export const delAtcp = async (addToCart, setAddToCart, setCount, pid) => {
   const newcart = await addToCart.filter((i) => i.id !== pid);
   setCount(addToCart.length - 1);
+  hotToast.success("Removed");
   return setAddToCart(newcart);
 };
 
 export const delWlistp = async (wishlist, setWishlist, id) => {
   const newcart = await wishlist.filter((i) => i.id !== id);
-  return setWishlist(newcart);
+  setWishlist(newcart);
+  hotToast.success("Removed");
 };
 
 export const addCart = async (addToCart, setAddToCart, setCount, pid) => {
@@ -57,6 +59,7 @@ export const addCart = async (addToCart, setAddToCart, setCount, pid) => {
       if (!alreadyAdded) {
         setAddToCart([...addToCart, data]);
         setCount(addToCart.length + 1);
+        hotToast.success("Added");
       } else {
         hotToast.error("Already added!");
       }
@@ -84,7 +87,7 @@ export const addToWishlist = async (
       if (!alreadyAdded) {
         setWishlist([...wishlist, data]);
       } else {
-        toast.error("Already added!");
+        hotToast.error("Already added!");
       }
     }
     const findProduct = allProducts.find((i) => i.id === pid);
@@ -92,6 +95,7 @@ export const addToWishlist = async (
     const newFindProduct = { ...findProduct, like: true };
     console.log(newFindProduct.like);
     setProduct([...allProducts, newFindProduct]);
+    hotToast.success("Added");
   } catch (err) {
     console.log(err);
   }

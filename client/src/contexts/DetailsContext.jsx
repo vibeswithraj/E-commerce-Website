@@ -11,13 +11,10 @@ const DetailsProvider = ({ children }) => {
   const [paypal, setPaypal] = useState("Paypal");
   const [totalOrder, setTotalOrder] = useState();
   const [status, setStatus] = useState("");
-  const [asideOpen, setAsideOpen] = useState(false);
 
   return (
     <deatilsContext.Provider
       value={{
-        asideOpen,
-        setAsideOpen,
         status,
         setStatus,
         totalOrder,

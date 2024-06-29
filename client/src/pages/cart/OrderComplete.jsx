@@ -26,12 +26,13 @@ const OrderComplete = () => {
     localStorage.clear();
     addToCart.splice(0, addToCart.length());
     //setAddToCard();
-    
   };
 
   return (
-    <>
-      <Nav />
+    <div className="w-full h-auto">
+      <div className="w-full h-auto">
+        <Nav />
+      </div>
       <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto overflow-x-hidden">
         <p className="text-[54px] font-medium text-center">Cart</p>
         <div className="w-[832px] grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
@@ -137,7 +138,7 @@ const OrderComplete = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

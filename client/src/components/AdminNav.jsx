@@ -1,15 +1,14 @@
 import { useContext } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
-import productsContext from "../contexts/ProductContext";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoExitOutline } from "react-icons/io5";
-import deatilsContext from "../contexts/DetailsContext.jsx";
 import { FiArrowLeft } from "react-icons/fi";
+import adminContext from "../contexts/AdminProvider.jsx";
 
 const AdminNav = () => {
-  const { catName, setCatName, open, setOpen } = useContext(productsContext);
-  const { asideOpen, setAsideOpen } = useContext(deatilsContext);
+  const { catName, setCatName, open, setOpen, asideOpen, setAsideOpen } =
+    useContext(adminContext);
 
   return (
     <nav
@@ -26,7 +25,7 @@ const AdminNav = () => {
             : "w-fit h-auto flex items-center gap-3 ml-3 scale-0 invisible transition-all ease-in duration-300"
         }
       >
-        <div className='bg-gray-200 rounded-full p-1 cursor-pointer mr-2'>
+        <div className="bg-gray-200 rounded-full p-1 cursor-pointer mr-2">
           <FiArrowLeft
             size={25}
             onClick={() => setAsideOpen((prev) => !prev)}

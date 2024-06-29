@@ -57,8 +57,8 @@ export const register = async (req, res) => {
     }
     const hasedPass = await bcrypt.hash(password, 10);
 
-    let generatedOtp = Math.floor(Math.random() * 999999);
-    generatedOtp.toString();
+    // let generatedOtp = Math.floor(Math.random() * 999999);
+    // generatedOtp.toString();
 
     // const transporter = nodemailer.createTransport({
     //   host: "smtp.ethereal.email",
@@ -76,15 +76,17 @@ export const register = async (req, res) => {
     //   text: `Hello ${firstName}.`, // plain text body
     //   html: `<b>Your OTP is ${generatedOtp}</b>`, // html body
     // });
-    // console.log("Message sent: %s", info.messageId);
-    res.json({ otp: generatedOtp });
+    // console.log("Message sent: %s", info.messageId);\
+
+    //res.json({ otp: generatedOtp });
     userData.create({
       firstName,
       lastName,
       email,
       password: hasedPass,
-      userOtp: generatedOtp,
+      // userOtp: generatedOtp,
     });
+    res.json({ message: "Register Successfully!" });
   } catch (err) {
     console.log(err);
   }

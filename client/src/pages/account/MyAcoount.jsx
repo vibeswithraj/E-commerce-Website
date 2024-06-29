@@ -2,12 +2,8 @@ import React, { useContext, useState } from "react";
 import Profile from "../../components/Profile";
 import axios from "axios";
 import { toast } from "react-toastify";
-import hotToast from "react-hot-toast";
-import { Link } from "react-router-dom";
 import userContext from "../../contexts/UserContext.jsx";
-import { LoaderIcon } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import Loader from "../../components/Loader.jsx";
+// import Loader from "../../components/Loader.jsx";
 import Nav from "../../components/Nav.jsx";
 import Footer from "../../components/Footer.jsx";
 
@@ -15,87 +11,16 @@ const MyAcoount = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [oldPass, setOldPassword] = useState("");
   const [newPass, setNewPassword] = useState("");
   const [repeatPass, setRepeatPassword] = useState("");
-  const [showOtp, setShowOtp] = useState("");
-  const navigate = useNavigate();
-  const { user, show, setShow, otp, setOtp, loading, setLoading } =
-    useContext(userContext);
-
-  const signin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (!firstName) {
-        return toast.error("Enter your name");
-      }
-      if (!lastName) {
-        return toast.error("Enter your last name");
-      }
-      if (!email) {
-        return toast.error("Enter your email");
-      }
-      if (!password) {
-        return toast.error("Enter your password");
-      }
-      const { data } = await axios.post(
-        "http://localhost:5050/register",
-        { firstName, lastName, email, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        setShow(true);
-        if (data.message) {
-          hotToast.success(data.message);
-        }
-        setShowOtp(data.otp);
-        setLoading(false);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handleOtp = async () => {
-    if (!otp) {
-      toast.error("Enter OTP!");
-    }
-    try {
-      const { data } = await axios.post(
-        "http://localhost:5050/checkOtp",
-        { email, otp },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        if (data.message) {
-          hotToast.success(data.message);
-        }
-        navigate("/accountdetail/login");
-      }
-      setShow(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { user, show, loading } = useContext(userContext);
 
   const handleSaveChange = async (e) => {
     e.preventDefault();
+    if (user.email === "demo1@gmail.com") {
+      return toast.error("demo user can't change password!");
+    }
     try {
       const { data } = await axios.post(
         `http://localhost:5050/updatePass`,
@@ -113,10 +38,12 @@ const MyAcoount = () => {
       console.log(err);
     }
   };
-  const color = "white";
+
   return (
-    <>
-      <Nav />
+    <div className="w-full h-auto">
+      <div className="w-full h-auto">
+        <Nav />
+      </div>
       <div
         className={
           show || loading
@@ -136,54 +63,11 @@ const MyAcoount = () => {
                   ? "absolute flex justify-center items-center visible top-0 left-0 w-full h-screen bg-otp"
                   : "hidden"
               }
-            >
-              {loading ? (
-                <Loader color={color} />
-              ) : (
-                <div
-                  className={
-                    show
-                      ? "flex w-[400px] visible bg-white p-10 shadow-lg rounded-md flex-col justify-evenly items-center"
-                      : "hidden"
-                  }
-                >
-                  <p className="text-xl font-semibold text-black text-center">
-                    Enter Your OTP
-                  </p>
-                  <p className="text-sm font-semibold text-black mt-1 text-center">
-                    check your email please
-                  </p>
-                  <p className="text-sm font-semibold text-green-400 mt-2 text-center">
-                    {showOtp}
-                  </p>
-                  <div className="border-[#CBCBCB] border sm:w-[200px] w-full h-10 rounded-md flex items-center mt-10">
-                    <input
-                      type="text"
-                      placeholder="otp"
-                      name="otp"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      className="w-full bg-transparent m-auto text-center text-base font-normal text-black outline-none border-none"
-                    />
-                  </div>
-                  <button
-                    className={
-                      !otp
-                        ? "w-[140px] h-[40px] mt-7 bg-[#141718] opacity-75 flex justify-center items-center rounded-lg text-white"
-                        : "w-[140px] h-[40px] mt-7 bg-[#141718] opacity-100 flex justify-center items-center rounded-lg text-white"
-                    }
-                    onClick={() => handleOtp()}
-                  >
-                    {!otp ? <LoaderIcon className="p-2" /> : "Next"}
-                  </button>
-                </div>
-              )}
-            </div>
+            ></div>
             <form
-              className="w-full justify-center h-[416px]"
+              className="w-full justify-center h-fit"
               action=""
               method="post"
-              onSubmit={signin}
             >
               <p className="text-xl font-semibold">Account Details</p>
               <ul className="mt-6 flex flex-col gap-6">
@@ -199,7 +83,7 @@ const MyAcoount = () => {
                       type="text"
                       placeholder="FIRST NAME"
                       name="firstName"
-                      value={firstName}
+                      value={firstName || user?.firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       className="px-4 w-full bg-transparent text-base font-normal text-[#6C7275] outline-none border-none"
                     />
@@ -217,7 +101,7 @@ const MyAcoount = () => {
                       type="text"
                       placeholder="LAST NAME"
                       name="lastName"
-                      value={lastName}
+                      value={lastName || user?.lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       className="px-4 w-full bg-transparent text-base font-normal text-[#6C7275] outline-none border-none"
                     />
@@ -235,47 +119,17 @@ const MyAcoount = () => {
                       type="email"
                       placeholder="EMAIL"
                       name="email"
-                      value={email}
+                      value={email || user?.email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="px-4 w-full bg-transparent text-base font-normal text-[#6C7275] outline-none border-none"
                     />
                   </div>
                 </li>
-                <li>
-                  <label
-                    htmlFor="password"
-                    className="text-xs font-bold text-[#6C7275] uppercase"
-                  >
-                    Password *
-                  </label>
-                  <div className="border-[#CBCBCB] border sm:w-[707px] w-full h-10 rounded-md flex items-center">
-                    <input
-                      type="text"
-                      placeholder="PASSWORD"
-                      name="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="px-4 w-full bg-transparent text-base font-normal text-[#6C7275] outline-none border-none"
-                    />
-                  </div>
-                </li>
               </ul>
-              <button className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white text-lg">
-                Sign Up
-              </button>
-              <div className="flex gap-3 text-lg mt-2">
-                <p>already have an account?</p>
-                <Link
-                  className="text-blue-500 underline text-lg"
-                  to={"/accountdetail/login"}
-                >
-                  login
-                </Link>
-              </div>
             </form>
-            {user?.firstName ? (
+            {user?.firstName && (
               <form
-                className="sm:w-[707px] w-full h-[372px] mt-10"
+                className="sm:w-[707px] w-full h-auto"
                 method="post"
                 onSubmit={handleSaveChange}
               >
@@ -336,18 +190,18 @@ const MyAcoount = () => {
                     </div>
                   </li>
                 </ul>
-                <button className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white">
+                <button
+                  className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white"
+                >
                   Save changes
                 </button>
               </form>
-            ) : (
-              ""
             )}
           </div>
         </div>
       </div>
-      <Footer/>
-    </>
+      <Footer />
+    </div>
   );
 };
 

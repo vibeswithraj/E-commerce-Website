@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
 import { atcid, login, logout, register, updatePass, wishlist, checkoutdetails, myProfile, } from "../controller/user.js";
 import { checkAuth, checkOtp } from "../helpers/userAuth.js";
-import { addnewproduct, changeStatus, orderDetails, productData, search } from "../controller/products.js";
+import { addnewproduct, orderDetails, productData, search } from "../controller/products.js";
 router.use(
   cors({
     methods: ["GET", "POST"],
@@ -36,6 +36,5 @@ router.post("/checkoutdetails",checkoutdetails);
 router.post("/addnewproduct", addnewproduct);
 
 router.get("/orderDetails",orderDetails);
-router.post("/changeStatus",changeStatus);
 
 export default router;

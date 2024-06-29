@@ -1,20 +1,29 @@
-import fs from "fs";
 import { checkoutDetails } from "../models/user.js";
+import fs from "fs";
 const data = JSON.parse(fs.readFileSync("./data.json", "utf-8"));
 export const products = data.products;
 
 export const productData = (req, res) => {
-  return res.json(data);
+  return res.send(products);
 };
 
 export const search = (req, res) => {
   try {
-    const { search } = req.query;
-    const searchList = products.filter((item) =>
-      search.toLowerCase() === ""
-        ? item
-        : item.title.toLowerCase().includes(search)
-    );
+    const { search, price } = req.query;
+    const searchList = products
+      .filter((item) =>
+        search.toLowerCase() === "all" || search === ""
+          ? item
+          : item.category.toLowerCase().includes(search.toLowerCase())
+      )
+      .filter((item) =>
+        price.toLowerCase() === "all price"
+          ? item
+          : parseInt(price) === 400.0
+          ? parseInt(item.price) >= parseInt(price)
+          : parseInt(item.price) >= price.split(" - ")[0] &&
+            parseInt(item.price) <= price.split(" - ")[1]
+      );
     return res.json(searchList);
   } catch (error) {
     console.log(error);
@@ -24,16 +33,6 @@ export const search = (req, res) => {
 export const orderDetails = async (req, res) => {
   const allOrderDetails = await checkoutDetails.find({});
   res.json({ orderlist: allOrderDetails });
-};
-
-export const changeStatus = async (req, res) => {
-  const { orderId, status } = req.body;
-  // console.log(req.body)
-  const findUser = await checkoutDetails.findOne({ orderId });
-  //findUser.shipping = shipping;
-  findUser.status = status;
-  await findUser.save();
-  res.json({ orderlist: checkoutDetails });
 };
 
 export const addnewproduct = async (req, res) => {

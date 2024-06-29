@@ -1,12 +1,12 @@
 import Aside from "../components/Aside";
 import { useContext } from "react";
-import productsContext from "../contexts/ProductContext";
 import RecentOrderList from "../components/RecentOrderList";
 import AdminNav from "../components/AdminNav";
 import AdminFooter from "../components/AdminFooter";
+import adminContext from "../contexts/AdminProvider";
 
 const OrderList = () => {
-  const { date, open, setOpen } = useContext(productsContext);
+  const { date, open, setOpen } = useContext(adminContext);
 
   return (
     <>

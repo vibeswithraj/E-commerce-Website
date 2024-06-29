@@ -62,6 +62,7 @@
       "subtotal": 15.99,
       "like": false,
       "sales": 1269,
+      "bestSeller": true,
       "stock": 20,
       "rating": {
         "count": 430,
@@ -130,6 +131,7 @@
       "subtotal": 10.99,
       "like": false,
       "sales": 1269,
+      "bestSeller": true,
       "stock": 40,
       "rating": {
         "count": 100,
@@ -181,6 +183,7 @@
       "subtotal": 109,
       "like": false,
       "sales": 1269,
+      "bestSeller": true,
       "stock": 50,
       "rating": {
         "count": 319,
@@ -232,6 +235,7 @@
       "subtotal": 999.99,
       "like": false,
       "sales": 1269,
+      "bestSeller": true,
       "stock": 70,
       "rating": {
         "count": 140,
@@ -300,6 +304,7 @@
       "like": false,
       "subtotal": 9.85,
       "sales": 1269,
+      "bestSeller": true,
       "stock": 90,
       "rating": {
         "count": 130,

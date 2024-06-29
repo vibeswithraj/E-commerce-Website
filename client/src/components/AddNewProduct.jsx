@@ -19,7 +19,7 @@ const AddNewProduct = () => {
   const [tag, setTag] = useState();
 
   const imageRef = useRef(null);
-  const { allProducts, setProducts } = useContext(productContext);
+  const { allProducts } = useContext(productContext);
 
   const allImage = [
     {

@@ -1,82 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
-import axios from "axios";
 
 const initialState = {
-  addToCart: [
-    //   {
-    //     title: "DANVOUY Womens T Shirt Casual Cotton Short",
-    //     quantity: 1,
-    //     category: "women's clothing",
-    //     description: "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter.",
-    //     id: 20,
-    //     image: "https://fakestoreapi.com/img/61pHAEJ4NML._AC_UX679_.jpg",
-    //     price: 12.99,
-    //     like: false,
-    //     subtotal: 12.99,
-    //     rating: {
-    //       count: 145,
-    //       rate: 3.6
-    //     },
-    // }
-  ],
+  addToCart: [],
   wishlist: [],
   mainSubTotal: 0,
   count: 0,
 };
 
-export const productSlice = createSlice({
+const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    addtocart: async (state, action) => {
-      try {
-        const { data } = await axios.get(
-          `http://localhost:5050/addtocart/${action.payload}`,
-          { withCredentials: true }
-        );
-        if (data.error) {
-          console.log(data.error);
-        }
-        const alreadyAdded = await state.addToCart.find(
-          (i) => i.id === action.payload
-        );
-        console.log(alreadyAdded)
-        if (!alreadyAdded) {
-          // const cart = state.addToCart.push([...state.addToCart,data]);
-          //state.addToCart.push([...state.addToCart,data]);
-          console.log(data);
-          return {
-            ...state,
-            addToCart: state.addToCart.push([...state.addToCart, data]),
-            count: state.count + 1,
-          };
-        } else {
-          toast.error("Already added!");
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
-
-    addtowishlist: async (state, action) => {
-      try {
-        const { data } = await axios.get(
-          `http://localhost:5050/wishlist/${action.payload}`
-        );
-        const alreadyAdded = await state.wishlist.find(
-          (i) => i.id === action.payload
-        );
-        if (!alreadyAdded) {
-          state.wishlist.push([...state.wishlist, data]);
-        } else {
-          toast.error("Already added!");
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
-
     incrise: (state, action) => {
       const updateCart = state.addToCart.map((curElem) => {
         if (curElem.id === action.payload) {

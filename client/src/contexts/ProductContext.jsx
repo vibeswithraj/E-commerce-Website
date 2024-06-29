@@ -9,9 +9,6 @@ import deatilsContext from "./DetailsContext";
 const productContext = createContext();
 
 const ProductProvider = ({ children }) => {
-  const [catName, setCatName] = useState("all");
-  const [date, setDate] = useState();
-  const [open, setOpen] = useState(true);
   const [subTotal, setSubTotal] = useState(0);
   const [addToCart, setAddToCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
@@ -19,11 +16,12 @@ const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState({});
   const [num, setNum] = useState(1);
   const [productDetail, setProductDetail] = useState();
-  const { setUser, setLoading, search } = useContext(userContext);
+  const { setUser } = useContext(userContext);
   const { setMainSubTotal } = useContext(deatilsContext);
   // const addToCart = useSelector(state=>state.addToCart)
   // const wishlist = useSelector(state=>state.wishlist)
   //const dispatch = useDispatch();
+
 
   useEffect(() => {
     const getMainSubTotal = () => {
@@ -37,39 +35,42 @@ const ProductProvider = ({ children }) => {
     //dispatch(mainsubTotal())
   }, [addToCart, setMainSubTotal]);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    try {
-      setLoading(true);
-      //setTimeout(() => {
-      axios
-        .get(`http://localhost:5050/products?search=${search}`, {
-          withCredentials: true,
-          signal: controller.signal,
-        })
-        .then((res) => {
-          setProducts(res.data);
-          setLoading(false);
-        })
-        .catch((err) => console.log(err));
-      //}, 3000);
-      // const addtocart = localStorage.getItem("addtocart");
-      // const wlist = localStorage.getItem("wishlist");
-      // const user = localStorage.getItem("user");
-      // setAddToCart(JSON.parse(addtocart));
-      // setWishlist(JSON.parse(wlist));
-      // setUser(JSON.parse(user));
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log("request is cancelled", error);
-        return;
-      }
-      console.log(error);
-    }
-    return () => {
-      controller.abort();
-    };
-  }, [setUser, setLoading, search]);
+  // useEffect(() => {
+  //   const controller = new AbortController();
+  //   try {
+  //     setLoading(true);
+  //     //setTimeout(() => {
+  //     axios
+  //       .get(
+  //         `http://localhost:5050/products?search=${search}&price=${checkbox?.price}`,
+  //         {
+  //           withCredentials: true,
+  //           signal: controller.signal,
+  //         }
+  //       )
+  //       .then((res) => {
+  //         setProducts(res.data);
+  //         setLoading(false);
+  //       })
+  //       .catch((err) => console.log(err));
+  //     //}, 3000);
+  //     // const addtocart = localStorage.getItem("addtocart");
+  //     // const wlist = localStorage.getItem("wishlist");
+  //     // const user = localStorage.getItem("user");
+  //     // setAddToCart(JSON.parse(addtocart));
+  //     // setWishlist(JSON.parse(wlist));
+  //     // setUser(JSON.parse(user));
+  //   } catch (error) {
+  //     if (axios.isCancel(error)) {
+  //       console.log("request is cancelled", error);
+  //       return;
+  //     }
+  //     console.log(error);
+  //   }
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, [setUser, setLoading, search, checkbox]);
 
   useEffect(() => {
     const fetchAuth = () => {
@@ -102,12 +103,6 @@ const ProductProvider = ({ children }) => {
         setAddToCart,
         wishlist,
         setWishlist,
-        catName,
-        setCatName,
-        date,
-        setDate,
-        open,
-        setOpen,
       }}
     >
       {children}

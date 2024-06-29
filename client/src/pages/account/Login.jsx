@@ -41,8 +41,10 @@ const Login = () => {
   };
 
   return (
-    <>
-      <Nav />
+    <div className="w-full h-auto">
+      <div className="w-full h-auto">
+        <Nav />
+      </div>
       <div className="pt-10 w-full h-auto sm:px-40 md:px-20 px-8 m-auto login">
         <p className="text-[54px] font-medium text-center my-20">My Account</p>
         <div className="flex w-full flex-col justify-evenly sm:flex-row gap-10 mb-20">
@@ -112,7 +114,7 @@ const Login = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

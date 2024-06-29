@@ -1,8 +1,6 @@
-import { NavLink } from "react-router-dom";
 import Aside from "../components/Aside";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext, useState } from "react";
-import productsContext from "../contexts/ProductContext";
 // import { BarChart } from "../components/Charts.tsx";
 import AdminNav from "../components/AdminNav";
 import RecentOrderList from "../components/RecentOrderList";
@@ -11,14 +9,28 @@ import deatilsContext from "../contexts/DetailsContext.jsx";
 import userContext from "../contexts/UserContext.jsx";
 // import { IoArrowUpOutline } from "react-icons/io5";
 import { BarChart } from "@mui/x-charts/BarChart";
+import adminContext from "../contexts/AdminProvider.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 const Dashboard = () => {
-  const { date, setDate, open, setOpen } = useContext(productsContext);
+  const {
+    date,
+    setDate,
+    open,
+    setOpen,
+    allProductData,
+    setAllProductData,
+    catName,
+  } = useContext(adminContext);
   const { totalOrder } = useContext(deatilsContext);
   const { orderList } = useContext(userContext);
-  const [weekly, setWeekly] = useState(true);
-  const [monthly, setMonthly] = useState(false);
-  const [yearly, setYearly] = useState(false);
+  const [options, setoptions] = useState({
+    weekly: true,
+    monthly: false,
+    yearly: false,
+  });
 
   const allLinks = [
     {
@@ -38,21 +50,30 @@ const Dashboard = () => {
     },
   ];
 
+  const { isError, isLoading, data, error } = useQuery({
+    queryKey: ["allproducts", catName],
+    queryFn: () =>
+      fetch(`http://localhost:5050/allproducts?search=${catName}`).then((res) =>
+        res.json()
+      ),
+  });
+
+  if (isError) {
+    toast.error(error);
+  }
+  if (data) {
+    setAllProductData(data);
+  }
+
   const handleBtn = (name) => {
     if (name === "weekly") {
-      setWeekly(true);
-      setMonthly(false);
-      setYearly(false);
+      setoptions({ weekly: true, monthly: false, yearly: false });
     }
     if (name === "monthly") {
-      setMonthly(true);
-      setWeekly(false);
-      setYearly(false);
+      setoptions({ weekly: false, monthly: true, yearly: false });
     }
     if (name === "yearly") {
-      setYearly(true);
-      setWeekly(false);
-      setMonthly(false);
+      setoptions({ weekly: false, monthly: false, yearly: true });
     }
   };
 
@@ -132,16 +153,15 @@ const Dashboard = () => {
                     className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
                     style={{
                       background: `conic-gradient(${
-                        orderList?.orderlist?.length
-                          ? orderList?.orderlist?.length < 33.33
-                            ? "#FF000D" // Red
-                            : "" || orderList?.orderlist?.length > 33.33
-                            ? "#ffa52f" // Orange
-                            : "" ||
-                              (orderList?.orderlist?.length > 33.33 &&
-                                orderList?.orderlist?.length > 66.66)
-                            ? "#3CD41A" // Green
-                            : ""
+                        orderList?.orderlist?.length &&
+                        orderList?.orderlist?.length < 33.33
+                          ? "#FF000D" // Red
+                          : "" || orderList?.orderlist?.length > 33.33
+                          ? "#ffa52f" // Orange
+                          : "" ||
+                            (orderList?.orderlist?.length > 33.33 &&
+                              orderList?.orderlist?.length > 66.66)
+                          ? "#3CD41A" // Green
                           : ""
                       } ${
                         (orderList?.orderlist?.length / 100) * 360
@@ -170,14 +190,12 @@ const Dashboard = () => {
                     className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
                     style={{
                       background: `conic-gradient(${
-                        orderList?.orderlist?.length
-                          ? 70 < 33.33
-                            ? "#FF000D"
-                            : "" || (70 < 66.66 && 70 > 33.33)
-                            ? "#ffa52f"
-                            : "" || 70 > 66.66
-                            ? "#3CD41A"
-                            : ""
+                        orderList?.orderlist?.length && 70 < 33.33
+                          ? "#FF000D"
+                          : "" || (70 < 66.66 && 70 > 33.33)
+                          ? "#ffa52f"
+                          : "" || 70 > 66.66
+                          ? "#3CD41A"
                           : ""
                       } ${(70 / 100) * 360}deg,rgb(237, 234, 238) 0)`,
                     }}
@@ -203,16 +221,15 @@ const Dashboard = () => {
                     className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
                     style={{
                       background: `conic-gradient(${
-                        orderList?.orderlist?.length
-                          ? orderList?.orderlist?.length < 33.33
-                            ? "#FF000D"
-                            : "" || orderList?.orderlist?.length > 33.33
-                            ? "#ffa52f"
-                            : "" ||
-                              (orderList?.orderlist?.length > 33.33 &&
-                                orderList?.orderlist?.length > 66.66)
-                            ? "#3CD41A"
-                            : ""
+                        orderList?.orderlist?.length &&
+                        orderList?.orderlist?.length < 33.33
+                          ? "#FF000D"
+                          : "" || orderList?.orderlist?.length > 33.33
+                          ? "#ffa52f"
+                          : "" ||
+                            (orderList?.orderlist?.length > 33.33 &&
+                              orderList?.orderlist?.length > 66.66)
+                          ? "#3CD41A"
                           : ""
                       } ${
                         (orderList?.orderlist?.length / 100) * 360
@@ -238,14 +255,12 @@ const Dashboard = () => {
                     className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
                     style={{
                       background: `conic-gradient(${
-                        orderList?.orderlist?.length
-                          ? 60 < 33.33
-                            ? "#FF000D"
-                            : "" || (60 > 33.33 && 60 < 66.66)
-                            ? "#ffa52f"
-                            : "" || 60 > 66.66
-                            ? "#3CD41A"
-                            : ""
+                        orderList?.orderlist?.length && 60 < 33.33
+                          ? "#FF000D"
+                          : "" || (60 > 33.33 && 60 < 66.66)
+                          ? "#ffa52f"
+                          : "" || 60 > 66.66
+                          ? "#3CD41A"
                           : ""
                       } ${(60 / 100) * 360}deg,rgb(237, 234, 238) 0)`,
                     }}
@@ -268,19 +283,19 @@ const Dashboard = () => {
                   </div>
                   <div className="flex gap-3">
                     {allLinks?.map((item) => (
-                      <NavLink
+                      <div
                         key={item?.name}
                         className={
-                          (weekly && item?.id === 1) ||
-                          (monthly && item?.id === 2) ||
-                          (yearly && !weekly && item?.id === 3)
-                            ? "bg-black text-white w-[90px] h-[32px] rounded-lg text-center text-sm font-normal border border-black uppercase cursor-pointer hover:bg-black hover:text-white flex justify-center items-center transition-all duration-200 ease-linear outline-none"
-                            : "w-[90px] h-[32px] rounded-lg text-center text-sm font-normal border border-black uppercase cursor-pointer hover:bg-black hover:text-white flex justify-center items-center transition-all duration-200 ease-linear outline-none"
+                          (options.weekly && item?.name === "weekly") ||
+                          (options.monthly && item?.name === "monthly") ||
+                          (options.yearly && item?.name === "yearly")
+                            ? "bg-black text-white w-[90px] h-[32px] rounded-lg text-center text-xs font-normal border border-black uppercase cursor-pointer hover:bg-black hover:text-white flex justify-center items-center transition-all duration-200 ease-linear outline-none"
+                            : "w-[90px] h-[32px] rounded-lg text-center text-xs font-normal border border-black uppercase cursor-pointer hover:bg-black hover:text-white flex justify-center items-center transition-all duration-200 ease-linear outline-none"
                         }
-                        onClick={() => handleBtn(item.name)}
+                        onClick={() => handleBtn(item?.name)}
                       >
                         {item?.name}
-                      </NavLink>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -290,34 +305,37 @@ const Dashboard = () => {
                     // height={420}
                     series={[
                       {
-                        data:
-                          weekly && !monthly && !yearly
-                            ? weeklyData_1
-                            : "error" || (yearly && !weekly)
-                            ? yearlyData_1
-                            : monthlyData_1,
+                        data: options.weekly
+                          ? weeklyData_1
+                          : "" || options.monthly
+                          ? monthlyData_1
+                          : "" || (!options.weekly && !options.monthly)
+                          ? yearlyData_1
+                          : "",
                         label: "Revenue",
                         id: "pvId",
                       },
                       {
-                        data:
-                          weekly && !monthly && !yearly
-                            ? weeklyData_2
-                            : "error" || (yearly && !weekly)
-                            ? yearlyData_2
-                            : monthlyData_2,
+                        data: options.weekly
+                          ? weeklyData_2
+                          : "" || options.monthly
+                          ? monthlyData_2
+                          : "" || (!options.weekly && !options.monthly)
+                          ? yearlyData_2
+                          : "",
                         label: "Transaction",
                         id: "uvId",
                       },
                     ]}
                     xAxis={[
                       {
-                        data:
-                          weekly && !monthly && !yearly
-                            ? weeks
-                            : "error" || (yearly && !weekly)
-                            ? years
-                            : months,
+                        data: options.weekly
+                          ? weeks
+                          : "" || options.monthly
+                          ? months
+                          : "" || (!options.weekly && !options.monthly)
+                          ? years
+                          : "",
                         scaleType: "band",
                       },
                     ]}
@@ -332,9 +350,50 @@ const Dashboard = () => {
                   </p>
                   <BsThreeDotsVertical size={20} className="cursor-pointer" />
                 </div>
-                <p className="w-full h-full flex justify-center items-center">
-                  empty
-                </p>
+                <div className="w-full h-[390px] flex flex-col overflow-y-scroll scroll-smooth">
+                  {isLoading ? (
+                    <div className="w-full h-full flex justify-center items-center">
+                      <CircularProgress />
+                    </div>
+                  ) : (
+                    allProductData
+                      ?.filter((item) => (item ? item.bestSeller : item))
+                      .map((item, index) => (
+                        <div
+                          className="w-full h-auto flex items-center justify-between gap-3 border-b py-4 cursor-pointer"
+                          key={index}
+                        >
+                          <div className="w-full h-auto flex items-center gap-4 justify-start">
+                            <div className="w-[64px] h-[64px] shrink-0 rounded-lg flex items-center">
+                              <img
+                                src={item?.image || ""}
+                                width={64}
+                                height={64}
+                                className="w-[64px] h-[64px] shrink-0 rounded-lg"
+                                alt="img"
+                              />
+                            </div>
+                            <div className="w-auto h-auto flex flex-col gap-1">
+                              <span className="text-sm text-black font-medium">
+                                {item?.title || ""}
+                              </span>
+                              <span className="text-sm text-black">
+                                ₹{item?.price || ""}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="w-fit whitespace-nowrap h-auto flex flex-col gap-1 items-end">
+                            <span className="text-base text-black font-semibold">
+                              ₹{item?.price || ""}
+                            </span>
+                            <span className="text-base text-gray-600">
+                              {item?.sales + " Sales"}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                  )}
+                </div>
               </div>
             </div>
             <RecentOrderList />
