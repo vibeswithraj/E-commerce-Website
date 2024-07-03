@@ -32,21 +32,29 @@ import { useGSAP } from "@gsap/react";
 const MainPage = () => {
   // const { contextSafe } = useGSAP();
   useGSAP(() => {
-    gsap.from("#text-1", {
-      x: "-100%",
-      duration: 1,
-      delay: 0.2,
-    });
-    gsap.from("#text-2", {
-      x: "100%",
-      duration: 1,
-      delay: 0.2,
-    });
+    // gsap.from("#text-1", {
+    //   x: "-100%",
+    //   duration: 1,
+    //   delay: 0.2,
+    // });
+    // gsap.from("#text-2", {
+    //   x: "100%",
+    //   duration: 1,
+    //   delay: 0.2,
+    // });
     gsap.to("#livingRoom", {
       y: 0,
       duration: 1,
       delay: 0.2,
     });
+    // gsap.to("#arrow", {
+    //   x: "-50%",
+    //   yoyo: true,
+    //   repeat: -1,
+    //   duration: 0.5,
+    //   ease: "power1.inOut",
+    //   delay: 0.2,
+    // });
   });
 
   const slider = [
@@ -195,6 +203,7 @@ const MainPage = () => {
                   <button className="w-fit h-auto text-base sm:text-lg flex gap-1 group items-center pb-1 transition-all ease-in-out duration-300">
                     Shop Now
                     <FaArrowRight
+                      id="arrow"
                       size={15}
                       className="w-fit h-fit pt-[3px] group-hover:ml-1 transition-all ease-in-out duration-300"
                     />

@@ -20,11 +20,6 @@ const userSchema = new mongoose.Schema(
       select: false,
       required: true,
     },
-    // userOtp: {
-    //   type: String,
-    //   required: true,
-    //   select: false,
-    // },
   },
   { timestamps: true }
 );
@@ -33,21 +28,15 @@ export const userData = mongoose.model("userData", userSchema);
 // const atcSchema = new mongoose.Schema(
 //   {
 //     userID: {
-//       // type: mongoose.Schema.Types.ObjectId,
-//       // ref: "userData",
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "userData",
 //       type: String,
 //     },
-//     addtocart: [
-//       {
-//         pid: {
-//           type: Number,
-//         },
-//       },
-//     ],
+//     addtocart: [],
 //   },
 //   { timestamps: true }
 // );
-// export const atcdata = mongoose.model("addToCartP", atcSchema);
+// export const atcdata = mongoose.model("addToCart", atcSchema);
 
 // const wishlistSchema = new mongoose.Schema(
 //   {
@@ -55,18 +44,11 @@ export const userData = mongoose.model("userData", userSchema);
 //       type: mongoose.Schema.Types.ObjectId,
 //       ref: "userData",
 //     },
-//     wishlist: [
-//       {
-//         productID: {
-//           type: Number,
-//           required: true,
-//         },
-//       },
-//     ],
+//     wishlist: {},
 //   },
 //   { timestamps: true }
 // );
-// export const wishlistData = mongoose.model("wishlistP", wishlistSchema);
+// export const wishlistData = mongoose.model("wishlist", wishlistSchema);
 
 const checkoutdetails = new mongoose.Schema(
   {
@@ -139,4 +121,3 @@ export const checkoutDetails = mongoose.model(
   "checkoutDetails",
   checkoutdetails
 );
-

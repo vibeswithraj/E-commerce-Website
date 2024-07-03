@@ -85,13 +85,13 @@ const AddToCart = () => {
     }
   };
   return (
-    <div className="w-full h-auto">
+    <div className="w-full h-full flex flex-col justify-evenly">
       <div className="w-full h-auto">
         <Nav />
       </div>
       <div className="mt-10 h-auto w-full sm:px-40 md:px-20 px-8 m-auto overflow-x-hidden">
         <p className="text-[54px] font-medium text-center">Cart</p>
-        <div className="w-[832px] grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
+        <div className="w-[832px] h-auto grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
           <NavLink
             to={"/addtocart"}
             id="borderChange"

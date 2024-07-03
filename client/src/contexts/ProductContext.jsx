@@ -3,12 +3,11 @@ import { createContext } from "react";
 import axios from "axios";
 import userContext from "./UserContext";
 import deatilsContext from "./DetailsContext";
-//import { mainsubTotal } from "./productSlice";
-//import {  useSelector } from "react-redux";
 
 const productContext = createContext();
 
 const ProductProvider = ({ children }) => {
+  const [loading, setLoading] = useState(false);
   const [subTotal, setSubTotal] = useState(0);
   const [addToCart, setAddToCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
@@ -16,12 +15,9 @@ const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState({});
   const [num, setNum] = useState(1);
   const [productDetail, setProductDetail] = useState();
-  const { setUser } = useContext(userContext);
+  const { setUser, search } = useContext(userContext);
+  let { checkbox } = useContext(userContext);
   const { setMainSubTotal } = useContext(deatilsContext);
-  // const addToCart = useSelector(state=>state.addToCart)
-  // const wishlist = useSelector(state=>state.wishlist)
-  //const dispatch = useDispatch();
-
 
   useEffect(() => {
     const getMainSubTotal = () => {
@@ -32,64 +28,65 @@ const ProductProvider = ({ children }) => {
       setSubTotal(totalPrice);
     };
     getMainSubTotal();
-    //dispatch(mainsubTotal())
   }, [addToCart, setMainSubTotal]);
 
-  // useEffect(() => {
-  //   const controller = new AbortController();
-  //   try {
-  //     setLoading(true);
-  //     //setTimeout(() => {
-  //     axios
-  //       .get(
-  //         `http://localhost:5050/products?search=${search}&price=${checkbox?.price}`,
-  //         {
-  //           withCredentials: true,
-  //           signal: controller.signal,
-  //         }
-  //       )
-  //       .then((res) => {
-  //         setProducts(res.data);
-  //         setLoading(false);
-  //       })
-  //       .catch((err) => console.log(err));
-  //     //}, 3000);
-  //     // const addtocart = localStorage.getItem("addtocart");
-  //     // const wlist = localStorage.getItem("wishlist");
-  //     // const user = localStorage.getItem("user");
-  //     // setAddToCart(JSON.parse(addtocart));
-  //     // setWishlist(JSON.parse(wlist));
-  //     // setUser(JSON.parse(user));
-  //   } catch (error) {
-  //     if (axios.isCancel(error)) {
-  //       console.log("request is cancelled", error);
-  //       return;
-  //     }
-  //     console.log(error);
-  //   }
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, [setUser, setLoading, search, checkbox]);
+  useEffect(() => {
+    const cancelToken = axios.CancelToken.source();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/products?search=${search}&price=${checkbox?.price}`,
+          {
+            withCredentials: true,
+            cancelToken: cancelToken.token,
+          }
+        );
+        if (data) {
+          setProducts(data);
+          setLoading(false);
+        }
+
+        // const addtocart = localStorage.getItem("addtocart");
+        // const wlist = localStorage.getItem("wishlist");
+        // const user = localStorage.getItem("user");
+        // setAddToCart(JSON.parse(addtocart));
+        // setWishlist(JSON.parse(wlist));
+        // setUser(JSON.parse(user));
+        
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log("request is cancelled");
+        }
+        console.log(error);
+      }
+    };
+    fetchData();
+    return () => {
+      cancelToken.cancel();
+    };
+  }, [search, checkbox, setProduct]);
 
   useEffect(() => {
     const fetchAuth = () => {
       axios
-        .get("http://localhost:5050/me", { withCredentials: true })
+        .get(`${process.env.REACT_APP_API_URL}/me`, { withCredentials: true })
         .then((res) => setUser(res.data.user))
         .catch((err) => console.log(err));
     };
     fetchAuth();
   }, [setUser]);
 
-  useEffect(() => {
-    localStorage.setItem("addtocart", JSON.stringify(addToCart));
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  }, [addToCart, wishlist]);
+  // useEffect(() => {
+  //   localStorage.setItem("addtocart", JSON.stringify(addToCart));
+  //   localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  // }, [addToCart, wishlist]);
 
   return (
     <productContext.Provider
       value={{
+        loading,
+        setLoading,
         productDetail,
         setProductDetail,
         subTotal,

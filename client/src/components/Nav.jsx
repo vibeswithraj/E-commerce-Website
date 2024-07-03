@@ -7,7 +7,7 @@ import { useContext } from "react";
 import userContext from "../contexts/UserContext.jsx";
 import { RxCross2 } from "react-icons/rx";
 import { FiMenu } from "react-icons/fi";
-// import { useSelector } from "react-redux";
+import { IconButton, Tooltip } from "@mui/material";
 
 const Nav = () => {
   const navLinks = [
@@ -21,28 +21,24 @@ const Nav = () => {
       id: 1,
       icon: <HiOutlineUserCircle size={24} />,
       path: "/accountdetail/account",
+      title: "Account",
     },
-    { id: 2, icon: <BsHandbag size={24} />, path: "/cart/addtocart" },
+    {
+      id: 2,
+      icon: <BsHandbag size={24} />,
+      path: "/cart/addtocart",
+      title: "Cart",
+    },
   ];
 
   const [open, setOpen] = useState(false);
   const { search, setSearch, count } = useContext(userContext);
-  // const count = useSelector((state) => state.count);
 
   const handleSearch = () => {
     const searchBar = document.getElementById("search");
     searchBar.classList.toggle("search");
+    setSearch("All");
   };
-  // useEffect(() => {
-  //   window.addEventListener("scroll", () => {
-  //     const wh = window.scrollY;
-  //     if (wh >= 60) {
-  //       setChange(true);
-  //     } else {
-  //       setChange(false);
-  //     }
-  //   });
-  // }, []);
 
   return (
     <div
@@ -77,27 +73,33 @@ const Nav = () => {
             </ul>
           ))}
         </div>
-        <div className="flex gap-4 relative">
-          <FiSearch
-            size={24}
-            className="cursor-pointer text-slate-500 hover:text-black duration-300 search-icon"
-            onClick={handleSearch}
-          />
+        <div className="flex gap-2 relative">
+          <Tooltip title="Search" onClick={handleSearch}>
+            <IconButton>
+              <FiSearch
+                size={24}
+                className="cursor-pointer text-slate-500 hover:text-black duration-300 search-icon"
+              />
+            </IconButton>
+          </Tooltip>
           {featuresLinks?.map((item) => (
-            <NavLink
-              key={item?.id}
-              to={item?.path}
-              className={(navClass) =>
-                navClass.isActive
-                  ? "text-black cursor-pointer hover:text-black duration-300"
-                  : "text-slate-500 cursor-pointer hover:text-black duration-300"
-              }
-            >
-              {item?.icon}
-            </NavLink>
+            <Tooltip title={item?.title} key={item?.id}>
+              <IconButton className="hover:text-black">
+                <NavLink
+                  to={item?.path}
+                  className={(navClass) =>
+                    navClass.isActive
+                      ? "text-black cursor-pointer duration-300"
+                      : "text-slate-500 cursor-pointer hover:text-black duration-300"
+                  }
+                >
+                  {item?.icon}
+                </NavLink>
+              </IconButton>
+            </Tooltip>
           ))}
           {count ? (
-            <div className="w-5 h-5 absolute cursor-pointer -right-2 bottom-2 rounded-full flex justify-center items-center bg-black text-white text-xs font-bold">
+            <div className="w-5 h-5 absolute cursor-pointer top-0 right-0 rounded-full flex justify-center items-center bg-black text-white text-xs font-semibold">
               {count}
             </div>
           ) : (
@@ -113,7 +115,6 @@ const Nav = () => {
           type="text"
           name="search"
           value={search}
-          defaultValue={"All"}
           placeholder="search"
           className="w-full h-9 text-lg mx-2 mb-[1.5px] flex justify-center items-center outline-none border-none bg-none"
           onChange={(e) => setSearch(e.target.value)}
@@ -143,7 +144,10 @@ const Nav = () => {
         </div>
         <ul className="flex items-center justify-center flex-col m-auto w-full text-center gap-5">
           {navLinks?.map((item) => (
-            <li className="w-full max-w-[350px] py-2 rounded-lg bg-white h-fit" key={item?.id}>
+            <li
+              className="w-full max-w-[350px] py-2 rounded-lg bg-white h-fit"
+              key={item?.id}
+            >
               <NavLink
                 className={(navClass) =>
                   navClass.isActive

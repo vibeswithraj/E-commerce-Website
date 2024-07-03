@@ -35,7 +35,7 @@ const CheckDeatail = () => {
   // const dispatch = useDispatch();
   const { count, setCount } = useContext(userContext);
   const { addToCart, setAddToCart } = useContext(productContext);
-  const { mainSubTotal, shipping, paypal, setPaypal, payByCard, setPayByCard } =
+  const { mainSubTotal, shipping, payBy, setPayBy } =
     useContext(deatilsContext);
   const incri = (pid) => {
     // dispatch(incrise(pid));
@@ -60,55 +60,60 @@ const CheckDeatail = () => {
       !zipCode ||
       !cardNumber
     ) {
-      hotToast.error("enter all filed!");
-    } else {
-      try {
-        const { data } = await axios.post(
-          "http://localhost:5050/checkoutdetails",
-          {
-            firstName,
-            lastName,
-            phoneNumber,
-            email,
-            address,
-            townCity,
-            state,
-            zipCode,
-            country,
-            addToCart,
-            payment: payByCard ? payByCard : "" || paypal ? paypal : "",
-            shipping,
-            mainSubTotal,
-            status: "Pennding",
-            cardNumber,
-          },
-          { withCredentials: true }
-        );
-        if (data.error) {
-          toast.error(data.error);
-        } else {
-          toast.success(data.message);
-        }
-        const colorChange = document.getElementById("colorChange");
-        const borderChange = document.getElementById("borderChange");
-        const textChange = document.getElementById("textChange");
-        colorChange.style.backgroundColor = "#33FF42";
-        borderChange.style.borderBottomColor = "#33FF42";
-        textChange.style.color = "#33FF42";
-        setChange(true);
-        setChangeTwo(true);
-        setChangeThree(false);
-        navigate("/ordercomplete");
-      } catch (err) {
-        console.log(err);
+      return hotToast.error("enter all filed!");
+    }
+    if (!payBy?.card && !payBy?.paypal) {
+      return hotToast.error("select payment method!");
+    }
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5050/checkoutdetails",
+        {
+          firstName,
+          lastName,
+          phoneNumber,
+          email,
+          address,
+          townCity,
+          state,
+          zipCode,
+          country,
+          addToCart,
+          payment: payBy?.card ? "Card" : "Paypal",
+          shipping,
+          mainSubTotal,
+          status: "Pennding",
+          cardNumber,
+        },
+        { withCredentials: true }
+      );
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.message);
       }
+      const colorChange = document.getElementById("colorChange");
+      const borderChange = document.getElementById("borderChange");
+      const textChange = document.getElementById("textChange");
+      colorChange.style.backgroundColor = "#33FF42";
+      borderChange.style.borderBottomColor = "#33FF42";
+      textChange.style.color = "#33FF42";
+      setChange(true);
+      setChangeTwo(true);
+      setChangeThree(false);
+      navigate("/ordercomplete");
+      addToCart?.splice(0, addToCart?.length);
+      setAddToCart([]);
+      setCount(0);
+    } catch (err) {
+      console.log(err);
     }
   };
 
   return (
     <div className="w-full h-auto">
-    <div className="w-full h-auto">
-      <Nav />
+      <div className="w-full h-auto">
+        <Nav />
       </div>
       <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto overflow-x-hidden">
         <p className="text-[54px] m-auto font-medium text-center">Cart</p>
@@ -200,9 +205,9 @@ const CheckDeatail = () => {
             </div>
           </NavLink>
         </div>
-        <div className="mt-20 m-auto flex sm:flex-row flex-col w-full justify-evenly sm:gap-6">
+        <div className="my-20 m-auto flex sm:flex-row flex-col w-full h-auto justify-evenly sm:gap-6">
           <form
-            className="sm:w-[643px] w-full h-[1474px] flex flex-col gap-6"
+            className="sm:w-[643px] w-full h-auto flex flex-col gap-6"
             method="post"
             onSubmit={handleNavLinks}
           >
@@ -377,6 +382,7 @@ const CheckDeatail = () => {
                     id="State"
                     type="text"
                     placeholder="State"
+                    required
                     name="state"
                     className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md"
                     value={state}
@@ -394,6 +400,7 @@ const CheckDeatail = () => {
                     id="Zip Code"
                     type="text"
                     placeholder="Zip Code"
+                    required
                     name="zipCode"
                     className="sm:w-[285px] md:w-full lg:w-full w-full h-[40px] py-0 px-4 border border-[#CBCBCB] flex items-center rounded-md"
                     value={zipCode}
@@ -405,30 +412,42 @@ const CheckDeatail = () => {
             <div className="w-full h-[468px] px-6 py-10 border border-[#6C7275] rounded">
               <p className="text-xl font-medium">Payment method</p>
               <ul className="w-full flex flex-col gap-6 mt-6">
-                <li className="py-[13px] px-4 w-full h-[52px] flex justify-between items-center text-base font-normal border border-[#6C7275] rounded cursor-pointer">
+                <li
+                  className="py-[13px] px-4 w-full h-[52px] flex justify-between items-center text-base font-normal border border-[#6C7275] rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setPayBy({ paypal: false, card: true })}
+                >
                   <div className="flex justify-between items-center">
                     <input
                       type="radio"
                       name="card"
-                      value={payByCard}
-                      onClick={(e) => setPayByCard(e.target.value)}
-                      className="text-base font-normal mr-3 w-[18px] h-[18px] cursor-pointer peer/draft"
+                      value={payBy?.card}
+                      checked={payBy?.card}
+                      className="text-base font-normal mr-3 w-[18px] h-[18px] cursor-pointer"
                     />
-                    <p className="peer-checked/draft:font-semibold">
+                    <p
+                      className={payBy?.card ? "font-semibold" : "font-normal"}
+                    >
                       Pay by Card Credit
                     </p>
                   </div>
                   <BsCreditCard2Front size={20} />
                 </li>
-                <li className="py-[13px] px-4 w-full h-[52px] flex items-center text-base font-normal border border-[#6C7275] rounded cursor-pointer">
+                <li
+                  className="py-[13px] px-4 w-full h-[52px] flex items-center text-base font-normal border border-[#6C7275] rounded cursor-pointer hover:bg-gray-100"
+                  onClick={() => setPayBy({ paypal: true, card: false })}
+                >
                   <input
                     type="radio"
                     name="card"
-                    value={paypal}
-                    onClick={(e) => setPaypal(e.target.value)}
-                    className="text-base font-normal mr-3 peer/draft w-[18px] h-[18px] cursor-pointer"
+                    value={payBy?.paypal}
+                    checked={payBy?.paypal}
+                    className="text-base font-normal mr-3 w-[18px] h-[18px] cursor-pointer"
                   />
-                  <p className="peer-checked/draft:font-semibold">Paypal</p>
+                  <p
+                    className={payBy?.paypal ? "font-semibold" : "font-normal"}
+                  >
+                    Paypal
+                  </p>
                 </li>
               </ul>
               <div className="mt-6 flex flex-col gap-3">
@@ -481,12 +500,24 @@ const CheckDeatail = () => {
                 </li>
               </ul>
             </div>
+            <div className="w-full h-fit my-5">
+              <button
+                className="w-full h-fit rounded-lg bg-[#141718] text-white py-3 flex justify-center items-center text-base font-medium mb-6 mt-6 sm:-mt-16 z-50 cursor-pointer"
+                onSubmit={handleNavLinks}
+                disabled={count === 0 ? true : false}
+              >
+                Place Order
+              </button>
+            </div>
           </form>
           <div className="sm:w-[413px] w-full h-[875px] m-auto sm:m-0 py-4 px-6 border-[#6C7275] flex flex-col justify-between rounded-md border">
             <p className="text-xl font-medium">Order summary</p>
             <div className="sm:w-[365px] w-full h-[556px] mt-6 m-auto flex flex-col gap-6">
-              {addToCart.map((item) => (
-                <div className="sm:w-[365px] w-full sm:h-[144px] md:h-auto h-auto sm:py-6 py-3 flex justify-center flex-col lg:flex-row lg:items-center items-end border-b-2 border-[#E8ECEF]">
+              {addToCart.map((item, index) => (
+                <div
+                  key={index}
+                  className="sm:w-[365px] w-full sm:h-[144px] md:h-auto h-auto sm:py-6 py-3 flex justify-center flex-col lg:flex-row lg:items-center items-end border-b-2 border-[#E8ECEF]"
+                >
                   <div className="flex w-full items-center justify-between lg:justify-normal gap-4">
                     <img
                       src={item?.image}
@@ -552,12 +583,6 @@ const CheckDeatail = () => {
             </div>
           </div>
         </div>
-        <button
-          className="sm:w-[413px] cursor-pointer md:w-[413px] lg:w-[413px] m-auto w-full rounded-lg bg-[#141718] text-white py-3 px-10 flex justify-center items-center text-base font-medium mb-6 mt-6 sm:-mt-16"
-          onClick={handleNavLinks}
-        >
-          Place Order
-        </button>
       </div>
       <Footer />
     </div>

@@ -62,7 +62,10 @@ const Product = () => {
 
   return (
     <div className="w-full py-6 h-screen flex flex-wrap justify-evenly items-center px-10 relative">
-      <div className="absolute top-4 left-4 cursor-pointer p-1 bg-gray-200 rounded-full" onClick={()=> navigate("/shop")}>
+      <div
+        className="absolute top-4 left-4 cursor-pointer p-1 bg-gray-200 rounded-full"
+        onClick={() => navigate("/shop")}
+      >
         <FiArrowLeft size={27} />
       </div>
       <div className="w-auto h-auto flex flex-col items-center gap-12 cursor-pointer">
@@ -105,7 +108,7 @@ const Product = () => {
             </div>
             <div>
               <p className="text-xs font-normal text-[#141718]">
-                {100 || productDetail.rating.count} Reviews
+                {productDetail?.rating.count || 1000} Reviews
               </p>
             </div>
           </div>
@@ -115,7 +118,7 @@ const Product = () => {
             </p>
           </div>
           <div>
-            <p className="text-base font-normal text-[#6C7275]">
+            <p className="text-base md:text-lg font-normal text-[#6C7275]">
               {productDetail?.description}
             </p>
           </div>
@@ -140,7 +143,7 @@ const Product = () => {
               <div className="w-[62px] h-[62px] border cursor-pointer bg-black rounded-lg ring-2 ring-offset-4 ring-orange-300"></div>
               <div className="w-[62px] h-[62px] border cursor-pointer bg-white/10 rounded-lg hover:ring-2 ring-offset-4 ring-orange-300"></div>
               <div className="w-[62px] h-[62px] border cursor-pointer bg-orange-500 rounded-lg hover:ring-2 ring-offset-4 ring-orange-300"></div>
-              <div className="w-[62px] h-[62px] border cursor-pointer bg-gray-200 rounded-lg hover:ring-2 ring-offset-4 ring-orange-300"></div>
+              <div className="w-[62px] h-[62px] border cursor-pointer bg-gray-300 rounded-lg hover:ring-2 ring-offset-4 ring-orange-300"></div>
             </div>
           </div>
         </div>
@@ -164,21 +167,24 @@ const Product = () => {
               </button>
             </div>
             <button
-              className="text-lg font-medium text-[#141718] w-full h-[52px] group flex justify-center items-center rounded-lg border-[#141718] border-2"
+              className="text-lg font-medium bg-white text-[#141718] w-full h-[52px] group flex justify-center items-center rounded-lg border-[#141718] border-[1px]"
               onClick={() => addWishlist(productDetail?.id)}
             >
               <span className="flex items-center mr-2">
                 <FontAwesomeIcon
                   icon={faHeart}
-                  className="text-xl group-hover:text-red-500 transition-all duration-200 text-slate-200 w-[25px] h-[25px]"
-                  //onClick={() => addToWishlist(items?.id)}
+                  className={
+                    productDetail?.like
+                      ? "text-xl text-red-500 transition-all duration-200 w-[25px] h-[25px]"
+                      : "text-xl group-hover:text-red-500 transition-all duration-200 text-slate-200 w-[25px] h-[25px]"
+                  }
                 />
               </span>
               Wishlist
             </button>
           </div>
           <button
-            className="text-lg font-medium text-white w-full bg-black rounded-lg h-[52px]"
+            className="text-lg font-medium text-white hover:bg-[rgba(0,0,0,0.81)] w-full bg-black rounded-lg h-[52px]"
             onClick={() => addcart(productDetail?.id)}
           >
             Add to Cart

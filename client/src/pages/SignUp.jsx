@@ -88,7 +88,7 @@ const SignUp = () => {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        "http://localhost:5050/login",
+        "http://localhost:6060/login",
         { email: "demo1@gmail.com", password: "demo1" },
         {
           headers: {
@@ -214,7 +214,6 @@ const SignUp = () => {
             Sign Up
           </button>
           <button
-            // title="login with demo account"
             className="w-full h-[48px] text-black text-lg hover:bg-gray-100 border-[1.50px] border-black hover:z-10 rounded-lg mt-5 relative overflow-hidden transition-all ease-linear duration-500"
             onClick={handleDemoAccount}
           >

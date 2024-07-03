@@ -37,7 +37,7 @@ const AllProducts = () => {
           </div>
           <div className="w-full h-auto flex flex-wrap justify-center mx-auto gap-6 mt-6">
             {isLoading ? (
-              <div className="w-full h-full flex justify-center items-center">
+              <div className="w-full h-[500px] flex justify-center items-center">
                 <CircularProgress />
               </div>
             ) : (

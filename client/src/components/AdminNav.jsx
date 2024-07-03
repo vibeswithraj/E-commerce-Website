@@ -57,13 +57,13 @@ const AdminNav = () => {
           <p className="w-full h-fit px-2 text-lg font-semibold text-black">
             Admin
           </p>
-          <div className="flex justify-between items-center w-full h-[32px] hover:bg-gray-200 cursor-pointer px-2 rounded-md">
+          <div className="flex justify-between items-center w-full h-[40px] hover:bg-gray-200 cursor-pointer px-2 rounded-md">
             <p className="text-sm font-normal text-black uppercase">
               Change password
             </p>
             <IoIosArrowForward />
           </div>
-          <div className="flex justify-between items-center w-full h-[32px] hover:bg-gray-200 cursor-pointer px-2 rounded-md">
+          <div className="flex justify-between items-center w-full h-[40px] hover:bg-gray-200 cursor-pointer px-2 rounded-md">
             <p className="text-sm font-normal text-black uppercase">Login</p>
             <IoExitOutline />
           </div>

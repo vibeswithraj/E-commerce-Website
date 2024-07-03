@@ -10,7 +10,8 @@ import adminContext from "../contexts/AdminProvider";
 
 const Aside = () => {
   const [open, setOpen] = useState(false);
-  const { setCatName, asideOpen, setAsideOpen } = useContext(adminContext);
+  const { catName, setCatName, asideOpen, setAsideOpen } =
+    useContext(adminContext);
 
   const allLinks = [
     {
@@ -35,24 +36,24 @@ const Aside = () => {
     {
       name: "all",
     },
-    {
-      name: "smartphones",
-    },
-    {
-      name: "laptops",
-    },
-    {
-      name: "fragrances",
-    },
-    {
-      name: "skincare",
-    },
-    {
-      name: "groceries",
-    },
-    {
-      name: "home-decoration",
-    },
+    // {
+    //   name: "smartphones",
+    // },
+    // {
+    //   name: "laptops",
+    // },
+    // {
+    //   name: "fragrances",
+    // },
+    // {
+    //   name: "skincare",
+    // },
+    // {
+    //   name: "groceries",
+    // },
+    // {
+    //   name: "home-decoration",
+    // },
     {
       name: "men's clothing",
     },
@@ -117,11 +118,15 @@ const Aside = () => {
           {categories?.map((item, index) => (
             <button
               key={index}
+              className={
+                catName.toLowerCase() === item?.name.toLowerCase()
+                ? "w-full h-10 text-base text-left font-normal text-black bg-transparent bg-gray-200 pl-2 border-b-2"
+                : "w-full h-10 text-base text-left font-normal text-black bg-transparent hover:bg-gray-200 pl-2 border-b-2"
+              }
               onClick={() => {
                 setCatName(item?.name);
                 //setOpen(false);
               }}
-              className="w-full h-10 text-base text-left font-normal text-black bg-transparent hover:bg-gray-200 pl-2 border-b-2"
             >
               {item?.name}
             </button>

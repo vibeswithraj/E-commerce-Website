@@ -19,19 +19,6 @@ const UserProvider = ({ children }) => {
 
   const { setTotalOrder } = useContext(deatilsContext);
 
-  // const change = async (orderId,status) => {
-  //   const { data } = await axios.post(
-  //     `http://localhost:5050/changeStatus`,
-  //     {
-  //       //orderId: orderDetail?.orderId,
-  //       orderId,
-  //       status,
-  //     },
-  //     { withCredentials: true }
-  //   );
-  //   setOrderList(data);
-  // };
-
   useEffect(() => {
     const getOrederListTotal = () => {
       const totalPrice = orderList?.orderlist?.reduce((total, item) => {
@@ -45,14 +32,14 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     const getDetails = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5050/orderDetails`);
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/orderDetails`);
         setOrderList(data);
       } catch (error) {
         console.log(error);
       }
     };
     getDetails();
-  },[]);
+  }, []);
 
   return (
     <userContext.Provider

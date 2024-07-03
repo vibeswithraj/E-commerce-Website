@@ -6,6 +6,7 @@ import { connectMongoDb } from "./data/database.js";
 import cookieParser from "cookie-parser";
 import userRouter from "./router/user.js";
 import adminRouter from "./router/admin.js";
+import productRouter from "./router/products.js";
 import cors from "cors";
 
 app.use(cookieParser());
@@ -21,6 +22,7 @@ app.use(
 );
 app.use("/", userRouter);
 app.use("/", adminRouter);
+app.use("/", productRouter);
 
 connectMongoDb();
 

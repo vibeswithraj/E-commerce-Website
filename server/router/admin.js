@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import { allProductsData, changeStatus } from "../controller/Admin.js"
+import { addnewproduct, orderDetails } from "../controller/products.js";
 dotenv.config({ path: "./config.env" });
 
 router.use(
@@ -21,5 +22,7 @@ router.use(express.urlencoded({ extended: true }));
 
 router.get("/allproducts?", allProductsData);
 router.post("/changeStatus", changeStatus);
+router.post("/addnewproduct", addnewproduct);
+router.get("/orderDetails", orderDetails);
 
 export default router;

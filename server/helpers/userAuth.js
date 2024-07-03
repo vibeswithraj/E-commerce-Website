@@ -1,11 +1,11 @@
 import Jwt from "jsonwebtoken";
-import { checkoutDetails, userData } from "../models/user.js";
+import { userData } from "../models/user.js";
 import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
 
 export const setCookies = async (res, user, message) => {
   try {
-    const token = Jwt.sign(
+    const token = await Jwt.sign(
       { email: user.email, id: user._id },
       process.env.JWT_SCRETE
     );
@@ -15,8 +15,8 @@ export const setCookies = async (res, user, message) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        // secure: false,
-        maxAge: 10000000,
+        secure: true,
+        maxAge: 90000000,
         // expires: new Date(Date.now() + 60 * 1000),
       })
       .json({ message, success: true, oneUser });
@@ -31,9 +31,8 @@ export const checkAuth = async (req, res, next) => {
     if (!token) {
       return res.json({ error: "Login first!" });
     }
-    const decoded = Jwt.verify(token, process.env.JWT_SCRETE);
-    const { email } = decoded;
-    const user = await userData.findOne({ email });
+    const decoded = await Jwt.verify(token, process.env.JWT_SCRETE);
+    const user = await userData.findOne({ _id: decoded.id });
     if (!user) {
       return res.json({ error: "user not found!" });
     }
@@ -49,23 +48,4 @@ export const errorHandler = (err, statusCode, res) => {
     success: false,
     error: err,
   });
-};
-
-export const checkOtp = async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-    otp.toString();
-    const findUser = await userData.findOne({ email }).select("+userOtp");
-    const { userOtp } = findUser;
-    if (otp) {
-      if (userOtp !== otp) {
-        res.json({ error: "Wrong OTP!" });
-      }
-    }
-    if (userOtp === otp) {
-      res.json({ message: "Register Successfully!" });
-    }
-  } catch (error) {
-    console.log(error);
-  }
 };

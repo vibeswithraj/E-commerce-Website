@@ -54,7 +54,7 @@ const Home = () => {
           path={"/admin/orderlist/orderdetails"}
           element={<OrderDetails />}
         />
-        <Route path={"/cart/ordercomplete"} element={<OrderComplete />} />
+        <Route path={"/ordercomplete"} element={<OrderComplete />} />
         <Route path={"/accountdetail/address"} element={<Address />} />
         <Route
           path={"/admin/allproducts/addnewproduct"}

@@ -1,29 +1,18 @@
 import Aside from "../components/Aside";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext, useState } from "react";
-// import { BarChart } from "../components/Charts.tsx";
 import AdminNav from "../components/AdminNav";
 import RecentOrderList from "../components/RecentOrderList";
 import AdminFooter from "../components/AdminFooter.jsx";
 import deatilsContext from "../contexts/DetailsContext.jsx";
 import userContext from "../contexts/UserContext.jsx";
-// import { IoArrowUpOutline } from "react-icons/io5";
 import { BarChart } from "@mui/x-charts/BarChart";
 import adminContext from "../contexts/AdminProvider.jsx";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 
 const Dashboard = () => {
-  const {
-    date,
-    setDate,
-    open,
-    setOpen,
-    allProductData,
-    setAllProductData,
-    catName,
-  } = useContext(adminContext);
+  const { date, setDate, open, setOpen, allProductData, loading } =
+    useContext(adminContext);
   const { totalOrder } = useContext(deatilsContext);
   const { orderList } = useContext(userContext);
   const [options, setoptions] = useState({
@@ -49,21 +38,6 @@ const Dashboard = () => {
       //path: "/admin/dashboard",
     },
   ];
-
-  const { isError, isLoading, data, error } = useQuery({
-    queryKey: ["allproducts", catName],
-    queryFn: () =>
-      fetch(`http://localhost:5050/allproducts?search=${catName}`).then((res) =>
-        res.json()
-      ),
-  });
-
-  if (isError) {
-    toast.error(error);
-  }
-  if (data) {
-    setAllProductData(data);
-  }
 
   const handleBtn = (name) => {
     if (name === "weekly") {
@@ -351,7 +325,7 @@ const Dashboard = () => {
                   <BsThreeDotsVertical size={20} className="cursor-pointer" />
                 </div>
                 <div className="w-full h-[390px] flex flex-col overflow-y-scroll scroll-smooth">
-                  {isLoading ? (
+                  {loading ? (
                     <div className="w-full h-full flex justify-center items-center">
                       <CircularProgress />
                     </div>

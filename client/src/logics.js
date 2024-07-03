@@ -41,7 +41,29 @@ export const delAtcp = async (addToCart, setAddToCart, setCount, pid) => {
   return setAddToCart(newcart);
 };
 
-export const delWlistp = async (wishlist, setWishlist, id) => {
+export const delWlistp = async (
+  wishlist,
+  setWishlist,
+  id,
+  allProducts,
+  setProducts
+) => {
+  const newWltPro = await wishlist.map((i) => {
+    if (i.id === id) {
+      return { ...i, like: (i.like = !i.like) };
+    } else {
+      return i;
+    }
+  });
+  setWishlist([newWltPro]);
+  const newAllProducts = await allProducts.map((i) => {
+    if (i.id === id) {
+      return { ...i, like: (i.like = !i.like) };
+    } else {
+      return i;
+    }
+  });
+  setProducts(newAllProducts);
   const newcart = await wishlist.filter((i) => i.id !== id);
   setWishlist(newcart);
   hotToast.success("Removed");
@@ -49,11 +71,11 @@ export const delWlistp = async (wishlist, setWishlist, id) => {
 
 export const addCart = async (addToCart, setAddToCart, setCount, pid) => {
   try {
-    const { data } = await axios.get(`http://localhost:5050/addtocart/${pid}`, {
+    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/addtocart/${pid}`, {
       withCredentials: true,
     });
     if (data.error) {
-      toast.error(data.error);
+      return toast.error(data.error);
     } else {
       const alreadyAdded = await addToCart.find((i) => i.id === pid);
       if (!alreadyAdded) {
@@ -73,29 +95,48 @@ export const addToWishlist = async (
   wishlist,
   setWishlist,
   allProducts,
-  setProduct,
+  setProducts,
   pid
 ) => {
   try {
-    const { data } = await axios.get(`http://localhost:5050/wishlist/${pid}`, {
-      withCredentials: true,
-    });
+    const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/wishlist/${pid}`);
     if (data.error) {
-      toast.error(data.error);
+      return toast.error(data.error);
     } else {
       const alreadyAdded = await wishlist.find((i) => i.id === pid);
       if (!alreadyAdded) {
         setWishlist([...wishlist, data]);
+        const newFindPro = await allProducts.map((i) => {
+          if (i.id === pid) {
+            return { ...i, like: (i.like = !i.like) };
+          } else {
+            return i;
+          }
+        });
+        setProducts(newFindPro);
+        hotToast.success("Added");
       } else {
-        hotToast.error("Already added!");
+        const newWltPro = await wishlist.map((i) => {
+          if (i.id === pid) {
+            return { ...i, like: (i.like = !i.like) };
+          } else {
+            return i;
+          }
+        });
+        setWishlist([newWltPro]);
+        const delPro = await wishlist.filter((item) => item.id !== pid);
+        setWishlist(delPro);
+        const newAllPro = await allProducts.map((i) => {
+          if (i.id === pid) {
+            return { ...i, like: (i.like = !i.like) };
+          } else {
+            return i;
+          }
+        });
+        setProducts(newAllPro);
+        return hotToast.success("Removed!");
       }
     }
-    const findProduct = allProducts.find((i) => i.id === pid);
-    console.log(findProduct.like);
-    const newFindProduct = { ...findProduct, like: true };
-    console.log(newFindProduct.like);
-    setProduct([...allProducts, newFindProduct]);
-    hotToast.success("Added");
   } catch (err) {
     console.log(err);
   }

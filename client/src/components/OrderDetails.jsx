@@ -23,8 +23,11 @@ const OrderDetails = () => {
       },
       { withCredentials: true }
     );
-    console.log(data);
-    setOrderList(data);
+    
+    if (data) {
+      console.log(data);
+      setOrderList(data);
+    }
   };
 
   const handlePennding = (s) => {

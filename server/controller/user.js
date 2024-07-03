@@ -1,40 +1,9 @@
-import { checkoutDetails, userData } from "../models/user.js";
+import { userData } from "../models/user.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { errorHandler, setCookies } from "../helpers/userAuth.js";
-import { products } from "./products.js";
 dotenv.config({ path: "./config.env" });
 //import nodemailer from "nodemailer";
-
-export const atcid = async (req, res) => {
-  try {
-    const pid = +req.params.id;
-    // const { userID } = req.query;
-    const product = await products.find((i) => i.id === pid);
-    if (!product) {
-      return errorHandler("product not found!", 200, res);
-    }
-    res.json(product);
-  } catch (err) {
-    console.log(err);
-    res.json({ error: err });
-  }
-};
-
-export const wishlist = async (req, res) => {
-  try {
-    const pid = +req.params.id;
-    // const {userEmail} = req.body;
-    const product = products.find((i) => i.id === pid);
-    const newProduct = { ...product, like: true };
-    res.json(newProduct);
-    // const {id,title,category,description,image,price,rating} = product;
-    // await wishlistData.create({id,title,category,description,image,price,rating,userEmail});
-  } catch (err) {
-    console.log(err);
-    res.json({ error: err });
-  }
-};
 
 export const register = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -106,7 +75,6 @@ export const login = async (req, res, next) => {
     if (!checkPass) {
       return errorHandler("password is incorrect!", 200, res);
     }
-    //res.json({ message: "Login Successfull!", user });
     setCookies(res, user, "Login Succsessfully!");
   } catch (err) {
     console.log(err);
@@ -128,11 +96,6 @@ export const updatePass = async (req, res) => {
   const hasedPass = await bcrypt.hash(newPass, 10);
   findUser.password = hasedPass;
   await findUser.save();
-  // const updatedUser = userData.findOneAndUpdate(
-  //   { email },
-  //   { $Set: req.body },
-  //   { new: true },
-  // );
   res.json({ message: "Updated succsessfully!" });
 };
 
@@ -153,54 +116,4 @@ export const myProfile = (req, res) => {
     message: "My Profile",
     user: req.user,
   });
-};
-
-export const checkoutdetails = async (req, res) => {
-  const orderId = Math.floor(Math.random() * 90000);
-  try {
-    const {
-      firstName,
-      lastName,
-      phoneNumber,
-      email,
-      address,
-      townCity,
-      state,
-      zipCode,
-      country,
-      addToCart,
-      payment,
-      mainSubTotal,
-      status,
-      cardNumber,
-      shipping,
-    } = req.body;
-    const finduser = await userData.findOne({ email });
-    if (!finduser) {
-      return res.json({ error: "user not found!" });
-    }
-    const cd = await checkoutDetails.create({
-      firstName,
-      lastName,
-      phoneNumber,
-      email,
-      address,
-      townCity,
-      state,
-      zipCode,
-      country,
-      addToCart,
-      payment,
-      shipping,
-      mainSubTotal,
-      status,
-      cardNumber,
-      orderId,
-    });
-    cd.save();
-    res.json({ message: "order succsessfull!" });
-  } catch (err) {
-    res.json({ error: err });
-    console.log(err);
-  }
 };

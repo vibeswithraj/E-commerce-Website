@@ -1,14 +1,16 @@
 import { FaCheck } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useContext, useState } from "react";
 // import { useSelector } from "react-redux";
 import productContext from "../../contexts/ProductContext";
 import Footer from "../../components/Footer";
 import Nav from "../../components/Nav";
+import userContext from "../../contexts/UserContext";
 
 const OrderComplete = () => {
   // const addToCart = useSelector((state) => state.AddToCart);
-  const { addToCart } = useContext(productContext);
+  const { addToCart, setAddToCart } = useContext(productContext);
+  const { setCount } = useContext(userContext);
   const [change, setChange] = useState(true);
   const [changeTwo, setChangeTwo] = useState(true);
   const [changeThree, setChangeThree] = useState(false);
@@ -24,18 +26,19 @@ const OrderComplete = () => {
     setChangeTwo(true);
     setChangeThree(true);
     localStorage.clear();
-    addToCart.splice(0, addToCart.length());
-    //setAddToCard();
+    addToCart.splice(0, addToCart.length);
+    setAddToCart([]);
+    setCount(0);
   };
 
   return (
-    <div className="w-full h-auto">
+    <div className="w-full h-screen flex flex-col justify-between">
       <div className="w-full h-auto">
         <Nav />
       </div>
-      <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto overflow-x-hidden">
+      <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto h-auto overflow-x-hidden">
         <p className="text-[54px] font-medium text-center">Cart</p>
-        <div className="w-[832px] grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
+        <div className="w-[832px] h-auto grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
           <NavLink
             //to={"/addtocart"}
             //id="borderChange"
@@ -115,7 +118,7 @@ const OrderComplete = () => {
             </div>
           </NavLink>
         </div>
-        <div className="w-full h-[400px] flex flex-col gap-8 justify-center items-center">
+        <div className="w-full h-[500px] flex flex-col gap-8 justify-center items-center">
           <button
             className={
               !changeThree
@@ -135,6 +138,12 @@ const OrderComplete = () => {
               "Click to complete"
             )}
           </button>
+          <Link
+            className="text-[#141718] cursor-pointer mt-8 w-fit h-fit rounded-lg py-2 px-6 border border-black bg-white hover:bg-black hover:text-white transition-all ease-linear text-center text-base"
+            to={"/shop"}
+          >
+            Countinue shopping
+          </Link>
         </div>
       </div>
       <Footer />

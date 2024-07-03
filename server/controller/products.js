@@ -1,3 +1,4 @@
+import { errorHandler } from "../helpers/userAuth.js";
 import { checkoutDetails } from "../models/user.js";
 import fs from "fs";
 const data = JSON.parse(fs.readFileSync("./data.json", "utf-8"));
@@ -60,5 +61,84 @@ export const addnewproduct = async (req, res) => {
     res.json({ allProducts });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const checkoutdetails = async (req, res) => {
+  const orderId = Math.floor(Math.random() * 90000);
+  try {
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      address,
+      townCity,
+      state,
+      zipCode,
+      country,
+      addToCart,
+      payment,
+      mainSubTotal,
+      status,
+      cardNumber,
+      shipping,
+    } = req.body;
+    const finduser = await userData.findOne({ email });
+    if (!finduser) {
+      return res.json({ error: "user not found!" });
+    }
+    const cd = await checkoutDetails.create({
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      address,
+      townCity,
+      state,
+      zipCode,
+      country,
+      addToCart,
+      payment,
+      shipping,
+      mainSubTotal,
+      status,
+      cardNumber,
+      orderId,
+    });
+    cd.save();
+    res.json({ message: "order succsessfull!" });
+  } catch (err) {
+    res.json({ error: err });
+    console.log(err);
+  }
+};
+
+export const atcid = async (req, res) => {
+  try {
+    const pid = +req.params.id;
+    const product = await products.find((i) => i.id === pid);
+    if (!product) {
+      return errorHandler("product not found!", 200, res);
+    }
+    res.json(product);
+  } catch (err) {
+    console.log(err);
+    res.json({ error: err });
+  }
+};
+
+export const wishlist = async (req, res) => {
+  try {
+    const pid = +req.params.id;
+    const product = await products.find((i) => i.id === pid);
+    if (!product) {
+      return errorHandler("product not found!", 200, res);
+    }
+    const newProduct = { ...product, like: true };
+    res.json(newProduct);
+  } catch (err) {
+    console.log(err);
+    res.json({ error: err });
   }
 };

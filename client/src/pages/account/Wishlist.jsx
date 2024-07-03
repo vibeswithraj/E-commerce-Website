@@ -7,22 +7,18 @@ import productContext from "../../contexts/ProductContext";
 import userContext from "../../contexts/UserContext";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
-//import { useDispatch, useSelector } from "react-redux";
-//import { addtocart, remove } from "../../contexts/productSlice";
+import Loader from "../../components/Loader";
 
 const Wishlist = () => {
-  // const wishlist = useSelector((state) => state.wishlist);
-  // const dispatch = useDispatch();
-  const { wishlist, setWishlist, addToCart, setAddToCart } =
+  const { wishlist, setWishlist, addToCart, setAddToCart, allProducts, setProducts} =
     useContext(productContext);
   const { setCount } = useContext(userContext);
+
   const delProduct = async (id) => {
-    delWlistp(wishlist, setWishlist, id);
-    // dispatch(remove(id));
+    delWlistp(wishlist, setWishlist, id, allProducts, setProducts);
   };
 
   const addcart = async (pid) => {
-    // dispatch(addtocart(pid));
     addCart(addToCart, setAddToCart, setCount, pid);
   };
 
@@ -54,20 +50,22 @@ const Wishlist = () => {
             </div>
             <div
               className={
-                wishlist.length !== 0
+                wishlist?.length !== 0
                   ? "w-full h-[400px] overflow-y-scroll mt-6 sm:m-0"
                   : "w-full h-[400px] overflow-y-scroll mt-6 sm:m-0 flex flex-col justify-center items-center"
               }
             >
-              {wishlist.length === 0 ? (
+              {!wishlist ? (
+                <Loader />
+              ) : wishlist?.length === 0 ? (
                 <div className="flex justify-center items-center">
                   Wishlist is empty
                 </div>
               ) : (
-                wishlist?.map((item) => (
+                wishlist?.map((item,index) => (
                   <div
                     className="sm:w-[707px] w-full sm:h-[120px] h-auto py-6 grid grid-cols-4 gap-4 justify-between items-center"
-                    key={item?.id}
+                    key={index}
                   >
                     <div className="flex gap-[10px] sm:col-span-2 col-span-3 items-center">
                       <div>
@@ -98,7 +96,7 @@ const Wishlist = () => {
                     </div>
                     <Link onClick={() => addcart(item?.id)}>
                       <button className="rounded-lg bg-[#141718] text-base font-medium w-[130px] h-[40px] text-white">
-                        add to cart
+                        Add to cart
                       </button>
                     </Link>
                   </div>

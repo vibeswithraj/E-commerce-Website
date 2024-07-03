@@ -5,10 +5,8 @@ import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import BannerFooter from "../components/BannerFooter";
 import userContext from "../contexts/UserContext.jsx";
-// import Loader from "../components/Loader.jsx";
 import { addCart, addToWishlist } from "../logics.js";
 import Nav from "../components/Nav.jsx";
-// import likeImg from "../images/likeImg.png";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Footer from "../components/Footer.jsx";
 import filter from "../images/filter 05.png";
@@ -16,65 +14,30 @@ import { FaAngleDown } from "react-icons/fa6";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { BsFillGridFill } from "react-icons/bs";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
-import { toast } from "react-toastify";
 import Loader from "../components/Loader.jsx";
-import { useQuery } from "@tanstack/react-query";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { FaHeart } from "react-icons/fa6";
-// import { useDispatch } from "react-redux";
-// import { addtocart, addtowishlist } from "../contexts/productSlice.js";
 
 const Shop = () => {
   let {
     allProducts,
     setProducts,
-    setProduct,
     addToCart,
     setAddToCart,
     wishlist,
     setWishlist,
     setProductDetail,
+    loading,
   } = useContext(productContext);
 
-  // const dispatch = useDispatch();
   const { search, setSearch, setCount } = useContext(userContext);
   let { checkbox, setCheckbox } = useContext(userContext);
   const [open, setOpen] = useState(false);
-  // const [grid, setGrid] = useState(false);
-
   const handleAddToCart = (pid) => {
     addCart(addToCart, setAddToCart, setCount, pid);
-    // dispatch(addtocart(pid))
   };
+
   const handleAddToWishlist = (pid) => {
-    addToWishlist(wishlist, setWishlist, allProducts, setProduct, pid);
-    // dispatch(addtowishlist(pid))
+    addToWishlist(wishlist, setWishlist, allProducts, setProducts, pid);
   };
-
-  // const fetchData = async () => {
-  //   const response = await fetch(
-  //     `http://localhost:5050/products?search=${search}&price=${checkbox?.price}`
-  //   );
-  //   const newData = await response.json();
-  //   return newData;
-  // };
-  const products = useQuery({
-    queryKey: ["products", search, checkbox?.price],
-    queryFn: () =>
-      fetch(
-        `http://localhost:5050/products?search=${search}&price=${checkbox?.price}`
-      ).then((res) => res.json()),
-  });
-
-  // if (products.isLoading) {
-  //   console.log("loading...");
-  // }
-  if (products.isError) {
-    toast.error(products.error);
-  }
-  if (products.data) {
-    setProducts(products.data);
-  }
 
   const handleProduct = async (id) => {
     try {
@@ -87,39 +50,9 @@ const Shop = () => {
     }
   };
 
-  // const col_span_3 = "col-span-3";
-  // const color = "lightgray";
+  const col_span_3 = "col-span-3";
+  const color = "lightgray";
 
-  // const filterList = [
-  //   {
-  //     id: 0,
-  //     title: "All Rooms",
-  //   },
-  //   {
-  //     id: 0,
-  //     title: "Living Room",
-  //   },
-  //   {
-  //     id: 0,
-  //     title: "Bedroom",
-  //   },
-  //   {
-  //     id: 0,
-  //     title: "Kitchen",
-  //   },
-  //   {
-  //     id: 0,
-  //     title: "Bathroom",
-  //   },
-  //   {
-  //     id: 0,
-  //     title: "Dinning",
-  //   },
-  //   {
-  //     id: 0,
-  //     title: "Outdoor",
-  //   },
-  // ];
   const categories = [
     {
       name: "All",
@@ -185,7 +118,6 @@ const Shop = () => {
   ];
 
   const handleInput = (id, amount) => {
-    // const newValue = { id: id, price: amount };
     setCheckbox((checkbox = { id, price: amount }));
   };
 
@@ -243,7 +175,6 @@ const Shop = () => {
                   name="checkbox"
                   value={item?.title}
                   checked={checkbox?.id === index}
-                  // multiple={false}
                   onChange={(e) => handleInput(item?.id, e.target.value)}
                   className="w-5 h-5"
                 />
@@ -271,12 +202,12 @@ const Shop = () => {
                       <FaAngleDown size={15} color="black" />
                     </span>
                   </div>
-                  <ul className="w-full h-auto flex flex-col bg-gray-50 border absolute top-[40px] z-30 invisible group-hover:visible">
+                  <ul className="w-full h-auto flex flex-col bg-gray-50 border absolute top-[42px] z-30 invisible group-hover:visible">
                     {categories?.map((item, index) => (
                       <li
                         className={
                           search.toLowerCase() === item?.name.toLowerCase()
-                            ? "w-full h-fit py-1 px-3 bg-gray-200 font-medium cursor-pointer text-gray-900"
+                            ? "w-full h-fit py-1 px-3 bg-gray-100 font-medium cursor-pointer text-gray-900"
                             : "w-full h-fit bg-white py-1 px-3 hover:bg-gray-100 cursor-pointer text-gray-600 hover:text-gray-900"
                         }
                         key={index}
@@ -301,12 +232,12 @@ const Shop = () => {
                       <FaAngleDown size={15} color="black" />
                     </span>
                   </div>
-                  <ul className="w-full h-auto flex flex-col rounded-md bg-gray-50 border absolute top-[40px] z-30 invisible group-hover:visible">
+                  <ul className="w-full h-auto flex flex-col rounded-br-md rounded-bl-md bg-gray-50 border absolute top-[42px] z-30 invisible group-hover:visible">
                     {priceList?.map((item, index) => (
                       <li
                         className={
                           checkbox?.price === item?.title
-                            ? "w-full h-fit py-1 px-3 bg-gray-200 font-medium cursor-pointer text-gray-900"
+                            ? "w-full h-fit py-1 px-3 bg-gray-100 font-medium cursor-pointer text-gray-900"
                             : "w-full h-fit bg-white py-1 px-3 hover:bg-gray-100 cursor-pointer text-gray-600 hover:text-gray-900"
                         }
                         key={index}
@@ -357,8 +288,8 @@ const Shop = () => {
               </button>
             </div>
           </div>
-          {products.isLoading ? (
-            <Loader />
+          {loading ? (
+            <Loader col_span_3={col_span_3} color={color} />
           ) : (
             <div
               className={
@@ -367,13 +298,15 @@ const Shop = () => {
                   : "w-full h-auto grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-5 transition-all ease-in-out duration-300"
               }
             >
-              {allProducts.length > 0 ? (
+              {allProducts?.length === 0 ? (
+                <div className="w-full h-screen flex items-center text-center mx-auto justify-evenly">
+                  <h1 className="w-fit h-fit text-3xl">no product found.</h1>
+                </div>
+              ) : (
                 allProducts?.map((items, index) => (
-                  <Link
+                  <div
                     key={index}
-                    // to={`/product`}
-                    onClick={() => handleProduct(items?.id)}
-                    className="xl:h-[433px] 2xl:h-[400px] h-auto xl:w-[262px] w-[152px] flex mx-auto flex-col mb-5 gap-5 cursor-pointer group relative shadow hover:shadow-lg border-t hover:scale-105 transition-all ease-in-out duration-300"
+                    className="xl:h-[433px] 2xl:h-[400px] h-auto pb-1 xl:w-[262px] w-[152px] flex mx-auto flex-col mb-5 gap-5 cursor-pointer group relative hover:shadow-lg border-b hover:scale-105 transition-all ease-in-out duration-300"
                   >
                     <span className="w-fit h-fit px-2 pb-[1.50px] bg-white text-black text-sm rounded absolute top-3 left-3 z-20 font-semibold">
                       NEW
@@ -381,37 +314,41 @@ const Shop = () => {
                     <span className="w-fit h-fit px-2 pb-[1.50px] bg-[#38CB89] text-white text-sm rounded absolute top-10 left-3 z-20 font-semibold">
                       {"-50%"}
                     </span>
-                    <div className="absolute sm:top-3 right-2 top-2 w-fit h-fit cursor-pointer z-20 flex justify-center items-center">
-                      {/* <img
-                      src={likeImg}
-                      className={"w-[50px] h-[50px]"}
-                      alt="img"
-                      onClick={() => handleAddToWishlist(items?.id)}
-                    /> */}
+                    <div className="absolute sm:top-3 right-2 top-2 w-fit h-fit cursor-pointer z-50 flex justify-center items-center">
                       <FavoriteIcon
-                        className="text-gray-300 hover:text-red-500"
+                        className={
+                          items?.like
+                            ? "text-red-500"
+                            : "text-gray-200 hover:text-red-500"
+                        }
                         onClick={() => handleAddToWishlist(items?.id)}
                       />
                     </div>
-                    <div className="xl:w-[262px] w-[152px] xl:h-[349px] h-[203px] relative flex items-center justify-center">
+                    <Link
+                      to={`/product/${items?.id}`}
+                      onClick={() => handleProduct(items?.id)}
+                      className="xl:w-[262px] w-[152px] xl:h-[349px] h-[203px] relative flex items-center justify-center"
+                    >
                       <img
                         // className="sm:w-[262px] w-[231px] sm:h-[349px] h-[308px] shrink-0"
                         className="w-[150px] xl:w-[180px] h-[150px] xl:h-[180px] shrink-0"
                         src={items?.image || ""}
                         alt="img"
                       />
-                      <button
-                        className="w-auto px-16 sm:px-20 h-auto py-2 bg-black text-white text-base rounded-md absolute -bottom-7 invisible transition-all ease-in-out delay-200 duration-300g group-hover:visible group-hover:bottom-0"
-                        onClick={() => handleAddToCart(items?.id)}
-                      >
-                        Add to cart
-                      </button>
-                    </div>
+                      <div className="w-full h-fit z-50 absolute px-2 -bottom-4 lg:-bottom-7 visible lg:invisible transition-all ease-in-out delay-100 duration-300g lg:group-hover:visible lg:group-hover:bottom-0">
+                        <button
+                          className="w-full h-fit py-2 bg-black text-white text-base rounded-md"
+                          onClick={() => handleAddToCart(items?.id)}
+                        >
+                          Add to cart
+                        </button>
+                      </div>
+                    </Link>
                     <div className="w-full xl:w-[262px] h-auto flex flex-col gap-2 sm:gap-1 px-0 xl:px-2">
                       <div className="flex gap-[3px]">
-                        <FaStar size={15} color="black" />
-                        <FaStar size={15} color="black" />
-                        <FaStar size={15} color="black" />
+                        <FaStar size={15} color="orange" />
+                        <FaStar size={15} color="orange" />
+                        <FaStar size={15} color="orange" />
                         <FaStar size={15} color="lightgray" />
                         <FaStar size={15} color="lightgray" />
                       </div>
@@ -425,14 +362,8 @@ const Shop = () => {
                         </span>
                       </span>
                     </div>
-                  </Link>
+                  </div>
                 ))
-              ) : (
-                <div className="w-full h-screen flex items-center text-center mx-auto justify-evenly">
-                  <h1 className="w-fit h-fit text-3xl">
-                    no product found.
-                  </h1>
-                </div>
               )}
             </div>
           )}

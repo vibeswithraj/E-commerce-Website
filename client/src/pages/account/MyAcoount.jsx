@@ -6,6 +6,7 @@ import userContext from "../../contexts/UserContext.jsx";
 // import Loader from "../../components/Loader.jsx";
 import Nav from "../../components/Nav.jsx";
 import Footer from "../../components/Footer.jsx";
+import { Link } from "react-router-dom";
 
 const MyAcoount = () => {
   const [firstName, setFirstName] = useState("");
@@ -125,6 +126,17 @@ const MyAcoount = () => {
                     />
                   </div>
                 </li>
+                <li>
+                  <div className="flex gap-3 text-lg mt-2">
+                    <p>register with another account</p>
+                    <Link
+                      className="text-blue-500 underline text-lg"
+                      to={"/signup"}
+                    >
+                      sign up
+                    </Link>
+                  </div>
+                </li>
               </ul>
             </form>
             {user?.firstName && (
@@ -190,9 +202,7 @@ const MyAcoount = () => {
                     </div>
                   </li>
                 </ul>
-                <button
-                  className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white"
-                >
+                <button className="w-[183px] h-[52px] mt-6 px-10 py-3 bg-[#141718] rounded-lg text-white">
                   Save changes
                 </button>
               </form>
