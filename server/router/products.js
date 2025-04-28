@@ -17,10 +17,10 @@ import {
 import { checkAuth } from '../helpers/userAuth.js';
 dotenv.config({ path: './config.env' });
 
-router.options('*', cors()); // Handle preflight requests
+// router.options('*', cors()); // Handle preflight requests
 router.use(
   cors({
-    origin: true, // Allow all origins
+    // origin: true, // Allow all origins
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
     //allowedHeaders: 'Content-Type,Authorization', // Allowed headers
     credentials: true, // Allow credentials

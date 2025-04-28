@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Profile from "../../components/Profile";
-import { BiEditAlt } from "react-icons/bi";
-import Nav from "../../components/Nav";
-import Footer from "../../components/Footer";
-import axios from "axios";
-import toast from "react-hot-toast";
+import React, { useEffect, useState } from 'react';
+import Profile from '../../components/Profile';
+import { BiEditAlt } from 'react-icons/bi';
+import Nav from '../../components/Nav';
+import Footer from '../../components/Footer';
+import axios from 'axios';
 
 const Address = () => {
   const [details, setDetails] = useState();
@@ -49,7 +48,7 @@ const Address = () => {
               </div>
               <p className="w-full text-lg mt-3">
                 {details?.address &&
-                  details?.firstName + " " + details?.lastName}
+                  details?.firstName + ' ' + details?.lastName}
               </p>
               <p className="w-full text-lg mt-1">
                 +91 {details?.address && details?.number}
