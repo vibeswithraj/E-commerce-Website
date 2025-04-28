@@ -12,13 +12,15 @@ import cors from 'cors';
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.options('*', cors()); // Handle preflight requests
+// app.options('*', cors()); // Handle preflight requests
 app.use(
   cors({
-    origin: true, // Allow all origins
-    methods: ['GET,POST,PUT,DELETE'], // Allowed methods
-    //allowedHeaders: 'Content-Type,Authorization', // Allowed headers
-    credentials: true, // Allow credentials
+    origin: [
+      'http://localhost:3000',
+      'https://e-commerce-website-xi-wine.vercel.app',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
   })
 );
 app.use('/', userRouter);

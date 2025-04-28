@@ -20,10 +20,12 @@ dotenv.config({ path: './config.env' });
 // router.options('*', cors()); // Handle preflight requests
 router.use(
   cors({
-    // origin: true, // Allow all origins
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-    //allowedHeaders: 'Content-Type,Authorization', // Allowed headers
-    credentials: true, // Allow credentials
+    origin: [
+      'http://localhost:3000',
+      'https://e-commerce-website-xi-wine.vercel.app',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
   })
 );
 
