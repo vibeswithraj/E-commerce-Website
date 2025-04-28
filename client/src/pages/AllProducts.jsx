@@ -3,13 +3,48 @@ import { FiPlusCircle } from "react-icons/fi";
 import { IoArrowUpOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 // import { products } from "../assets/ProductsData";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AdminNav from "../components/AdminNav";
 import { CircularProgress } from "@mui/material";
-import adminContext from "../contexts/AdminProvider"; 
+import adminContext from "../contexts/AdminProvider";
+import axios from "axios";
 
 const AllProducts = () => {
-  const { allProductData,isLoading, open, setOpen } = useContext(adminContext);
+  const {
+    allProductData,
+    isLoading,
+    open,
+    setOpen,
+    setLoading,
+    setAllProductData,
+    catName,
+  } = useContext(adminContext);
+
+  useEffect(() => {
+    setLoading(true);
+    const cancelToken = axios.CancelToken.source();
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/allproducts?search=${catName}`,
+          { withCredentials: true, cancelToken: cancelToken.token }
+        );
+        if (data) {
+          setLoading(false);
+          setAllProductData(data);
+        }
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log("request is cancelled");
+        }
+        console.log(error);
+      }
+    };
+    fetchData();
+    return () => {
+      cancelToken.cancel();
+    };
+  }, [catName, setAllProductData, setLoading]);
 
   // #FF000D
   return (
@@ -22,7 +57,7 @@ const AllProducts = () => {
             <div>
               <p className="text-2xl font-bold text-black">All Products</p>
               <p className="text-base font-normal text-black font-sans">
-                Home {">"} all products
+                <Link to={"/admin/dashboard"}>Home</Link> {">"} all products
               </p>
             </div>
             <div>
@@ -44,9 +79,9 @@ const AllProducts = () => {
               allProductData?.map((items, index) => (
                 <div
                   key={index}
-                  className="w-[360px] min-h-[300px] max-h-full rounded-2xl cursor-pointer flex flex-col justify-between bg-[#FAFAFA] p-3 hover:scale-105 hover:shadow-lg transition-all ease-out duration-300"
+                  className="w-[360px] min-h-[300px] max-h-full rounded-2xl cursor-pointer flex flex-col justify-between bg-[#FAFAFA] shadow-md p-3 hover:scale-105 hover:shadow-lg transition-all ease-out duration-300"
                 >
-                  <div className="w-full h-full border flex gap-6">
+                  <div className="w-full h-full flex gap-6">
                     <img
                       src={items?.image}
                       className="w-[80px] h-[80px] rounded-md shrink-0"
@@ -71,7 +106,7 @@ const AllProducts = () => {
                       Summary
                     </p>
                     <p className="h-[70px] overflow-y-scroll text-sm font-semibold text-black opacity-50">
-                      {items?.description}
+                      {items?.description?.substring(0, 140).trim() + "..."}
                     </p>
                   </div>
                   <div className="w-full h-[86px] mt-1 shrink-0 border border-slate-400 flex flex-col justify-around rounded-xl outline-none px-3">
@@ -91,10 +126,11 @@ const AllProducts = () => {
                       </p>
                       <div className="flex justify-center items-center gap-2">
                         <div
-                          className={`w-[64px] h-[4px] border-none bg-gray-300 rounded-full flex items-center`}
+                          className={`w-[100px] h-[4px] border-none bg-gray-300 rounded-full flex items-center`}
                         >
                           <div
-                            style={{ width: (items?.stock / 50) * 20 }}
+                            // style={{ width: (items?.stock / 50) * 20 }}
+                            style={{ width: items?.stock }}
                             className={`h-[4px] border-none bg-[#ffa52f] rounded-full outline-none`}
                           />
                         </div>

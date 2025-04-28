@@ -49,7 +49,7 @@ const SignIn = () => {
         return toast.error("Please check checkbox!");
       }
       const { data } = await axios.post(
-        "http://localhost:5050/login",
+        `${process.env.REACT_APP_API_URL}/login`,
         { email, password },
         {
           headers: {
@@ -74,7 +74,10 @@ const SignIn = () => {
 
   return (
     <div className="w-full h-screen flex flex-wrap">
-      <div id="left" className="w-auto h-full bg-gray-100 relative flex flex-grow items-start justify-center">
+      <div
+        id="left"
+        className="w-auto h-full bg-gray-100 relative flex flex-grow items-start justify-center"
+      >
         <img
           src={signUpImg || ""}
           width={"50%"}
@@ -91,7 +94,10 @@ const SignIn = () => {
           </p>
         </div>
       </div>
-      <div id="right" className="w-auto h-auto flex flex-grow justify-center items-center px-[9%] py-5">
+      <div
+        id="right"
+        className="w-auto h-auto flex flex-grow justify-center items-center px-[9%] py-5"
+      >
         <form action="" method="post" className="w-full h-fit flex flex-col">
           <span className="w-fit text-black text-4xl font-mono font-bold mb-4">
             Sign In

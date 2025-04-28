@@ -6,28 +6,28 @@ import { IoBagHandleOutline } from "react-icons/io5";
 import card from "../images/card.png";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useContext, useState } from "react";
-import userContext from "../contexts/UserContext";
 import AdminNav from "./AdminNav";
 import axios from "axios";
+import adminContext from "../contexts/AdminProvider";
+import { IoArrowBack } from "react-icons/io5";
+import { IconButton, Tooltip } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const OrderDetails = () => {
-  const { orderDetail, setOrderList } = useContext(userContext);
+  const { orderDetail, setOrderList } = useContext(adminContext);
   const [open, setOpen] = useState(false);
 
   const change = async (orderId, status) => {
     const { data } = await axios.post(
-      `http://localhost:5050/changeStatus`,
+      `${process.env.REACT_APP_API_URL}/changeStatus`,
       {
         orderId,
         status,
       },
       { withCredentials: true }
     );
-    
-    if (data) {
-      console.log(data);
-      setOrderList(data);
-    }
+
+    if (data) setOrderList(data);
   };
 
   const handlePennding = (s) => {
@@ -46,6 +46,11 @@ const OrderDetails = () => {
     change(orderDetail?.orderId, s);
   };
 
+  // const taxAmount = (orderDetail?.mainSubTotal * 20) / 100;
+  const freeshipping = orderDetail?.mainSubTotal;
+  const expressshipping = 15 + orderDetail?.mainSubTotal;
+  const pickupshipping = 21 + orderDetail?.mainSubTotal;
+
   return (
     <div className="w-full h-full flex">
       <Aside />
@@ -56,8 +61,19 @@ const OrderDetails = () => {
             <div>
               <p className="text-2xl font-bold text-black">Order list</p>
               <p className="text-base font-normal text-black font-sans">
-                Home {">"} order list {">"} order details
+                <Link to={"/admin/dashboard"}>Home</Link> {">"}{" "}
+                <Link to={"/admin/orderlist"}>order list</Link> {">"} order
+                details
               </p>
+            </div>
+            <div className="mr-2">
+              <Tooltip title="Back">
+                <IconButton>
+                  <Link to={"/admin/orderlist"}>
+                    <IoArrowBack color="black" />
+                  </Link>
+                </IconButton>
+              </Tooltip>
             </div>
           </div>
           <div className="w-full h-[536px] rounded-xl bg-[#FAFAFA] mt-6 flex flex-col gap-6 p-4">
@@ -67,7 +83,7 @@ const OrderDetails = () => {
                   Orders ID: #{orderDetail?.orderId || ""}
                 </p>
                 <p
-                  className={`w-[71px] h-[32px] text-xs rounded-md ${
+                  className={`w-fit h-fit p-2 text-sm rounded-md ${
                     orderDetail?.status
                       ? orderDetail?.status === "Pennding"
                         ? "bg-[#FFA52F]"
@@ -83,8 +99,11 @@ const OrderDetails = () => {
                 </p>
               </div>
               <div className="w-full h-fit flex justify-between items-center mt-2">
-                <p className="text-sm font-semibold text-black">
-                  Date: {orderDetail?.createdAt?.split("T")[0] || ""}
+                <p className="text-base font-semibold text-black">
+                  Date:{" "}
+                  <span className="text-sm font-normal ml-1">
+                    {orderDetail?.createdAt?.split("T")[0] || ""}
+                  </span>
                 </p>
                 <div className="flex gap-4 relative">
                   <button
@@ -97,8 +116,8 @@ const OrderDetails = () => {
                   <ul
                     className={
                       !open
-                        ? "w-[219px] h-[150px] bg-gray-200 absolute rounded-b-md visible left-0 top-[55px] z-10 flex flex-col justify-around p-2"
-                        : "w-[219px] h-[150px] bg-gray-200 absolute rounded-b-md invisible top-0 left-0"
+                        ? "w-[219px] h-[150px] bg-gray-200 absolute rounded-md visible left-0 top-[56px] z-10 flex flex-col justify-around p-2"
+                        : "w-[219px] h-[150px] bg-gray-200 absolute rounded-md invisible top-0 left-0"
                     }
                   >
                     <li
@@ -124,7 +143,7 @@ const OrderDetails = () => {
                     <li
                       className={
                         orderDetail?.status === "Canceled"
-                          ? "w-full h-[35px] shrink-0 hover:bg-red-500 text-black rounded-md  flex items-center cursor-pointer pl-2 bg-red-500"
+                          ? "w-full h-[35px] shrink-0 hover:bg-red-500 text-black rounded-md  flex items-center cursor-pointer pl-2 bg-red-5"
                           : "w-full h-[35px] shrink-0 hover:bg-red-500 text-black rounded-md  flex items-center cursor-pointer pl-2"
                       }
                       onClick={() => handleCanceled("Canceled")}
@@ -148,19 +167,27 @@ const OrderDetails = () => {
                     <HiOutlineUser color="#fff" size={28} />
                   </div>
                   <div className="w-full h-fit">
-                    <p className="text-xl font-semibold text-black">Customer</p>
-                    <p className="opacity-75 text-base mt-1">
-                      Full Name: {orderDetail?.firstName + " " || ""}
-                      {orderDetail?.lastName || ""}
+                    <p className="text-2xl font-semibold mb-2 text-black">
+                      Customer
                     </p>
-                    <p className="opacity-75 text-base mt-1">
-                      Email: {orderDetail?.email || ""}
+                    <p className="text-base text-black font-medium">
+                      Full Name:{" "}
+                      <span className="font-normal text-gray-700 ml-2">
+                        {orderDetail?.firstName + " " + orderDetail?.lastName ||
+                          ""}
+                      </span>
                     </p>
-                    <p className="opacity-75 text-base mt-1">
+                    <p className="text-base text-black font-medium mt-1">
+                      Email:{" "}
+                      <span className="font-normal text-gray-700 ml-2">
+                        {orderDetail?.email || ""}
+                      </span>
+                    </p>
+                    <p className="text-base text-black font-medium mt-1">
                       Phone: +91
-                      {" " +
-                        orderDetail?.phoneNumber?.toString().split("91")[1] ||
-                        "error"}
+                      <span className="font-normal text-gray-700 ml-2">
+                        {" " + orderDetail?.phoneNumber || ""}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -174,18 +201,26 @@ const OrderDetails = () => {
                     <IoBagHandleOutline color="#fff" size={28} />
                   </div>
                   <div className="w-full h-fit">
-                    <p className="text-xl font-semibold text-black">
+                    <p className="text-2xl font-semibold mb-2 text-black">
                       Order Info
                     </p>
-                    <p className="opacity-75 text-base mt-1">
-                      Shipping: Next express
+                    <p className="text-base text-[#272727] font-medium">
+                      Shipping:{" "}
+                      <span className="font-normal text-gray-700 ml-2">
+                        {orderDetail?.shipping || ""}
+                      </span>
                     </p>
-                    <p className="opacity-75 text-base mt-1">
-                      Payment Method: {orderDetail?.payment || ""}
+                    <p className="text-base text-[#272727] mt-1 font-medium">
+                      Payment Method:{" "}
+                      <span className="font-normal text-gray-700 ml-2">
+                        {orderDetail?.payment || ""}
+                      </span>
                     </p>
-                    <p className="opacity-75 text-base mt-1">
+                    <p className="text-base text-[#272727] mt-1 font-medium">
                       Status:{" "}
-                      {orderDetail?.status ? orderDetail?.status : "Pennding"}
+                      <span className="font-normal text-gray-700 ml-2">
+                        {orderDetail?.status || ""}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -199,14 +234,16 @@ const OrderDetails = () => {
                     <IoBagHandleOutline color="#fff" size={28} />
                   </div>
                   <div className="w-full h-fit">
-                    <p className="text-xl font-semibold text-black">
+                    <p className="text-2xl font-semibold mb-2 text-black">
                       Deliver to
                     </p>
-                    <p className="opacity-75 text-base mt-1">
+                    <p className="text-[#272727] font-medium text-base">
                       Address:{" "}
-                      {orderDetail?.address
-                        ? orderDetail?.address
-                        : "Dharam Colony, Palam Vihar, Gurgaon, Haryana"}
+                      <span className="font-normal text-gray-700 ml-2">
+                        {orderDetail?.address
+                          ? orderDetail?.address
+                          : "Dharam Colony, Palam Vihar, Gurgaon, Haryana"}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -217,25 +254,32 @@ const OrderDetails = () => {
             </div>
             <div className="w-full h-auto flex gap-5">
               <div className="w-[348px] h-[154px] shrink-0 rounded-lg border-[1.5px] border-gray-400 outline-none py-3 px-4">
-                <p className="text-xl font-semibold text-black">Payment Info</p>
+                <p className="text-2xl font-semibold text-black">
+                  Payment Info
+                </p>
                 <div className="w-full h-fit mt-4 flex items-center">
                   <img src={card ? card : ""} alt="profile pic" />
-                  <p className="opacity-75 text-base">
-                    Master Card{" "}
-                    {orderDetail?.cardNumber
-                      ? "**** **** *" +
-                        orderDetail?.cardNumber?.toString().split(1, 8)[1]
-                      : "**** **** ****"}
+                  <p className="font-medium text-black text-base">
+                    Master Card
+                    <span className="font-normal text-gray-700 ml-2">
+                      {orderDetail?.cardNumber
+                        ? "**** **** *" +
+                          orderDetail?.cardNumber?.toString().split(1, 8)[1]
+                        : "**** **** ****"}
+                    </span>
                   </p>
                 </div>
-                <p className="opacity-75 text-base mt-1">
-                  Business name: {orderDetail?.firstName + " " || ""}
-                  {orderDetail?.lastName || ""}
+                <p className="font-medium text-black text-base mt-1">
+                  Business name:{" "}
+                  <span className="font-normal text-gray-700 ml-2">
+                    {orderDetail?.firstName + " " + orderDetail?.lastName || ""}
+                  </span>
                 </p>
-                <p className="opacity-75 text-base mt-1">
+                <p className="font-medium text-black text-base mt-1">
                   Phone: +91
-                  {" " + orderDetail?.phoneNumber?.toString().split("91")[1] ||
-                    "error"}
+                  <span className="font-normal text-gray-700 ml-2">
+                    {" " + orderDetail?.phoneNumber || ""}
+                  </span>
                 </p>
               </div>
               <div className="w-full h-[120px]">
@@ -274,7 +318,7 @@ const OrderDetails = () => {
                     <img
                       src={item?.image}
                       alt="product img"
-                      className="w-[40px] h-[40px] shrink-0 rounded-lg border-none bg-gray-300 outline-none mr-2"
+                      className="w-[40px] h-[40px] shrink-0 object-fill rounded-lg border-none bg-gray-300 outline-none mr-2"
                     />
                     <p className="w-auto h-auto text-base text-black">
                       {item?.title}
@@ -293,45 +337,44 @@ const OrderDetails = () => {
                   <p className="text-lg font-normal">Subtotal</p>
                   <p className="text-lg font-normal">Tax (20%)</p>
                   <p className="text-lg font-normal">Discount</p>
-                  <p className="text-lg font-normal">Sipping Rate</p>
+                  <p className="text-lg font-normal">
+                    Sipping Rate{" "}
+                    {orderDetail?.shipping === "Express shipping" &&
+                      "(Express)"}
+                    {orderDetail?.shipping === "Free shipping" && "(Free)"}
+                    {orderDetail?.shipping === "Pick Up shipping" &&
+                      "(Pick Up)"}
+                  </p>
                   <p className="text-xl font-semibold mt-2">Total</p>
                 </div>
                 <div className="flex flex-col gap-3 text-right">
                   <p className="text-lg font-normal">
-                    ₹{orderDetail?.mainSubTotal || ""}
-                  </p>
-                  <p className="text-lg font-normal">
-                    ₹{(orderDetail?.mainSubTotal * 20) / 100 || "0"}
+                    ₹{orderDetail?.mainSubTotal || "0"}
                   </p>
                   <p className="text-lg font-normal">₹0</p>
-                  <p className="text-lg font-normal">
-                    ₹
-                    {orderDetail?.shipping
-                      ? orderDetail?.shipping === "Express shipping"
-                        ? "15"
-                        : 0 || orderDetail?.shipping === "Free shipping"
-                        ? "0"
-                        : 0 || orderDetail?.shipping === "Pick Up shipping"
-                        ? "21"
-                        : 0
-                      : 0}
-                  </p>
-                  <p className="text-xl font-semibold mt-2">
-                    ₹
-                    {orderDetail?.shipping === "Fress shipping"
-                      ? orderDetail?.mainSubTotal
-                      : ""}
-                    {orderDetail?.shipping === "Express shipping"
-                      ? 15 +
-                        (orderDetail?.mainSubTotal * 20) / 100 +
-                        orderDetail?.mainSubTotal
-                      : ""}
-                    {orderDetail?.shipping === "Pick Up shipping"
-                      ? 21 +
-                        (orderDetail?.mainSubTotal * 20) / 100 +
-                        orderDetail?.mainSubTotal
-                      : ""}
-                  </p>
+                  <p className="text-lg font-normal">₹0</p>
+                  {orderDetail?.shipping ? (
+                    <p className="text-lg font-normal">
+                      ₹{orderDetail?.shipping === "Express shipping" && "15"}
+                      {orderDetail?.shipping === "Free shipping" && "0"}
+                      {orderDetail?.shipping === "Pick Up shipping" && "21"}
+                    </p>
+                  ) : (
+                    <p className="text-lg font-normal">₹0</p>
+                  )}
+                  {orderDetail?.shipping ? (
+                    <p className="text-xl font-semibold mt-2">
+                      ₹
+                      {orderDetail?.shipping === "Free shipping" &&
+                        freeshipping}
+                      {orderDetail?.shipping === "Express shipping" &&
+                        expressshipping}
+                      {orderDetail?.shipping === "Pick Up shipping" &&
+                        pickupshipping}
+                    </p>
+                  ) : (
+                    <p className="text-xl font-semibold mt-2">₹0</p>
+                  )}
                 </div>
               </div>
             </table>

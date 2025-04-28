@@ -1,7 +1,13 @@
-import { userData } from "../models/user.js";
+import {
+  atcdata,
+  checkoutDetails,
+  userData,
+  wishlistData,
+} from "../models/user.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import { errorHandler, setCookies } from "../helpers/userAuth.js";
+import { errorHandler, setCookies, setLogout } from "../helpers/userAuth.js";
+import { adminData } from "../models/admin.js";
 dotenv.config({ path: "./config.env" });
 //import nodemailer from "nodemailer";
 
@@ -48,33 +54,32 @@ export const register = async (req, res) => {
     // console.log("Message sent: %s", info.messageId);\
 
     //res.json({ otp: generatedOtp });
-    userData.create({
+    await userData.create({
       firstName,
       lastName,
       email,
       password: hasedPass,
-      // userOtp: generatedOtp,
     });
+    atcdata.create({ email });
+    wishlistData.create({ email });
     res.json({ message: "Register Successfully!" });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const login = async (req, res, next) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    if (!email || !password) {
+    if (!email || !password)
       return errorHandler("Enter your email and password!", 200, res);
-    }
+
     const user = await userData.findOne({ email }).select("+password");
-    if (!user) {
-      return errorHandler("user not found!", 200, res);
-    }
+    if (!user) return errorHandler("user not found!", 200, res);
+
     const checkPass = await bcrypt.compare(password, user.password);
-    if (!checkPass) {
-      return errorHandler("password is incorrect!", 200, res);
-    }
+    if (!checkPass) return errorHandler("password is incorrect!", 200, res);
+
     setCookies(res, user, "Login Succsessfully!");
   } catch (err) {
     console.log(err);
@@ -83,20 +88,38 @@ export const login = async (req, res, next) => {
 
 export const updatePass = async (req, res) => {
   const { email, oldPass, newPass, repeatPass } = req.body;
-  if (!oldPass || !newPass || !repeatPass) {
+  if (!oldPass || !newPass || !repeatPass)
     return errorHandler("please enter all filed!", 200, res);
-  }
-  if (newPass !== repeatPass) {
+
+  if (newPass !== repeatPass)
     return errorHandler("incorrect password!", 200, res);
-  }
-  const findUser = await userData.findOne({ email });
-  if (!findUser) {
-    return errorHandler("user not found!", 200, res);
-  }
+
   const hasedPass = await bcrypt.hash(newPass, 10);
-  findUser.password = hasedPass;
-  await findUser.save();
+  const findUser = await userData.findOneAndUpdate(
+    { email },
+    { $set: { password: hasedPass } },
+    { new: true }
+  );
+  if (!findUser) return errorHandler("user not found!", 200, res);
+
+  //findUser.password = hasedPass;
+  //await findUser.save();
   res.json({ message: "Updated succsessfully!" });
+};
+
+export const profileImage = async (req, res) => {
+  const { image } = req.body;
+  try {
+    const user = await userData.findOneAndUpdate(
+      { email: req.user?.email },
+      { $set: { image: image } },
+      { new: true }
+    );
+    if (!user) return errorHandler("user not found!", 200, res);
+    res.json({ message: "Image Added!", success: true });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const logout = (req, res) => {
@@ -106,7 +129,7 @@ export const logout = (req, res) => {
       .clearCookie("token")
       .json({ message: "Logout Succsessfull!" });
   } catch (err) {
-    res.json({ error: "Logout failed!" });
+    errorHandler("Logout failed!", 200, res);
     console.log(err);
   }
 };
@@ -116,4 +139,31 @@ export const myProfile = (req, res) => {
     message: "My Profile",
     user: req.user,
   });
+};
+
+export const orders = async (req, res) => {
+  try {
+    const checkUser = await checkoutDetails.find({ email: req.user?.email });
+    if (!checkUser) return res.json({ error: "user not found!" });
+    res.json({ orderList: checkUser, success: true });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const address = async (req, res) => {
+  try {
+    const user = await checkoutDetails.findOne({ email: req?.user?.email });
+    if (!user) return errorHandler("user not found!", 200, res);
+
+    const userObj = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      address: user.address,
+      number: user.phoneNumber,
+    };
+    res.json(userObj);
+  } catch (error) {
+    console.log(error);
+  }
 };

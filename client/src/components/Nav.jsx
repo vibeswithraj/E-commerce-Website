@@ -8,6 +8,7 @@ import userContext from "../contexts/UserContext.jsx";
 import { RxCross2 } from "react-icons/rx";
 import { FiMenu } from "react-icons/fi";
 import { IconButton, Tooltip } from "@mui/material";
+import productContext from "../contexts/ProductContext.jsx";
 
 const Nav = () => {
   const navLinks = [
@@ -32,7 +33,8 @@ const Nav = () => {
   ];
 
   const [open, setOpen] = useState(false);
-  const { search, setSearch, count } = useContext(userContext);
+  const { search, setSearch } = useContext(userContext);
+  const { addToCart } = useContext(productContext);
 
   const handleSearch = () => {
     const searchBar = document.getElementById("search");
@@ -98,12 +100,10 @@ const Nav = () => {
               </IconButton>
             </Tooltip>
           ))}
-          {count ? (
+          {addToCart && addToCart?.length > 0 && (
             <div className="w-5 h-5 absolute cursor-pointer top-0 right-0 rounded-full flex justify-center items-center bg-black text-white text-xs font-semibold">
-              {count}
+              {addToCart?.length}
             </div>
-          ) : (
-            ""
           )}
         </div>
       </div>
@@ -139,28 +139,26 @@ const Nav = () => {
         >
           <RxCross2
             size={35}
-            className="cursor-pointer float-right text-black duration-300 search-icon"
+            className="cursor-pointer float-right text-[#0F0F0F] duration-300 search-icon"
           />
         </div>
-        <ul className="flex items-center justify-center flex-col m-auto w-full text-center gap-5">
+        <div className="flex items-center justify-center flex-col m-auto w-full text-center gap-5">
           {navLinks?.map((item) => (
-            <li
-              className="w-full max-w-[350px] py-2 rounded-lg bg-white h-fit"
+            <NavLink
+              className={(navClass) =>
+                navClass.isActive
+                  ? "w-full max-w-[350px] py-2 rounded-lg bg-[#0F0F0F] text-white h-fit font-medium"
+                  : "w-full max-w-[350px] py-2 rounded-lg bg-white text-black h-fit font-normal"
+              }
+              to={item?.path}
               key={item?.id}
             >
-              <NavLink
-                className={(navClass) =>
-                  navClass.isActive
-                    ? "w-full h-fit text-2xl font-medium text-black"
-                    : "w-full h-fit text-2xl font-medium text-gray-600 duration-300"
-                }
-                to={item?.path}
-              >
+              <div className="w-full h-fit text-2xl duration-300">
                 {item?.name}
-              </NavLink>
-            </li>
+              </div>
+            </NavLink>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );

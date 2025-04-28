@@ -3,7 +3,7 @@ import { HiCollection } from "react-icons/hi";
 import { FaFileAlt } from "react-icons/fa";
 // import { FiArrowLeft } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import adminContext from "../contexts/AdminProvider";
@@ -13,47 +13,31 @@ const Aside = () => {
   const { catName, setCatName, asideOpen, setAsideOpen } =
     useContext(adminContext);
 
-  const allLinks = [
-    {
-      name: "dashboard",
-      path: "/admin/dashboard",
+  const allLinks = useMemo(() => {
+    return [
+      {
+        name: "dashboard",
+        path: "/admin/dashboard",
 
-      icon: <MdOutlineDashboard size={16} className="mr-1" />,
-    },
-    {
-      name: "all products",
-      path: "/admin/allproducts",
-      icon: <HiCollection size={16} className="mr-1" />,
-    },
-    {
-      name: "order list",
-      path: "/admin/orderlist",
-      icon: <FaFileAlt size={16} className="mr-1" />,
-    },
-  ];
+        icon: <MdOutlineDashboard size={16} className="mr-1" />,
+      },
+      {
+        name: "all products",
+        path: "/admin/allproducts",
+        icon: <HiCollection size={16} className="mr-1" />,
+      },
+      {
+        name: "order list",
+        path: "/admin/orderlist",
+        icon: <FaFileAlt size={16} className="mr-1" />,
+      },
+    ];
+  }, []);
 
   const categories = [
     {
       name: "all",
     },
-    // {
-    //   name: "smartphones",
-    // },
-    // {
-    //   name: "laptops",
-    // },
-    // {
-    //   name: "fragrances",
-    // },
-    // {
-    //   name: "skincare",
-    // },
-    // {
-    //   name: "groceries",
-    // },
-    // {
-    //   name: "home-decoration",
-    // },
     {
       name: "men's clothing",
     },
@@ -72,19 +56,17 @@ const Aside = () => {
     <aside
       className={
         asideOpen
-          ? "w-[260px] shadow-none border-none outline-none h-auto px-4 pt-5 bg-[#FAFAFA] invisible -ml-[260px] transition-all ease-in duration-300"
-          : "w-[260px] shadow-none border-none outline-none h-auto px-4 pt-5 bg-[#FAFAFA] visible transition-all ease-in duration-300"
+          ? "w-[260px] shadow-none border-none outline-none h-auto px-4 pt-5 bg-[#FAFAFA] invisible -ml-[260px] transition-all ease-linear duration-300"
+          : "w-[260px] shadow-none border-none outline-none h-auto px-4 pt-5 bg-[#FAFAFA] visible transition-all ease-linear duration-300"
       }
     >
       <div className="w-full flex justify-between items-center">
         <p className="text-3xl font-bold text-black">3legant</p>
-        <div>
-          <FiMenu
-            size={25}
-            onClick={() => setAsideOpen(true)}
-            className="cursor-pointer mt-2"
-          />
-        </div>
+        <FiMenu
+          size={25}
+          onClick={() => setAsideOpen(true)}
+          className="cursor-pointer mt-2"
+        />
       </div>
       <div className="mt-12">
         {allLinks?.map((item) => (
@@ -97,8 +79,8 @@ const Aside = () => {
                 : "w-[212px] h-[48px] shrink-0 rounded-lg text-xs font-semibold border border-black cursor-pointer pl-3 flex items-center uppercase mt-5 bg-[#FAFAFA] text-black hover:bg-gray-200"
             }
           >
-            {item.icon}
-            {item.name}
+            <div>{item.icon}</div>
+            <div className="ml-2">{item.name}</div>
           </NavLink>
         ))}
       </div>
@@ -120,8 +102,8 @@ const Aside = () => {
               key={index}
               className={
                 catName.toLowerCase() === item?.name.toLowerCase()
-                ? "w-full h-10 text-base text-left font-normal text-black bg-transparent bg-gray-200 pl-2 border-b-2"
-                : "w-full h-10 text-base text-left font-normal text-black bg-transparent hover:bg-gray-200 pl-2 border-b-2"
+                  ? "w-full h-10 text-base text-left font-normal text-black bg-transparent bg-gray-200 pl-2 border-b-2"
+                  : "w-full h-10 text-base text-left font-normal text-black bg-transparent hover:bg-gray-200 pl-2 border-b-2"
               }
               onClick={() => {
                 setCatName(item?.name);

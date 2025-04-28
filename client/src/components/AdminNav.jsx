@@ -3,35 +3,59 @@ import { IoIosSearch } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoExitOutline } from "react-icons/io5";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiMenu } from "react-icons/fi";
 import adminContext from "../contexts/AdminProvider.jsx";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const AdminNav = () => {
   const { catName, setCatName, open, setOpen, asideOpen, setAsideOpen } =
     useContext(adminContext);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URL}/admin/logout`,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (data.error) return toast.error(data.error);
+      if (data.message) {
+        toast.success(data.message);
+        navigate("/signup");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <nav
       className={
         asideOpen
-          ? "w-full h-[80px] flex justify-between md:pr-10 pr-3 items-center bg-[#FAFAFA] z-30 transition-all ease-in duration-300"
-          : "w-full h-[80px] flex justify-between md:pr-10 pr-3 items-center bg-[#FAFAFA] z-30"
+          ? "w-full h-[70px] flex justify-between md:pr-10 pr-3 items-center bg-[#FAFAFA] z-30 transition-all ease-linear duration-300"
+          : "w-full h-[70px] flex justify-between md:pr-10 pr-3 items-center bg-[#FAFAFA] z-30"
       }
     >
       <div
         className={
           asideOpen
-            ? "w-fit h-auto flex items-center gap-3 ml-3 scale-100 visible transition-all ease-in duration-300"
-            : "w-fit h-auto flex items-center gap-3 ml-3 scale-0 invisible transition-all ease-in duration-300"
+            ? "w-fit h-auto flex items-center gap-3 ml-3 visible"
+            : "w-fit h-auto flex items-center gap-3 ml-3 invisible"
         }
       >
-        <div className="bg-gray-200 rounded-full p-1 cursor-pointer mr-2">
-          <FiArrowLeft
-            size={25}
-            onClick={() => setAsideOpen((prev) => !prev)}
-            className={asideOpen ? "cursor-pointe" : "cursor-pointer"}
-          />
-        </div>
+        <FiMenu
+          size={25}
+          onClick={() => setAsideOpen((prev) => !prev)}
+          className="cursor-pointer"
+        />
         <p className="font-medium text-2xl hidden md:block">3legant</p>
       </div>
       <div className="flex md:gap-8 gap-3 items-center w-auto h-fit relative">
@@ -63,7 +87,10 @@ const AdminNav = () => {
             </p>
             <IoIosArrowForward />
           </div>
-          <div className="flex justify-between items-center w-full h-[40px] hover:bg-gray-200 cursor-pointer px-2 rounded-md">
+          <div
+            onClick={handleLogout}
+            className="flex justify-between items-center w-full h-[40px] hover:bg-gray-200 cursor-pointer px-2 rounded-md"
+          >
             <p className="text-sm font-normal text-black uppercase">Login</p>
             <IoExitOutline />
           </div>

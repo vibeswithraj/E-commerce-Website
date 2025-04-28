@@ -1,145 +1,83 @@
-import { FaCheck } from "react-icons/fa";
-import { Link, NavLink } from "react-router-dom";
-import { useContext, useState } from "react";
-// import { useSelector } from "react-redux";
-import productContext from "../../contexts/ProductContext";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
 import Footer from "../../components/Footer";
 import Nav from "../../components/Nav";
+import CartNav from "../../components/CartNav";
 import userContext from "../../contexts/UserContext";
 
 const OrderComplete = () => {
-  // const addToCart = useSelector((state) => state.AddToCart);
-  const { addToCart, setAddToCart } = useContext(productContext);
-  const { setCount } = useContext(userContext);
-  const [change, setChange] = useState(true);
-  const [changeTwo, setChangeTwo] = useState(true);
-  const [changeThree, setChangeThree] = useState(false);
-
-  const handleNavLinks = () => {
-    const colorChange = document.getElementById("colorChange");
-    const borderChange = document.getElementById("borderChange");
-    const textChange = document.getElementById("textChange");
-    colorChange.style.backgroundColor = "#33FF42";
-    borderChange.style.borderBottomColor = "#33FF42";
-    textChange.style.color = "#33FF42";
-    setChange(true);
-    setChangeTwo(true);
-    setChangeThree(true);
-    localStorage.clear();
-    addToCart.splice(0, addToCart.length);
-    setAddToCart([]);
-    setCount(0);
-  };
+  const { checkOutDetail } = useContext(userContext);
+  // const findIndex = orders?.length;
+  // const orderDetail = orders[findIndex - 1];
 
   return (
-    <div className="w-full h-screen flex flex-col justify-between">
+    <div className="w-full h-full flex flex-col">
       <div className="w-full h-auto">
         <Nav />
       </div>
-      <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto h-auto overflow-x-hidden">
+      <div className="mt-10 w-full flex flex-col justify-center items-center sm:px-40 md:px-20 px-8 m-auto h-full overflow-x-hidden">
         <p className="text-[54px] font-medium text-center">Cart</p>
-        <div className="w-[832px] h-auto grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
-          <NavLink
-            //to={"/addtocart"}
-            //id="borderChange"
-            className="border-b-2 w-[256px] border-[#33FF42]"
-          >
-            <div className="flex gap-4 cursor-pointer justify-center items-center pb-5">
-              <NavLink
-                //id="colorChange"
-                className="bg-[#33FF42] rounded-full w-[40px] h-[40px] flex justify-center items-center text-white"
-              >
-                {change ? (
-                  <div>
-                    <FaCheck size={20} />
-                  </div>
-                ) : (
-                  "1"
-                )}
-              </NavLink>
-              <NavLink
-                //id="textChange"
-                className="text-base font-semibold text-[#33FF42]"
-              >
-                <div id="colorName">Shoppingcart</div>
-              </NavLink>
+        <CartNav sc={true} cd={true} />
+        <div className="w-[800px] h-auto border-t shadow-xl flex flex-col gap-16 items-center my-10 py-10">
+          <div className="flex flex-col text-center gap-8 w-fit h-fit">
+            <p className="text-xl sm:text-3xl font-medium text-gray-600">
+              Thank you! 🎉
+            </p>
+            <p className="text-[#141718] text-center text-2xl sm:text-4xl font-medium">
+              Your order has been received
+            </p>
+          </div>
+          <div className="w-full h-full flex flex-col justify-center items-center gap-5">
+            <div className="w-fit h-auto flex flex-wrap gap-20 justify-between items-center">
+              {checkOutDetail?.addToCart?.map((item, index) => (
+                <div className="w-auto h-auto relative" key={index}>
+                  <img
+                    src={item?.image}
+                    width={96}
+                    height={100}
+                    className="w-[96px] h-[100px]"
+                    alt="img"
+                  />
+                  <span className="w-[28px] h-[28px] bg-black text-sm text-white flex items-center justify-center absolute -top-4 -right-4 rounded-full">
+                    {item?.quantity}
+                  </span>
+                </div>
+              ))}
             </div>
-          </NavLink>
-          <NavLink
-            //to={"/checkoutdetails"}
-            //id="borderChange"
-            className="border-b-2 w-[256px] border-[#33FF42]"
-          >
-            <div className="flex gap-4 cursor-pointer justify-center items-center pb-5">
-              <NavLink
-                //id="colorChange"
-                className="bg-[#33FF42] rounded-full w-[40px] h-[40px] flex justify-center items-center text-white"
-              >
-                {changeTwo ? (
-                  <div className="rounded-full py-[7.5px]">
-                    <FaCheck size={20} />
-                  </div>
-                ) : (
-                  "2"
-                )}
-              </NavLink>
-              <NavLink
-                //id="textChange"
-                className="text-base font-semibold text-[#33FF42]"
-              >
-                <div id="colorName">Checkout details</div>
-              </NavLink>
-            </div>
-          </NavLink>
-          <NavLink
-            to={"/ordercomplete"}
-            id="borderChange"
-            className="border-b-2 w-[256px] border-black"
-          >
-            <div className="flex gap-4 cursor-pointer justify-center items-center pb-5">
-              <NavLink
-                id="colorChange"
-                className="bg-black rounded-full w-[40px] h-[40px] flex justify-center items-center text-white"
-              >
-                {changeThree ? (
-                  <div className="rounded-full py-[7.5px]">
-                    <FaCheck size={20} />
-                  </div>
-                ) : (
-                  "3"
-                )}
-              </NavLink>
-              <NavLink
-                id="textChange"
-                className="text-base font-semibold text-black"
-              >
-                <div id="colorName">Order complete</div>
-              </NavLink>
-            </div>
-          </NavLink>
-        </div>
-        <div className="w-full h-[500px] flex flex-col gap-8 justify-center items-center">
-          <button
-            className={
-              !changeThree
-                ? "w-[365px] h-[52px] flex justify-center items-center bg-[#141718] rounded-lg text-white text-center cursor-pointer"
-                : "w-[365px] h-[52px] flex justify-center items-center"
-            }
-            onClick={handleNavLinks}
-          >
-            {changeThree ? (
-              <div className="flex flex-col gap-8">
-                <p className="text-[#141718] text-center text-[30px] font-medium">
-                  Your order has been received
-                </p>
-                <p>Thank you! 🎉</p>
-              </div>
-            ) : (
-              "Click to complete"
-            )}
-          </button>
+          </div>
+          <div className="w-fit h-auto flex gap-10">
+            <ul className="flex flex-col gap-2">
+              <li className="text-gray-600 text-lg font-medium">Order code:</li>
+              <li className="text-gray-600 text-lg font-medium">Date:</li>
+              <li className="text-gray-600 text-lg font-medium">Total:</li>
+              <li className="text-gray-600 text-lg font-medium">
+                Payment method:
+              </li>
+            </ul>
+            <ul className="flex flex-col gap-2">
+              <li className="text-gray-900 text-lg font-medium">
+                #{checkOutDetail?.orderId}2
+              </li>
+              <li className="text-gray-900 text-lg font-medium">
+                {/* {checkOutDetail?.updatedAt?.split("T")[0]} */}
+                {checkOutDetail?.createdAt?.split("T")[0]}
+              </li>
+              <li className="text-gray-900 text-lg font-medium">
+                ₹
+                {checkOutDetail?.shipping === "Free shipping" &&
+                  checkOutDetail?.mainSubTotal}
+                {checkOutDetail?.shipping === "Express shipping" &&
+                  checkOutDetail.mainSubTotal + 15}
+                {checkOutDetail?.shipping === "Pick Up shipping" &&
+                  checkOutDetail?.mainSubTotal + 21}
+              </li>
+              <li className="text-gray-900 text-lg font-medium">
+                {checkOutDetail?.payment}
+              </li>
+            </ul>
+          </div>
           <Link
-            className="text-[#141718] cursor-pointer mt-8 w-fit h-fit rounded-lg py-2 px-6 border border-black bg-white hover:bg-black hover:text-white transition-all ease-linear text-center text-base"
+            className="bg-[#141718] cursor-pointer mt-8 w-fit h-fit rounded-lg py-2 px-6 border border-black text-white transition-all ease-linear text-center text-base"
             to={"/shop"}
           >
             Countinue shopping

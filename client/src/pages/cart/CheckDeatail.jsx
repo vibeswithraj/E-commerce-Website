@@ -1,8 +1,6 @@
 import { BsCreditCard2Front } from "react-icons/bs";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCheck } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import hotToast from "react-hot-toast";
@@ -12,13 +10,9 @@ import userContext from "../../contexts/UserContext";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
 import deatilsContext from "../../contexts/DetailsContext";
-// import { useDispatch, useSelector } from "react-redux";
-// import { dicrise, incrise } from "../../contexts/productSlice.js";
+import CartNav from "../../components/CartNav";
 
 const CheckDeatail = () => {
-  const [change, setChange] = useState(true);
-  const [changeTwo, setChangeTwo] = useState(false);
-  const [changeThree, setChangeThree] = useState(false);
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -30,19 +24,14 @@ const CheckDeatail = () => {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [cardNumber, setCardNumber] = useState("");
-
-  // const addToCart = useSelector((state) => state.AddToCart);
-  // const dispatch = useDispatch();
-  const { count, setCount } = useContext(userContext);
+  const { count, setCount, setCheckOutDetail } = useContext(userContext);
   const { addToCart, setAddToCart } = useContext(productContext);
   const { mainSubTotal, shipping, payBy, setPayBy } =
     useContext(deatilsContext);
   const incri = (pid) => {
-    // dispatch(incrise(pid));
     incrise(addToCart, setAddToCart, pid);
   };
   const decri = (pid) => {
-    // dispatch(dicrise(pid));
     dicrise(addToCart, setAddToCart, count, setCount, pid);
   };
 
@@ -67,7 +56,7 @@ const CheckDeatail = () => {
     }
     try {
       const { data } = await axios.post(
-        "http://localhost:5050/checkoutdetails",
+        `${process.env.REACT_APP_API_URL}/checkoutdetails`,
         {
           firstName,
           lastName,
@@ -87,24 +76,15 @@ const CheckDeatail = () => {
         },
         { withCredentials: true }
       );
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        toast.success(data.message);
-      }
-      const colorChange = document.getElementById("colorChange");
-      const borderChange = document.getElementById("borderChange");
-      const textChange = document.getElementById("textChange");
-      colorChange.style.backgroundColor = "#33FF42";
-      borderChange.style.borderBottomColor = "#33FF42";
-      textChange.style.color = "#33FF42";
-      setChange(true);
-      setChangeTwo(true);
-      setChangeThree(false);
-      navigate("/ordercomplete");
+      if (data.error) toast.error(data.error);
+      if (data.message) toast.success(data.message);
+      if (data.finalRes) setCheckOutDetail(data.finalRes);
+
+      navigate("/cart/ordercomplete");
       addToCart?.splice(0, addToCart?.length);
       setAddToCart([]);
       setCount(0);
+      localStorage.clear();
     } catch (err) {
       console.log(err);
     }
@@ -115,101 +95,14 @@ const CheckDeatail = () => {
       <div className="w-full h-auto">
         <Nav />
       </div>
-      <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto overflow-x-hidden">
+      <div className="mt-10 w-full md:px-20 px-4 m-auto overflow-x-hidden">
         <p className="text-[54px] m-auto font-medium text-center">Cart</p>
-        <div className="w-[832px] grid grid-cols-3 gap-8 mt-10 justify-center m-auto">
-          <NavLink
-            //to={"/addtocart"}
-            //id="borderChange"
-            className="border-b-2 w-[256px] border-[#33FF42]"
-          >
-            <div className="flex gap-4 cursor-pointer justify-center items-center pb-5">
-              <NavLink
-                //id="colorChange"
-                className="bg-[#33FF42] rounded-full w-[40px] h-[40px] flex justify-center items-center text-white"
-              >
-                {change ? (
-                  <div>
-                    <FaCheck size={20} />
-                  </div>
-                ) : (
-                  "1"
-                )}
-              </NavLink>
-              <NavLink
-                //id="textChange"
-                className="text-base font-semibold text-[#33FF42]"
-              >
-                <div id="colorName">Shoppingcart</div>
-              </NavLink>
-            </div>
-          </NavLink>
-          <NavLink
-            to={"/checkoutdetails"}
-            id="borderChange"
-            className="border-b-2 w-[256px] border-black"
-          >
-            <div className="flex gap-4 cursor-pointer justify-center items-center pb-5">
-              <NavLink
-                id="colorChange"
-                className={(round) =>
-                  round.isActive
-                    ? "bg-black rounded-full w-[40px] h-[40px] flex justify-center items-center text-white"
-                    : "bg-slate-500 rounded-full w-[40px] h-[40px] flex justify-center items-center text-white"
-                }
-              >
-                {changeTwo ? (
-                  <div className="rounded-full py-[7.5px]">
-                    <FaCheck size={20} />
-                  </div>
-                ) : (
-                  "2"
-                )}
-              </NavLink>
-              <NavLink
-                id="textChange"
-                className={(navClass) =>
-                  navClass.isActive
-                    ? "text-base font-semibold text-black"
-                    : "text-base font-semibold text-slate-500"
-                }
-              >
-                <div id="colorName">Checkout details</div>
-              </NavLink>
-            </div>
-          </NavLink>
-          <NavLink
-            //to={"/ordercomplete"}
-            //id="borderChange"
-            className="border-none w-[256px]"
-          >
-            <div className="flex gap-4 cursor-pointer justify-center items-center pb-5">
-              <NavLink
-                //id="colorChange"
-                className="bg-slate-500 rounded-full w-[40px] h-[40px] flex justify-center items-center text-white"
-              >
-                {changeThree ? (
-                  <div className="rounded-full py-[7.5px]">
-                    <FaCheck size={20} />
-                  </div>
-                ) : (
-                  "3"
-                )}
-              </NavLink>
-              <NavLink
-                //id="textChange"
-                className="text-base font-semibold text-slate-500"
-              >
-                <div id="colorName">Order complete</div>
-              </NavLink>
-            </div>
-          </NavLink>
-        </div>
+        <CartNav sc={true} />
         <div className="my-20 m-auto flex sm:flex-row flex-col w-full h-auto justify-evenly sm:gap-6">
           <form
             className="sm:w-[643px] w-full h-auto flex flex-col gap-6"
             method="post"
-            onSubmit={handleNavLinks}
+            //onSubmit={handleNavLinks}
           >
             <div className="w-full h-[372px] px-4 py-10 border border-[#6C7275] rounded">
               <p className="text-xl font-medium">Contact Infomation</p>
@@ -500,11 +393,11 @@ const CheckDeatail = () => {
                 </li>
               </ul>
             </div>
-            <div className="w-full h-fit my-5">
+            <div className="w-full h-fit my-5 lg:my-14">
               <button
                 className="w-full h-fit rounded-lg bg-[#141718] text-white py-3 flex justify-center items-center text-base font-medium mb-6 mt-6 sm:-mt-16 z-50 cursor-pointer"
-                onSubmit={handleNavLinks}
-                disabled={count === 0 ? true : false}
+                onClick={handleNavLinks}
+                disabled={addToCart && addToCart?.length === 0 ? true : false}
               >
                 Place Order
               </button>

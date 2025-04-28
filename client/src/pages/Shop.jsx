@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import productContext from "../contexts/ProductContext.jsx";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import BannerFooter from "../components/BannerFooter";
 import userContext from "../contexts/UserContext.jsx";
-import { addCart, addToWishlist } from "../logics.js";
+import { addCart, addToWishlist, productDetails } from "../logics.js";
 import Nav from "../components/Nav.jsx";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Footer from "../components/Footer.jsx";
@@ -15,6 +15,7 @@ import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { BsFillGridFill } from "react-icons/bs";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
 import Loader from "../components/Loader.jsx";
+import axios from "axios";
 
 const Shop = () => {
   let {
@@ -26,9 +27,10 @@ const Shop = () => {
     setWishlist,
     setProductDetail,
     loading,
+    setLoading,
   } = useContext(productContext);
 
-  const { search, setSearch, setCount } = useContext(userContext);
+  const { search, setImage, setSearch, setCount } = useContext(userContext);
   let { checkbox, setCheckbox } = useContext(userContext);
   const [open, setOpen] = useState(false);
   const handleAddToCart = (pid) => {
@@ -39,15 +41,8 @@ const Shop = () => {
     addToWishlist(wishlist, setWishlist, allProducts, setProducts, pid);
   };
 
-  const handleProduct = async (id) => {
-    try {
-      const find = await allProducts.find((i) => i.id === id);
-      if (find) {
-        setProductDetail(find);
-      }
-    } catch (err) {
-      console.log(err);
-    }
+  const handleProduct = (id) => {
+    productDetails(setProductDetail, id);
   };
 
   const col_span_3 = "col-span-3";
@@ -120,6 +115,40 @@ const Shop = () => {
   const handleInput = (id, amount) => {
     setCheckbox((checkbox = { id, price: amount }));
   };
+
+  useEffect(() => {
+    setLoading(true);
+    const cancelToken = axios.CancelToken.source();
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/products?search=${search}&price=${checkbox?.price}`,
+          {
+            withCredentials: true,
+            cancelToken: cancelToken.token,
+          }
+        );
+
+        if (data) {
+          setProducts(data);
+          setLoading(false);
+        }
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log("request is cancelled");
+        }
+        console.log(error);
+      }
+    };
+
+    const getImage = localStorage.getItem("image");
+    setImage(getImage);
+
+    fetchData();
+    return () => {
+      cancelToken.cancel();
+    };
+  }, [search, checkbox, setImage, setLoading, setProducts]);
 
   return (
     <div className="w-full h-auto">
@@ -202,7 +231,7 @@ const Shop = () => {
                       <FaAngleDown size={15} color="black" />
                     </span>
                   </div>
-                  <ul className="w-full h-auto flex flex-col bg-gray-50 border absolute top-[42px] z-30 invisible group-hover:visible">
+                  <ul className="w-full h-auto flex flex-col bg-gray-50 border absolute top-[42px] z-50 invisible group-hover:visible">
                     {categories?.map((item, index) => (
                       <li
                         className={
@@ -232,7 +261,7 @@ const Shop = () => {
                       <FaAngleDown size={15} color="black" />
                     </span>
                   </div>
-                  <ul className="w-full h-auto flex flex-col rounded-br-md rounded-bl-md bg-gray-50 border absolute top-[42px] z-30 invisible group-hover:visible">
+                  <ul className="w-full h-auto flex flex-col rounded-br-md rounded-bl-md bg-gray-50 border absolute top-[42px] z-50 invisible group-hover:visible">
                     {priceList?.map((item, index) => (
                       <li
                         className={
@@ -306,15 +335,19 @@ const Shop = () => {
                 allProducts?.map((items, index) => (
                   <div
                     key={index}
-                    className="xl:h-[433px] 2xl:h-[400px] h-auto pb-1 xl:w-[262px] w-[152px] flex mx-auto flex-col mb-5 gap-5 cursor-pointer group relative hover:shadow-lg border-b hover:scale-105 transition-all ease-in-out duration-300"
+                    className="xl:h-[433px] 2xl:h-[400px] h-auto pb-1 xl:w-[262px] w-[152px] flex mx-auto flex-col mb-5 gap-5 cursor-pointer group relative shadow hover:shadow-lg hover:scale-105 transition-all ease-in-out duration-300"
                   >
-                    <span className="w-fit h-fit px-2 pb-[1.50px] bg-white text-black text-sm rounded absolute top-3 left-3 z-20 font-semibold">
-                      NEW
-                    </span>
-                    <span className="w-fit h-fit px-2 pb-[1.50px] bg-[#38CB89] text-white text-sm rounded absolute top-10 left-3 z-20 font-semibold">
-                      {"-50%"}
-                    </span>
-                    <div className="absolute sm:top-3 right-2 top-2 w-fit h-fit cursor-pointer z-50 flex justify-center items-center">
+                    {items?.bestSeller && (
+                      <>
+                        <span className="w-fit h-fit px-2 pb-[1.50px] bg-white text-black text-sm rounded absolute top-3 left-3 z-20 font-semibold">
+                          NEW
+                        </span>
+                        <span className="w-fit h-fit px-2 pb-[1.50px] bg-[#38CB89] text-white text-sm rounded absolute top-10 left-3 z-20 font-semibold">
+                          "-50%"
+                        </span>
+                      </>
+                    )}
+                    <div className="absolute sm:top-3 right-2 top-2 w-fit h-fit cursor-pointer z-40 flex justify-center items-center">
                       <FavoriteIcon
                         className={
                           items?.like

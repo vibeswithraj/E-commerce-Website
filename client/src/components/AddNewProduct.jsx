@@ -1,10 +1,10 @@
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Aside from "./Aside";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { FaRegImage } from "react-icons/fa6";
-import productContext from "../contexts/ProductContext";
 import AdminNav from "./AdminNav";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AddNewProduct = () => {
   const [image, setImage] = useState(null);
@@ -14,12 +14,11 @@ const AddNewProduct = () => {
   const [brandName, setBrandName] = useState("");
   const [discount, setDiscount] = useState("");
   const [stockQuantity, setSQuantity] = useState(0);
-  const [regularPrice, setRPrice] = useState("");
-  const [salePrice, setSPrice] = useState("");
+  const [regularPrice, setRPrice] = useState(0);
+  const [salePrice, setSPrice] = useState(0);
   const [tag, setTag] = useState();
 
   const imageRef = useRef(null);
-  const { allProducts } = useContext(productContext);
 
   const allImage = [
     {
@@ -53,34 +52,46 @@ const AddNewProduct = () => {
   };
 
   const handleOnChange = (event) => {
-    console.log(event.target.files[0]);
-    const file = event.target.files[0];
-    setImage(file);
+    var reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    reader.onload = () => {
+      console.log(reader.result);
+      setImage(reader.result);
+    };
+    reader.onerror = (err) => {
+      console.log("error img ", err);
+    };
     //localStorage.setItem("image", URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios
-        .post(
-          "http://localhost:5050/addnewproduct",
-          {
-            id: allProducts.length + 1,
-            title: proName,
-            description: descri,
-            category: category,
-            // brand: brandName,
-            stock: parseInt(stockQuantity),
-            price: parseInt(salePrice),
-            // discountPercentage: discount,
-            // rating: 4.69,
-            image: URL.createObjectURL(image),
+      const { data } = await axios.post(
+        "http://localhost:6060/addnewproduct",
+        {
+          title: proName,
+          quantity: 1,
+          category: category,
+          description: descri,
+          image: image,
+          price: parseInt(salePrice),
+          like: false,
+          subtotal: parseInt(salePrice),
+          sales: 0,
+          stock: parseInt(stockQuantity),
+          rating: {
+            count: 0,
+            rate: 0,
           },
-          { withCredentials: true }
-        )
-        .then((res) => console.log(res.data))
-        .catch((err) => console.log(err));
+        },
+        { withCredentials: true }
+      );
+
+      console.log(data);
+      if (data.error) {
+        toast.error(data.error);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -212,13 +223,12 @@ const AddNewProduct = () => {
             </div>
             <div className="w-full h-auto">
               <img
-                src={image ? URL.createObjectURL(image) : ""}
+                src={image === "" || image === null ? "" : image}
                 className="w-full h-[428px] bg-slate-300 rounded-lg object-cover"
                 width={"100%"}
                 height={428}
                 alt=""
               />
-
               <p className="mt-4">Product Gallery</p>
               <div
                 className="w-full h-[164px] text-center mt-3 border-black border-[2px] opacity-70 border-dashed flex flex-col justify-center items-center bg-[#FAFAFA]"
@@ -234,6 +244,7 @@ const AddNewProduct = () => {
                   name="productGallery"
                   ref={imageRef}
                   onChange={handleOnChange}
+                  accept="image/*"
                   className="w-full h-[164px] text-base rounded-lg bg-transparent hidden"
                 />
               </div>
@@ -245,11 +256,7 @@ const AddNewProduct = () => {
                   >
                     <div className="w-16 h-16">
                       <img
-                        src={
-                          item?.path || image
-                            ? item?.path || URL.createObjectURL(image)
-                            : ""
-                        }
+                        src={image === "" || image === null ? "" : image}
                         className="rounded-md bg-slate-300 w-16 h-16 transition duration-700 ease-in object-cover"
                         width={64}
                         height={64}

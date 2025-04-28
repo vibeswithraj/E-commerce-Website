@@ -51,7 +51,7 @@ const Login = () => {
           <div>
             <Profile />
           </div>
-          <div className="flex sm:w-[707px] w-full flex-col gap-10">
+          <div className="flex sm:w-[60%] w-full flex-col gap-10">
             <form
               className="w-full justify-center h-[325px]"
               action=""

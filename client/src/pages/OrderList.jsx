@@ -1,12 +1,29 @@
 import Aside from "../components/Aside";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import RecentOrderList from "../components/RecentOrderList";
 import AdminNav from "../components/AdminNav";
 import AdminFooter from "../components/AdminFooter";
 import adminContext from "../contexts/AdminProvider";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const OrderList = () => {
-  const { date, open, setOpen } = useContext(adminContext);
+  const { date, open, setOpen, setOrderList, orderList, setOrderDetail } =
+    useContext(adminContext);
+
+  useEffect(() => {
+    const getDetails = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/orderDetails`
+        );
+        setOrderList(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDetails();
+  }, [setOrderList]);
 
   return (
     <>
@@ -14,12 +31,12 @@ const OrderList = () => {
         <Aside />
         <div className="w-full h-auto relative">
           <AdminNav />
-          <div className="bg-[#e7e7e3] w-full h-fit px-4 py-5">
+          <div className="bg-[#e7e7e3] shadow-md w-full h-fit px-4 pt-5 pb-7">
             <div className="w-full h-[54px] flex justify-between items-center">
               <div>
                 <p className="text-2xl font-bold text-black">Order list</p>
                 <p className="text-base font-normal text-black font-sans">
-                  Home {">"} order list
+                  <Link to={"/admin/dashboard"}>Home</Link> {">"} order list
                 </p>
               </div>
               <div>
@@ -30,7 +47,10 @@ const OrderList = () => {
                 />
               </div>
             </div>
-            <RecentOrderList />
+            <RecentOrderList
+              orderList={orderList}
+              setOrderDetail={setOrderDetail}
+            />
           </div>
           <div
             className={

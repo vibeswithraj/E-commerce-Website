@@ -2,6 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { Backdrop, CircularProgress } from "@mui/material";
 
+const AdminRegister = lazy(() => import("../pages/AdminRegister.jsx"));
+const AdminLogin = lazy(() => import("../pages/AdminLogin.jsx"));
 const MainPage = lazy(() => import("../pages/MainPage.jsx"));
 const AllProducts = lazy(() => import("../pages/AllProducts.jsx"));
 const Blog = lazy(() => import("../pages/Blog.jsx"));
@@ -28,43 +30,46 @@ const Home = () => {
   return (
     <Suspense
       fallback={
-        <Backdrop
-          sx={{ color: "#fff" }}
-          open={true}
-        >
+        <Backdrop sx={{ color: "#fff" }} open={true}>
           <CircularProgress color="inherit" />
         </Backdrop>
       }
     >
       <Routes>
         <Route path={"/"} element={<SignUp />} />
+        
+        {/* Pages */}
         <Route path={"/signup"} element={<SignUp />} />
         <Route path={"/signin"} element={<SignIn />} />
         <Route path={"/home"} element={<MainPage />} />
         <Route path={"/shop"} element={<Shop />} />
         <Route path={"/blog"} element={<Blog />} />
         <Route path={"/contactus"} element={<ContactUs />} />
-        <Route path={"/accountdetail/orderhistory"} element={<Order />} />
-        <Route path={"/accountdetail/account"} element={<MyAcoount />} />
+
+        {/* Product Details */}
         <Route path={"/product/:id"} element={<Product />} />
+
+        {/* Admin */}
+        <Route path={"/admin/register"} element={<AdminRegister />} />
+        <Route path={"/admin/login"} element={<AdminLogin />} />
         <Route path={"/admin/dashboard"} element={<Dashboard />} />
         <Route path={"/admin/allproducts"} element={<AllProducts />} />
         <Route path={"/admin/orderlist"} element={<OrderList />} />
-        <Route
-          path={"/admin/orderlist/orderdetails"}
-          element={<OrderDetails />}
-        />
-        <Route path={"/ordercomplete"} element={<OrderComplete />} />
-        <Route path={"/accountdetail/address"} element={<Address />} />
-        <Route
-          path={"/admin/allproducts/addnewproduct"}
-          element={<AddNewProduct />}
-        />
-        <Route path={"/cart/addtocart"} element={<AddToCart />} />
+        <Route path={"/admin/orderlist/orderdetails"} element={<OrderDetails />} />
+        <Route path={"/admin/allproducts/addnewproduct"} element={<AddNewProduct />} />
+
+        {/* Account */}
+        <Route path={"/accountdetail/orderhistory"} element={<Order />} />
+        <Route path={"/accountdetail/account"} element={<MyAcoount />} />
         <Route path={"/accountdetail/login"} element={<Login />} />
         <Route path={"/accountdetail/logout"} element={<Logout />} />
+        <Route path={"/accountdetail/address"} element={<Address />} />
         <Route path={"/accountdetail/yourwishlist"} element={<Wishlist />} />
+
+        {/* Cart */}
         <Route path={"/cart/checkoutdetails"} element={<CheckDeatail />} />
+        <Route path={"/cart/ordercomplete"} element={<OrderComplete />} />
+        <Route path={"/cart/addtocart"} element={<AddToCart />} />
       </Routes>
     </Suspense>
   );

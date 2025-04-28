@@ -11,7 +11,7 @@ import gsap from "gsap";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { setLoading } = useContext(userContext);
+  const { setLoading, setUser } = useContext(userContext);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -60,7 +60,7 @@ const SignUp = () => {
         return toast.error("Please check checkbox!");
       }
       const { data } = await axios.post(
-        "http://localhost:5050/register",
+        `${process.env.REACT_APP_API_URL}/register`,
         { firstName, lastName, email, password },
         {
           headers: {
@@ -88,8 +88,8 @@ const SignUp = () => {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        "http://localhost:6060/login",
-        { email: "demo1@gmail.com", password: "demo1" },
+        `${process.env.REACT_APP_API_URL}/login`,
+        { email: "test@gmail.com", password: "test" },
         {
           headers: {
             "Content-Type": "application/json",
@@ -97,14 +97,41 @@ const SignUp = () => {
           withCredentials: true,
         }
       );
-      if (data.error) {
-        toast.error(data.error);
-      } else {
-        if (data.message) {
-          hotToast.success(data.message);
-          navigate("/home");
+      if (data.error) return toast.error(data.error);
+
+      if (data.message) {
+        hotToast.success(data.message);
+        setUser(data.oneUser);
+        navigate("/home");
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAdminDemoAccount = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API_URL}/admin/login`,
+        {
+          email: "admin1@gmail.com",
+          password: "admin1",
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        setLoading(false);
+      );
+
+      if (data.error) return toast.error(data.error);
+      if (data.message) {
+        hotToast.success(data.message);
+        console.log(data.oneAdmin);
+        navigate("/admin/dashboard");
       }
     } catch (error) {
       console.log(error);
@@ -137,17 +164,26 @@ const SignUp = () => {
         id="right"
         className="w-auto h-auto flex justify-center items-center flex-grow px-[9%] py-5"
       >
-        <form action="" method="post" className="w-full h-fit flex flex-col">
+        <form method="POST" className="w-full h-fit flex flex-col">
           <span className="w-fit h-fit text-black text-4xl font-mono font-bold mb-4">
             Sign Up
           </span>
-          <span className="w-fit h-fit text-gray-600 text-lg mb-7">
+          <span className="w-fit h-fit text-gray-600 text-lg mb-2">
             Already have an account?{" "}
             <Link
               to={"/signin"}
               className="w-fit h-fit text-lg font-bold text-green-400 cursor-pointer"
             >
               Sign in
+            </Link>
+          </span>
+          <span className="w-fit h-fit text-gray-600 text-lg mb-7">
+            For Admin only?{" "}
+            <Link
+              to={"/admin/register"}
+              className="w-fit h-fit text-lg font-bold text-green-400 cursor-pointer"
+            >
+              Sign Up
             </Link>
           </span>
           <input
@@ -214,10 +250,16 @@ const SignUp = () => {
             Sign Up
           </button>
           <button
-            className="w-full h-[48px] text-black text-lg hover:bg-gray-100 border-[1.50px] border-black hover:z-10 rounded-lg mt-5 relative overflow-hidden transition-all ease-linear duration-500"
+            className="w-full h-[48px] text-black text-lg hover:bg-gray-200/70 border-[1.50px] border-black hover:z-10 rounded-lg mt-5 relative overflow-hidden transition-all ease-linear duration-500"
             onClick={handleDemoAccount}
           >
             Login with demo account
+          </button>
+          <button
+            className="w-full h-[48px] text-black text-lg hover:bg-gray-200/70 border-[1.50px] border-black hover:z-10 rounded-lg mt-5 relative overflow-hidden transition-all ease-linear duration-500"
+            onClick={handleAdminDemoAccount}
+          >
+            Admin Login with demo account
           </button>
         </form>
       </div>

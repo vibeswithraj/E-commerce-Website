@@ -7,6 +7,7 @@ const initialState = {
   count: 0,
 };
 
+
 const productSlice = createSlice({
   name: "product",
   initialState,

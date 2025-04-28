@@ -10,12 +10,15 @@ import {
   register,
   updatePass,
   myProfile,
+  orders,
+  address,
+  profileImage,
 } from "../controller/user.js";
 import { checkAuth } from "../helpers/userAuth.js";
 
 router.use(
   cors({
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     //origin: process.env.FRONTEND_URI,
     origin: true,
     credentials: true,
@@ -27,9 +30,14 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
 router.get("/me", checkAuth, myProfile);
+
 router.post("/register", register);
 router.post("/login", login);
 router.post("/updatePass", updatePass);
+router.post("/profileImage", checkAuth, profileImage);
 router.get("/logout", logout);
+
+router.get("/orders", checkAuth, orders);
+router.get("/address", checkAuth, address);
 
 export default router;

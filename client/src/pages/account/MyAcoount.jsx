@@ -19,13 +19,13 @@ const MyAcoount = () => {
 
   const handleSaveChange = async (e) => {
     e.preventDefault();
-    if (user.email === "demo1@gmail.com") {
+    if (user?.email === "demo1@gmail.com") {
       return toast.error("demo user can't change password!");
     }
     try {
       const { data } = await axios.post(
-        `http://localhost:5050/updatePass`,
-        { email: user.email, oldPass, newPass, repeatPass },
+        `${process.env.REACT_APP_API_URL}/updatePass`,
+        { email: user?.email, oldPass, newPass, repeatPass },
         {
           withCredentials: true,
         }
@@ -48,8 +48,8 @@ const MyAcoount = () => {
       <div
         className={
           show || loading
-            ? "pt-10 w-full h-auto relative sm:px-40 md:px-20 px-8 m-auto myAccount"
-            : "mt-10 w-full h-auto sm:px-40 md:px-20 px-8 m-auto"
+            ? "pt-10 w-full h-auto relative md:px-20 px-4 m-auto myAccount"
+            : "mt-10 w-full h-auto md:px-20 px-4 m-auto"
         }
       >
         <p className="text-[54px] font-medium text-center my-20">My Account</p>
@@ -57,7 +57,7 @@ const MyAcoount = () => {
           <div>
             <Profile />
           </div>
-          <div className="flex sm:w-[707px] w-full flex-col gap-10">
+          <div className="flex sm:w-[60%] w-full flex-col gap-10">
             <div
               className={
                 show || loading
@@ -79,7 +79,7 @@ const MyAcoount = () => {
                   >
                     First name *
                   </label>
-                  <div className="border-[#CBCBCB] border sm:w-[707px] w-full h-10 rounded-md flex items-center">
+                  <div className="border-[#CBCBCB] focus-within:border-black border sm:max-w-3xl w-full h-10 rounded-md flex items-center">
                     <input
                       type="text"
                       placeholder="FIRST NAME"
@@ -97,7 +97,7 @@ const MyAcoount = () => {
                   >
                     last name *
                   </label>
-                  <div className="border-[#CBCBCB] border sm:w-[707px] w-full h-10 rounded-md flex items-center">
+                  <div className="border-[#CBCBCB] focus-within:border-black border sm:max-w-3xl w-full h-10 rounded-md flex items-center">
                     <input
                       type="text"
                       placeholder="LAST NAME"
@@ -115,7 +115,7 @@ const MyAcoount = () => {
                   >
                     Email *
                   </label>
-                  <div className="border-[#CBCBCB] border sm:w-[707px] w-full h-10 rounded-md flex items-center">
+                  <div className="border-[#CBCBCB] focus-within:border-black border sm:max-w-3xl w-full h-10 rounded-md flex items-center">
                     <input
                       type="email"
                       placeholder="EMAIL"
@@ -141,7 +141,7 @@ const MyAcoount = () => {
             </form>
             {user?.firstName && (
               <form
-                className="sm:w-[707px] w-full h-auto"
+                className="sm:max-w-3xl w-full h-auto"
                 method="post"
                 onSubmit={handleSaveChange}
               >
@@ -154,7 +154,7 @@ const MyAcoount = () => {
                     >
                       Old password
                     </label>
-                    <div className="border-[#CBCBCB] border sm:w-[707px] w-full h-10 rounded-md flex items-center">
+                    <div className="border-[#CBCBCB] focus-within:border-black border sm:max-w-3xl w-full h-10 rounded-md flex items-center">
                       <input
                         type="text"
                         placeholder="Old password"
@@ -172,7 +172,7 @@ const MyAcoount = () => {
                     >
                       new password
                     </label>
-                    <div className="border-[#CBCBCB] border sm:w-[707px] w-full h-10 rounded-md flex items-center">
+                    <div className="border-[#CBCBCB] focus-within:border-black border sm:max-w-3xl w-full h-10 rounded-md flex items-center">
                       <input
                         type="text"
                         placeholder="New password"
@@ -190,7 +190,7 @@ const MyAcoount = () => {
                     >
                       REPEAT NEW PASSWORD
                     </label>
-                    <div className="border-[#CBCBCB] border sm:w-[707px] w-full h-10 rounded-md flex items-center">
+                    <div className="border-[#CBCBCB] focus-within:border-black border sm:max-w-3xl w-full h-10 rounded-md flex items-center">
                       <input
                         type="text"
                         placeholder="Repeat new password"

@@ -20,35 +20,38 @@ const userSchema = new mongoose.Schema(
       select: false,
       required: true,
     },
+    image: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );
 export const userData = mongoose.model("userData", userSchema);
 
-// const atcSchema = new mongoose.Schema(
-//   {
-//     userID: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "userData",
-//       type: String,
-//     },
-//     addtocart: [],
-//   },
-//   { timestamps: true }
-// );
-// export const atcdata = mongoose.model("addToCart", atcSchema);
+const atcSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    addtocart: [],
+  },
+  { timestamps: true }
+);
+export const atcdata = mongoose.model("addToCart", atcSchema);
 
-// const wishlistSchema = new mongoose.Schema(
-//   {
-//     userID: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "userData",
-//     },
-//     wishlist: {},
-//   },
-//   { timestamps: true }
-// );
-// export const wishlistData = mongoose.model("wishlist", wishlistSchema);
+const wishlistSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    wishlist: [],
+  },
+  { timestamps: true }
+);
+export const wishlistData = mongoose.model("wishlist", wishlistSchema);
 
 const checkoutdetails = new mongoose.Schema(
   {
@@ -67,6 +70,7 @@ const checkoutdetails = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     address: {
       type: String,

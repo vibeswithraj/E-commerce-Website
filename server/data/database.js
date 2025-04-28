@@ -4,11 +4,11 @@ dotenv.config({ path: "./config.env" });
 
 export const connectMongoDb = () => {
   mongoose
-    .connect(process.env.MONGO_URI,{
+    .connect(process.env.MONGODB_ATLAS_URI, {
       //useNewUrlParser: true,
       //useUnifiedTopology: true,
       dbName: "E-commerce",
     })
-    .then(()=>console.log("connected to mongodb"))
+    .then(() => console.log("connected to mongodb"))
     .catch((error) => console.log("can't connect to mongodb", error));
 };

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import { createContext } from "react";
-import deatilsContext from "./DetailsContext";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { createContext } from "react";
+import toast from "react-hot-toast";
 
 const userContext = createContext();
 
@@ -9,50 +9,39 @@ const UserProvider = ({ children }) => {
   const [search, setSearch] = useState("All");
   let [checkbox, setCheckbox] = useState({ id: 0, price: "All price" });
   const [count, setCount] = useState(0);
-  const [user, setUser] = useState([]);
-  const [image, setImage] = useState();
+  const [user, setUser] = useState();
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [orderList, setOrderList] = useState([]);
-  const [orderDetail, setOrderDetail] = useState({});
-
-  const { setTotalOrder } = useContext(deatilsContext);
+  const [orders, setOrders] = useState([]);
+  const [checkOutDetail, setCheckOutDetail] = useState({});
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
-    const getOrederListTotal = () => {
-      const totalPrice = orderList?.orderlist?.reduce((total, item) => {
-        return total + item.mainSubTotal;
-      }, 0);
-      setTotalOrder(totalPrice);
-    };
-    getOrederListTotal();
-  }, [orderList, setTotalOrder]);
+    const fetchAuth = async () => {
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/me`, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  useEffect(() => {
-    const getDetails = async () => {
-      try {
-        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/orderDetails`);
-        setOrderList(data);
-      } catch (error) {
-        console.log(error);
+      console.log(data);
+      if (data.error) {
+        return toast.error(data.error);
+      }
+      if (data.user) {
+        setUser(data.user);
+        console.log(data.user);
       }
     };
-    getDetails();
-  }, []);
+    fetchAuth();
+  }, [setUser]);
 
   return (
     <userContext.Provider
       value={{
         checkbox,
         setCheckbox,
-        //change,
-        orderDetail,
-        setOrderDetail,
-        orderList,
-        setOrderList,
-        otp,
-        setOtp,
         show,
         setShow,
         image,
@@ -65,6 +54,10 @@ const UserProvider = ({ children }) => {
         setSearch,
         loading,
         setLoading,
+        orders,
+        setOrders,
+        checkOutDetail,
+        setCheckOutDetail,
       }}
     >
       {children}

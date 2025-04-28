@@ -1,25 +1,45 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Profile from "../../components/Profile";
 import { BiEditAlt } from "react-icons/bi";
-import userContext from "../../contexts/UserContext";
 import Nav from "../../components/Nav";
 import Footer from "../../components/Footer";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Address = () => {
-  const { user } = useContext(userContext);
+  const [details, setDetails] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/address`,
+          { withCredentials: true }
+        );
+
+        // if (data.error) return toast.error(data.error);
+
+        setDetails(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="w-full h-auto">
       <div className="w-full h-auto">
         <Nav />
       </div>
-      <div className="mt-10 w-full sm:px-40 md:px-20 px-8 m-auto">
+      <div className="mt-10 w-full md:px-20 px-4 m-auto">
         <p className="text-[54px] font-medium text-center my-20">My Account</p>
         <div className="flex w-full flex-col justify-evenly sm:flex-row gap-10 mb-20">
           <div>
             <Profile />
           </div>
-          <div className="sm:w-[707px] w-full">
-            <div className="w-[350px] h-[160px] p-3 rounded-md border-[2px] outline-none shadow-sm border-gray-200">
+          <div className="sm:w-[60%] w-full flex flex-wrap justify-start gap-1 items-start h-auto">
+            <div className="sm:w-[350px] w-full h-auto p-3 rounded-lg border-[1.5px] shadow-md">
               <div className="w-full flex justify-between">
                 <p className="text-lg font-semibold">Billing Address</p>
                 <button className="flex items-center">
@@ -28,12 +48,15 @@ const Address = () => {
                 </button>
               </div>
               <p className="w-full text-lg mt-3">
-                {user?.user?.firstName + " " + user?.user?.lastName}
+                {details?.address &&
+                  details?.firstName + " " + details?.lastName}
               </p>
               <p className="w-full text-lg mt-1">
-                +91 {user?.user?.phoneNumber}
+                +91 {details?.address && details?.number}
               </p>
-              <p className="w-full text-lg mt-1">{user?.user?.address}</p>
+              <p className="w-full text-lg mt-1">
+                Address: {details?.address && details?.address}
+              </p>
             </div>
           </div>
         </div>

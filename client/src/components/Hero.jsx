@@ -10,9 +10,9 @@ const Hero = () => {
         alt=""
       />
       <div className="absolute flex flex-col text-center px-2">
-        <p className="text-[#605F5F]">Home {"> "}<span className="text-black font-semibold">Shop</span></p>
-        <p className="sm:text-[54px] text-[27px] mt-2 mb-8 font-medium">Shop page</p>
-        <p className="sm:text-xl text-xl font-normal text-center md:text-start">
+        <p className="text-[#605F5F]">Home {"> "}<span className="text-black font-medium">Shop</span></p>
+        <p className="sm:text-[54px] text-[37px] mt-2 mb-8 font-medium">Shop page</p>
+        <p className="sm:text-xl text-lg font-normal text-center md:text-start">
           Let’s design the place you always imagined.
         </p>
       </div>

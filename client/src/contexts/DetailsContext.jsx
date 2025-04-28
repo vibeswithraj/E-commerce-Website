@@ -8,7 +8,6 @@ const DetailsProvider = ({ children }) => {
   const [subTotal, setSubTotal] = useState();
   const [mainSubTotal, setMainSubTotal] = useState(0);
   const [payBy, setPayBy] = useState({ paypal: false, card: false });
-  const [totalOrder, setTotalOrder] = useState();
   const [status, setStatus] = useState("");
 
   return (
@@ -16,8 +15,6 @@ const DetailsProvider = ({ children }) => {
       value={{
         status,
         setStatus,
-        totalOrder,
-        setTotalOrder,
         shipping,
         setShipping,
         payBy,

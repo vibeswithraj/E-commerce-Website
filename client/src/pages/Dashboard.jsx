@@ -1,20 +1,36 @@
 import Aside from "../components/Aside";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AdminNav from "../components/AdminNav";
 import RecentOrderList from "../components/RecentOrderList";
 import AdminFooter from "../components/AdminFooter.jsx";
-import deatilsContext from "../contexts/DetailsContext.jsx";
-import userContext from "../contexts/UserContext.jsx";
 import { BarChart } from "@mui/x-charts/BarChart";
 import adminContext from "../contexts/AdminProvider.jsx";
 import { CircularProgress } from "@mui/material";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
-  const { date, setDate, open, setOpen, allProductData, loading } =
-    useContext(adminContext);
-  const { totalOrder } = useContext(deatilsContext);
-  const { orderList } = useContext(userContext);
+  const {
+    date,
+    setDate,
+    open,
+    setOpen,
+    loading,
+    totalOrder,
+    setTotalOrder,
+    orderList,
+    setOrderList,
+    canOrders,
+    setCanOrders,
+    actOrders,
+    setActOrders,
+    comOrders,
+    setComOrders,
+    setOrderDetail,
+    bestSeller,
+    setBestSeller,
+  } = useContext(adminContext);
   const [options, setoptions] = useState({
     weekly: true,
     monthly: false,
@@ -39,6 +55,10 @@ const Dashboard = () => {
     },
   ];
 
+  const canOrderList = orderList?.filter((item) => item.status === "Canceled");
+  const actOrderList = orderList?.filter((item) => item.status === "Pennding");
+  const comOrderList = orderList?.filter((item) => item.status === "Delivered");
+
   const handleBtn = (name) => {
     if (name === "weekly") {
       setoptions({ weekly: true, monthly: false, yearly: false });
@@ -50,6 +70,75 @@ const Dashboard = () => {
       setoptions({ weekly: false, monthly: false, yearly: true });
     }
   };
+
+  useEffect(() => {
+    const getTotalOrederList = async () => {
+      const totalPrice = await orderList?.reduce((total, item) => {
+        return total + item.mainSubTotal;
+      }, 0);
+      setTotalOrder(totalPrice);
+    };
+    getTotalOrederList();
+  }, [orderList, setTotalOrder]);
+
+  useEffect(() => {
+    const getCanOrderList = async () => {
+      const totalPrice = await canOrderList?.reduce((total, item) => {
+        return total + item.mainSubTotal;
+      }, 0);
+      setCanOrders(totalPrice);
+    };
+    getCanOrderList();
+  }, [canOrderList, setCanOrders]);
+
+  useEffect(() => {
+    const getActOrderList = async () => {
+      const totalPrice = await actOrderList?.reduce((total, item) => {
+        return total + item.mainSubTotal;
+      }, 0);
+      setActOrders(totalPrice);
+    };
+    getActOrderList();
+  }, [actOrderList, setActOrders]);
+
+  useEffect(() => {
+    const getComOrderList = async () => {
+      const totalPrice = await comOrderList?.reduce((total, item) => {
+        return total + item.mainSubTotal;
+      }, 0);
+      setComOrders(totalPrice);
+    };
+    getComOrderList();
+  }, [comOrderList, setComOrders]);
+
+  useEffect(() => {
+    const fetchBestSeller = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/bestsellers`,
+          { withCredentials: true }
+        );
+        setBestSeller(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBestSeller();
+  }, [setBestSeller]);
+
+  useEffect(() => {
+    const getDetails = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/orderDetails`
+        );
+        setOrderList(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDetails();
+  }, [setOrderList]);
 
   const weeklyData_1 = [300, 144, 433, 655, 237, 755, 190];
   const weeklyData_2 = [200, 444, 343, 556, 778, 455, 990];
@@ -93,12 +182,12 @@ const Dashboard = () => {
         <Aside />
         <div className={"w-full h-auto relative"}>
           <AdminNav />
-          <div className="w-full bg-[#e7e7e3] h-auto px-4 py-5">
+          <div className="w-full bg-[#e7e7e3] h-auto px-4 pt-5 pb-7">
             <div className="w-full h-[54px] flex justify-between items-center">
               <div>
                 <p className="text-2xl font-bold text-black">Dashboard</p>
                 <p className="text-base font-normal text-black font-sans">
-                  Home {">"} dashboard
+                  <Link to={"/admin/dashboard"}>Home</Link> {">"} dashboard
                 </p>
               </div>
               <div>
@@ -111,144 +200,149 @@ const Dashboard = () => {
               </div>
             </div>
             <div
-              className={`w-full h-[149px] flex justify-between gap-8 overflow-x-scroll mt-6`}
+              className={`w-full h-[165px] flex justify-between items-start gap-4 overflow-x-scroll mt-6`}
             >
-              <div className="w-[266px] h-full flex flex-col justify-between py-2 px-3 rounded-2xl bg-[#FAFAFA]">
+              <div className="w-full h-[149px] shadow-md flex flex-col justify-between py-2 px-3 rounded-2xl bg-[#FAFAFA]">
                 <p className="w-fit h-auto text-base font-semibold text-black">
                   Total Orders
                 </p>
                 <div className="w-full h-auto flex justify-between px-2 items-center">
-                  <div>
-                    <p className="text-lg font-bold text-black">
-                      ₹{totalOrder?.toFixed() || 0}
-                    </p>
-                  </div>
+                  <p className="text-lg font-bold text-black">
+                    ₹{totalOrder?.toFixed() || "0"}
+                  </p>
                   <div
                     className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
                     style={{
                       background: `conic-gradient(${
-                        orderList?.orderlist?.length &&
-                        orderList?.orderlist?.length < 33.33
+                        orderList?.length && orderList?.length < 33.33
                           ? "#FF000D" // Red
-                          : "" || orderList?.orderlist?.length > 33.33
+                          : "" || orderList?.length > 33.33
                           ? "#ffa52f" // Orange
                           : "" ||
-                            (orderList?.orderlist?.length > 33.33 &&
-                              orderList?.orderlist?.length > 66.66)
+                            (orderList?.length > 33.33 &&
+                              orderList?.length > 66.66)
                           ? "#3CD41A" // Green
                           : ""
                       } ${
-                        (orderList?.orderlist?.length / 100) * 360
+                        (orderList?.length / 100) * 360
                       }deg,rgb(237, 234, 238) 0)`,
                     }}
                   >
                     <p className="w-fit h-auto text-base font-bold text-black opacity-85 z-10">
-                      {(orderList?.orderlist?.length *
-                        orderList?.orderlist?.length) /
-                        100 || 0}
+                      {(orderList?.length * orderList?.length) / 100 || "0"}%
+                    </p>
+                  </div>
+                </div>
+                <p className="opacity-80 text-sm">{date}</p>
+              </div>
+              <div className="w-full h-[149px] shadow-md flex flex-col justify-between py-2 px-3 rounded-2xl bg-[#FAFAFA]">
+                <p className="w-fit h-auto text-base font-semibold text-black">
+                  Active Orders
+                </p>
+                <div className="w-full h-auto flex justify-between px-2 items-center">
+                  <p className="text-lg font-bold text-black">
+                    ₹{actOrders?.toFixed()}
+                  </p>
+                  <div
+                    className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
+                    style={{
+                      background: `conic-gradient(${
+                        orderList?.length && actOrderList?.length < 33.33
+                          ? "#FF000D"
+                          : "" ||
+                            (actOrderList?.length < 66.66 &&
+                              actOrderList?.length > 33.33)
+                          ? "#ffa52f"
+                          : "" || actOrderList?.length > 66.66
+                          ? "#3CD41A"
+                          : ""
+                      } ${
+                        (actOrderList?.length / 100) * 360
+                      }deg,rgb(237, 234, 238) 0)`,
+                    }}
+                  >
+                    <p className="w-fit h-auto text-base font-bold text-black opacity-85 z-10">
+                      {(actOrderList?.length * actOrderList?.length) / 100 ||
+                        "0"}
                       %
                     </p>
                   </div>
                 </div>
                 <p className="opacity-80 text-sm">{date}</p>
               </div>
-              <div className="w-[266px] h-full flex flex-col justify-between py-2 px-3 rounded-2xl bg-[#FAFAFA]">
-                <p className="w-fit h-auto text-base font-semibold text-black">
-                  Active Orders
-                </p>
-                <div className="w-full h-auto flex justify-between px-2 items-center">
-                  <div>
-                    <p className="text-lg font-bold text-black">₹{100000}</p>
-                  </div>
-                  <div
-                    className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
-                    style={{
-                      background: `conic-gradient(${
-                        orderList?.orderlist?.length && 70 < 33.33
-                          ? "#FF000D"
-                          : "" || (70 < 66.66 && 70 > 33.33)
-                          ? "#ffa52f"
-                          : "" || 70 > 66.66
-                          ? "#3CD41A"
-                          : ""
-                      } ${(70 / 100) * 360}deg,rgb(237, 234, 238) 0)`,
-                    }}
-                  >
-                    <p className="w-fit h-auto text-base font-bold text-black opacity-85 z-10">
-                      {70}%
-                    </p>
-                  </div>
-                </div>
-                <p className="opacity-80 text-sm">{date}</p>
-              </div>
-              <div className="w-[266px] h-full flex flex-col justify-between py-2 px-3 rounded-2xl bg-[#FAFAFA]">
+              <div className="w-full h-[149px] shadow-md flex flex-col justify-between py-2 px-3 rounded-2xl bg-[#FAFAFA]">
                 <p className="w-fit h-auto text-base font-semibold text-black">
                   Completed Orders
                 </p>
                 <div className="w-full h-auto flex justify-between px-2 items-center">
-                  <div>
-                    <p className="text-lg font-bold text-black">
-                      ₹{totalOrder?.toFixed() || 0}
-                    </p>
-                  </div>
+                  <p className="text-lg font-bold text-black">
+                    ₹{comOrders?.toFixed() || "0"}
+                  </p>
                   <div
                     className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
                     style={{
                       background: `conic-gradient(${
-                        orderList?.orderlist?.length &&
-                        orderList?.orderlist?.length < 33.33
+                        orderList?.length && comOrderList?.length < 33.33
                           ? "#FF000D"
-                          : "" || orderList?.orderlist?.length > 33.33
+                          : "" || comOrderList?.length > 33.33
                           ? "#ffa52f"
                           : "" ||
-                            (orderList?.orderlist?.length > 33.33 &&
-                              orderList?.orderlist?.length > 66.66)
+                            (comOrderList?.length > 33.33 &&
+                              comOrderList?.length > 66.66)
                           ? "#3CD41A"
                           : ""
                       } ${
-                        (orderList?.orderlist?.length / 100) * 360
+                        (comOrderList?.length / 100) * 360
                       }deg,rgb(237, 234, 238) 0)`,
                     }}
                   >
                     <p className="w-fit h-auto text-base font-bold text-black opacity-85 z-10">
-                      {orderList?.orderlist?.length || 0}%
+                      {(comOrderList?.length * comOrderList?.length) / 100 ||
+                        "0"}
+                      %
                     </p>
                   </div>
                 </div>
                 <p className="opacity-80 text-sm">{date}</p>
               </div>
-              <div className="w-[266px] h-full flex flex-col justify-between py-2 px-3 rounded-2xl bg-[#FAFAFA]">
+              <div className="w-full h-[149px] shadow-md flex flex-col justify-between py-2 px-3 rounded-2xl bg-[#FAFAFA]">
                 <p className="w-fit h-auto text-base font-semibold text-black">
-                  Return Orders
+                  Canceled Orders
                 </p>
                 <div className="w-full h-auto flex justify-between px-2 items-center">
-                  <div>
-                    <p className="text-lg font-bold text-black">₹{60000}</p>
-                  </div>
+                  <p className="h-auto text-lg font-bold text-black">
+                    ₹{canOrders?.toFixed() || "0"}
+                  </p>
                   <div
                     className="circle relative flex justify-center items-center w-[90px] h-[90px] outline-none opacity-85 bg-gray-200 rounded-full"
                     style={{
                       background: `conic-gradient(${
-                        orderList?.orderlist?.length && 60 < 33.33
+                        orderList?.length && canOrderList?.length < 33.33
                           ? "#FF000D"
-                          : "" || (60 > 33.33 && 60 < 66.66)
+                          : "" ||
+                            (canOrderList?.length > 33.33 &&
+                              canOrderList?.length < 66.66)
                           ? "#ffa52f"
-                          : "" || 60 > 66.66
+                          : "" || canOrderList?.length > 66.66
                           ? "#3CD41A"
                           : ""
-                      } ${(60 / 100) * 360}deg,rgb(237, 234, 238) 0)`,
+                      } ${
+                        (canOrderList?.length / 100) * 360
+                      }deg,rgb(237, 234, 238) 0)`,
                     }}
                   >
                     <p className="w-fit h-auto text-base font-bold text-black opacity-85 z-10">
-                      {60}%
+                      {(canOrderList?.length * canOrderList?.length) / 100 ||
+                        "0"}
+                      %
                     </p>
                   </div>
                 </div>
                 <p className="opacity-80 text-sm">{date}</p>
               </div>
             </div>
-            <div className="w-full h-auto mt-6 grid grid-cols-3 gap-4">
-              <div className="w-full h-[460px] bg-[#FAFAFA] rounded-2xl py-1 col-span-2">
+            <div className="w-full h-auto mt-3 grid grid-cols-3 gap-4">
+              <div className="w-full h-[460px] bg-[#FAFAFA] shadow-md rounded-2xl py-1 col-span-2">
                 <div className="w-full h-[60px] border-b-2 flex px-4 justify-between items-center">
                   <div>
                     <p className="text-xl font-semibold text-black">
@@ -317,7 +411,7 @@ const Dashboard = () => {
                   />
                 </div>
               </div>
-              <div className="w-full h-[460px] bg-[#FAFAFA] rounded-2xl px-4 py-1">
+              <div className="w-full h-[460px] bg-[#FAFAFA] shadow-md rounded-2xl px-4 py-1">
                 <div className="w-full h-[60px] flex justify-between items-center border-b-2">
                   <p className="text-xl font-semibold text-black">
                     Best Sellers
@@ -330,47 +424,48 @@ const Dashboard = () => {
                       <CircularProgress />
                     </div>
                   ) : (
-                    allProductData
-                      ?.filter((item) => (item ? item.bestSeller : item))
-                      .map((item, index) => (
-                        <div
-                          className="w-full h-auto flex items-center justify-between gap-3 border-b py-4 cursor-pointer"
-                          key={index}
-                        >
-                          <div className="w-full h-auto flex items-center gap-4 justify-start">
-                            <div className="w-[64px] h-[64px] shrink-0 rounded-lg flex items-center">
-                              <img
-                                src={item?.image || ""}
-                                width={64}
-                                height={64}
-                                className="w-[64px] h-[64px] shrink-0 rounded-lg"
-                                alt="img"
-                              />
-                            </div>
-                            <div className="w-auto h-auto flex flex-col gap-1">
-                              <span className="text-sm text-black font-medium">
-                                {item?.title || ""}
-                              </span>
-                              <span className="text-sm text-black">
-                                ₹{item?.price || ""}
-                              </span>
-                            </div>
+                    bestSeller?.map((item, index) => (
+                      <div
+                        className="w-full h-auto flex items-center justify-between gap-3 border-b border-gray-400/50 py-4 cursor-pointer"
+                        key={index}
+                      >
+                        <div className="w-full h-auto flex items-center gap-4 justify-start">
+                          <div className="w-[64px] h-[64px] shrink-0 rounded-lg flex items-center">
+                            <img
+                              src={item?.image || ""}
+                              width={64}
+                              height={64}
+                              className="w-[64px] h-[64px] shrink-0 rounded-lg"
+                              alt="img"
+                            />
                           </div>
-                          <div className="w-fit whitespace-nowrap h-auto flex flex-col gap-1 items-end">
-                            <span className="text-base text-black font-semibold">
-                              ₹{item?.price || ""}
+                          <div className="w-auto h-auto flex flex-col gap-1">
+                            <span className="text-sm text-black font-medium">
+                              {item?.title || ""}
                             </span>
-                            <span className="text-base text-gray-600">
-                              {item?.sales + " Sales"}
+                            <span className="text-sm text-black">
+                              ₹{item?.price || ""}
                             </span>
                           </div>
                         </div>
-                      ))
+                        <div className="w-fit whitespace-nowrap h-auto flex flex-col gap-1 items-end">
+                          <span className="text-base text-black font-semibold">
+                            ₹{item?.price || ""}
+                          </span>
+                          <span className="text-base text-gray-600">
+                            {item?.sales + " Sales"}
+                          </span>
+                        </div>
+                      </div>
+                    ))
                   )}
                 </div>
               </div>
             </div>
-            <RecentOrderList />
+            <RecentOrderList
+              orderList={orderList}
+              setOrderDetail={setOrderDetail}
+            />
           </div>
           <div
             className={

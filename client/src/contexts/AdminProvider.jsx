@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 
 const adminContext = createContext();
 
@@ -10,36 +9,23 @@ const AdminProvider = ({ children }) => {
   const [open, setOpen] = useState(true);
   const [asideOpen, setAsideOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    const cancelToken = axios.CancelToken.source();
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(
-          `${process.env.REACT_APP_API_URL}/allproducts?search=${catName}`,
-          { withCredentials: true, cancelToken: cancelToken.token }
-        );
-        if (data) {
-          setLoading(false);
-          setAllProductData(data);
-        }
-      } catch (error) {
-        if (axios.isCancel(error)) {
-          console.log("request is cancelled");
-        }
-        console.log(error);
-      }
-    };
-    fetchData();
-    return () => {
-      cancelToken.cancel();
-    };
-  }, [catName]);
+  const [orderList, setOrderList] = useState([]);
+  const [bestSeller, setBestSeller] = useState([]);
+  const [orderDetail, setOrderDetail] = useState({});
+  const [totalOrder, setTotalOrder] = useState();
+  const [canOrders, setCanOrders] = useState();
+  const [actOrders, setActOrders] = useState();
+  const [comOrders, setComOrders] = useState();
 
   return (
     <adminContext.Provider
       value={{
+        totalOrder,
+        setTotalOrder,
+        orderList,
+        setOrderList,
+        orderDetail,
+        setOrderDetail,
         allProductData,
         setAllProductData,
         catName,
@@ -52,6 +38,14 @@ const AdminProvider = ({ children }) => {
         setAsideOpen,
         loading,
         setLoading,
+        canOrders,
+        setCanOrders,
+        actOrders,
+        setActOrders,
+        comOrders,
+        setComOrders,
+        bestSeller,
+        setBestSeller,
       }}
     >
       {children}

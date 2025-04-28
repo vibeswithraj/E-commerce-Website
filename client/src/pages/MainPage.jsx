@@ -1,6 +1,7 @@
 import React from "react";
 import Nav from "../components/Nav";
-// import banner from "../images/Image placeholder shop.png";
+import banner from "../images/Image placeholder shop.png";
+import banner3 from "../images/Image Placeholder header blog.png";
 import banner2 from "../images/Banner2.png";
 import HomeImg1 from "../images/image2.png";
 import HomeImg2 from "../images/HomeImg1.png";
@@ -28,49 +29,19 @@ import { Divider } from "@mui/material";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const MainPage = () => {
   // const { contextSafe } = useGSAP();
   useGSAP(() => {
-    // gsap.from("#text-1", {
-    //   x: "-100%",
-    //   duration: 1,
-    //   delay: 0.2,
-    // });
-    // gsap.from("#text-2", {
-    //   x: "100%",
-    //   duration: 1,
-    //   delay: 0.2,
-    // });
     gsap.to("#livingRoom", {
       y: 0,
       duration: 1,
       delay: 0.2,
     });
-    // gsap.to("#arrow", {
-    //   x: "-50%",
-    //   yoyo: true,
-    //   repeat: -1,
-    //   duration: 0.5,
-    //   ease: "power1.inOut",
-    //   delay: 0.2,
-    // });
   });
-
-  const slider = [
-    {
-      id: 0,
-      imgName: banner2,
-    },
-    // {
-    //   id: 1,
-    //   imgName: banner,
-    // },
-    // {
-    //   id: 2,
-    //   imgName: banner,
-    // },
-  ];
 
   const newArrivals = [
     {
@@ -110,30 +81,88 @@ const MainPage = () => {
     },
   ];
 
+  const LeftArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        style={{ ...style, display: "block", color: "black" }}
+        className={className + "left-0 z-10 right-[90%] absolute lg:right-[100%] lg:mr-2 top-[49%] cursor-pointer"}
+        onClick={onClick}
+      >
+        <GoArrowLeft size={22} />
+      </div>
+    );
+  };
+
+  const RightArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        style={{ ...style, display: "block", color: "black" }}
+        className={className + "right-0 z-10 left-[90%] absolute lg:left-[100%] lg:ml-2 top-[49%] cursor-pointer"}
+        onClick={onClick}
+      >
+        <GoArrowRight size={22} />
+      </div>
+    );
+  };
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    initialSlide: 0,
+    lazyLoad: true,
+    pauseOnHover: true,
+    // fade: true,
+    // waitForAnimate: false,
+    nextArrow: <RightArrow />,
+    prevArrow: <LeftArrow />,
+  };
+
+  const num = [
+    {
+      id: 0,
+      image: banner,
+    },
+    {
+      id: 1,
+      image: banner2,
+    },
+    {
+      id: 2,
+      image: banner3,
+    },
+  ];
+
   return (
     <div className="w-full h-auto">
       <div className="w-full h-auto">
         <Nav />
       </div>
-      <section className="w-full h-auto mt-2 mb-0 sm:mb-16 sm:px-10 px-2 relative">
-        <div id="wrapper" className="w-full h-[536px] flex overflow-x-scroll">
-          {slider.map((item, index) => (
-            <img
-              id="banner"
-              key={index}
-              src={item.imgName || ""}
-              alt="banner"
-              width={"100%"}
-              // height={"100%"}
-              className="w-full h-full object-cover"
-            />
-          ))}
-        </div>
-        <div className="w-fit h-fit p-2 bg-white rounded-full absolute left-0 sm:left-4 ml-4 sm:ml-10  top-[35%] z-40 cursor-pointer">
-          <GoArrowLeft size={22} />
-        </div>
-        <div className="w-fit h-fit p-2 bg-white rounded-full absolute right-0 sm:right-4 mr-4 sm:mr-10 top-[35%] z-40 cursor-pointer">
-          <GoArrowRight size={22} />
+      <section className="w-full h-auto mt-2 mb-0 sm:mb-16 sm:px-10 px-2">
+        <div className="w-full h-auto slider-container">
+          <Slider
+            {...settings}
+            className='w-full h-auto relative'
+            //className="w-full h-auto border flex items-center justify-center"
+          >
+            {num?.map((item, index) => (
+              <img
+                id="banner"
+                src={item?.image || ""}
+                alt="banner"
+                width={"100%"}
+                key={index}
+                // height={"100%"}
+                className="w-full h-[40vh] lg:h-[536px] object-cover lg:object-fill"
+              />
+            ))}
+          </Slider>
         </div>
         <div className="w-full h-fit flex flex-wrap sm:flex-nowrap items-center mt-7 sm:mt-14 justify-between">
           <span
@@ -260,7 +289,7 @@ const MainPage = () => {
           </Link>
         </div>
         <div className="w-full h-fit flex shrink-0 overflow-x-scroll gap-6 scroll-smooth mt-14 pb-10">
-          {newArrivals.map((item, index) => (
+          {newArrivals?.map((item, index) => (
             <Link
               key={index}
               // to={`/product`}
@@ -287,15 +316,15 @@ const MainPage = () => {
                   src={item?.image || ""}
                   alt="img"
                 />
-                <button className="w-auto px-16 sm:px-20 h-auto py-2 bg-black text-white text-base rounded-md absolute bottom-0 invisible transition-all ease-in-out duration-300g group-hover:visible group-hover:bottom-8">
+                <button className="w-auto px-16 sm:px-20 h-auto py-2 bg-black text-white text-base rounded-md absolute bottom-0 visible lg:invisible transition-all ease-in-out duration-300g lg:group-hover:visible lg:group-hover:bottom-8">
                   Add to cart
                 </button>
               </div>
               <div className="w-full h-auto flex flex-col gap-2 sm:gap-1 px-2">
                 <div className="flex gap-[3px]">
-                  <FaStar size={15} color="black" />
-                  <FaStar size={15} color="black" />
-                  <FaStar size={15} color="black" />
+                  <FaStar size={15} color="orange" />
+                  <FaStar size={15} color="orange" />
+                  <FaStar size={15} color="orange" />
                   <FaStar size={15} color="lightgray" />
                   <FaStar size={15} color="lightgray" />
                 </div>
@@ -357,7 +386,7 @@ const MainPage = () => {
           alt="img"
           className="w-full sm:w-[50%] flex flex-grow h-fit sm:h-auto"
         />
-        <div className="w-full md:w-[50%] h-[537px] px-4 sm:px-9 py-4 sm:p-0 bg-gray-100 mb-1 flex justify-center items-center">
+        <div className="w-full md:w-[50%] h-[537px] lg:h-auto px-4 sm:px-9 py-4 sm:p-0 bg-gray-100 mb-1 flex justify-center items-center">
           <div className="w-fit h-fit flex flex-col">
             <span className="w-fit h-fit text-[#377DFF] text-base lg:text-lg font-bold mb-3">
               SALE UP TO 35% OFF

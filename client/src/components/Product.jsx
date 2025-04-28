@@ -4,13 +4,6 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useState } from "react";
 import productContext from "../contexts/ProductContext";
 import hotToast from "react-hot-toast";
-// import { useDispatch, useSelector } from "react-redux";
-// import {
-//   addtocart,
-//   addtowishlist,
-//   dicrise,
-//   incrise,
-// } from "../contexts/productSlice";
 import { FiArrowLeft } from "react-icons/fi";
 import { addCart, addToWishlist, dicrise, incrise } from "../logics";
 import userContext from "../contexts/UserContext";
@@ -28,17 +21,13 @@ const Product = () => {
   } = useContext(productContext);
   const { count, setCount } = useContext(userContext);
   const navigate = useNavigate();
-  //const addToCart = useSelector((state) => state.addToCart);
-  // const dispatch = useDispatch();
   const [num, setNum] = useState(1);
 
   const addcart = async (pid) => {
-    // dispatch(addtocart(pid));
     addCart(addToCart, setAddToCart, setCount, pid);
   };
 
   const addWishlist = async (pid) => {
-    // dispatch(addtowishlist(pid));
     addToWishlist(wishlist, setWishlist, allProducts, setProduct, pid);
   };
 
@@ -48,20 +37,18 @@ const Product = () => {
       return hotToast.error("first add to cart!");
     }
     setNum(num + 1);
-    // dispatch(incrise(pid));
-    incrise(addToCart, setAddToCart, pid);
+    incrise(addToCart, setAddToCart, pid,num);
   };
 
   const dicri = (pid) => {
     if (num > 1) {
       setNum(num - 1);
     }
-    // dispatch(dicrise(pid));
-    dicrise(addToCart, setAddToCart, count, setCount, pid);
+    dicrise(addToCart, setAddToCart, count, setCount, pid, num);
   };
 
   return (
-    <div className="w-full py-6 h-screen flex flex-wrap justify-evenly items-center px-10 relative">
+    <div className="w-full py-6 h-screen flex flex-wrap gap-4 md:gap-0 justify-evenly items-center md:px-10 px-4 relative">
       <div
         className="absolute top-4 left-4 cursor-pointer p-1 bg-gray-200 rounded-full"
         onClick={() => navigate("/shop")}
@@ -72,31 +59,31 @@ const Product = () => {
         <div className="w-auto h-auto flex justify-center items-center">
           <img
             src={productDetail?.image || ""}
-            className="w-[300px] h-[350px]"
+            className="w-[300px] h-[350px] object-fill"
             width={300}
             height={350}
             alt="product img"
           />
         </div>
-        <div className="w-full h-[167px] flex justify-center items-center sm:gap-6 gap-2">
+        <div className="w-full h-auto flex justify-center items-center sm:gap-6 gap-2">
           <img
             src={productDetail?.image}
-            className="w-[140px] h-[140px]"
+            className="w-[140px] h-[140px] object-fill"
             alt="product images"
           />
           <img
             src={productDetail?.image}
-            className="w-[140px] h-[140px]"
+            className="w-[140px] h-[140px] object-fill"
             alt="product images"
           />
           <img
             src={productDetail?.image}
-            className="w-[140px] h-[140px]"
+            className="w-[140px] h-[140px] object-fill"
             alt="product images"
           />
         </div>
       </div>
-      <div className="w-auto h-auto flex items-center sm:items-start flex-col">
+      <div className="w-auto h-auto flex items-start flex-col">
         <div className="max-w-[508px] w-full flex flex-col h-auto gap-2 sm:gap-4">
           <div className="gap-[10px] flex items-center">
             <div className="flex gap-[1px]">
