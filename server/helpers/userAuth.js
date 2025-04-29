@@ -1,26 +1,26 @@
-import Jwt from "jsonwebtoken";
-import { userData } from "../models/user.js";
-import dotenv from "dotenv";
-import { adminData } from "../models/admin.js";
-dotenv.config({ path: "./config.env" });
+import Jwt from 'jsonwebtoken';
+import { userData } from '../models/user.js';
+import dotenv from 'dotenv';
+import { adminData } from '../models/admin.js';
+dotenv.config({ path: './config.env' });
 
 export const setCookies = async (res, user, message) => {
   try {
     const token = await Jwt.sign(
       { email: user.email, id: user._id },
       process.env.JWT_SCRETE,
-      { expiresIn: "2d" }
+      { expiresIn: '2d' }
     );
 
     const oneUser = await userData
       .findOne({ email: user.email })
-      .select("-createdAt -_id -updatedAt -__v -password");
+      .select('-createdAt -_id -updatedAt -__v -password');
 
     res
-      .cookie("token", token, {
+      .cookie('token', token, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: 'strict',
         maxAge: 90000000,
         // expires: new Date(Date.now() + 60 * 1000),
       })
@@ -39,10 +39,10 @@ export const setAdminCookies = async (res, admin, message) => {
 
     const oneAdmin = await adminData
       .findOne({ email: admin.email })
-      .select("-createdAt -_id -updatedAt -__v -password");
+      .select('-createdAt -_id -updatedAt -__v -password');
 
     res
-      .cookie("adminToken", token, {
+      .cookie('adminToken', token, {
         httpOnly: true,
         secure: true,
         maxAge: 90000000,
@@ -59,9 +59,9 @@ export const setLogout = (res, cookieName) => {
     res
       .status(200)
       .clearCookie(cookieName)
-      .json({ message: "Logout Succsessfull!" });
+      .json({ message: 'Logout Succsessfull!' });
   } catch (err) {
-    errorHandler("Logout failed!", 200, res);
+    errorHandler('Logout failed!', 200, res);
     console.log(err);
   }
 };
@@ -70,12 +70,18 @@ export const checkAuth = async (req, res, next) => {
   try {
     const { token } = req.cookies;
     // if (!token) return res.json({ error: "Login first!" });
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized: Login first!' });
+    }
 
     if (token) {
       const decoded = await Jwt.verify(token, process.env.JWT_SCRETE);
       const user = await userData.findById(decoded.id);
-      if (!user) return res.json({ error: "Login first!" });
-      else req.user = user;
+      // if (!user) return res.json({ error: 'Login first!' });
+      if (!user) {
+        return res.status(401).json({ error: 'Unauthorized: User not found!' });
+      }
+      req.user = user;
       next();
     }
   } catch (err) {
