@@ -1,6 +1,6 @@
-import axios from "axios";
-import { toast } from "react-toastify";
-import hotToast from "react-hot-toast";
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import hotToast from 'react-hot-toast';
 
 export const incrise = (addToCart, setAddToCart, pid, num) => {
   let updateCart = addToCart.map((curElem) => {
@@ -39,7 +39,7 @@ export const delAtcp = async (addToCart, setAddToCart, setCount, pid) => {
   try {
     const { data } = await axios.get(
       `${process.env.REACT_APP_API_URL}/removeatcpro/${pid}`,
-      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      { withCredentials: true, headers: { 'Content-Type': 'application/json' } }
     );
     if (data.error) toast.error(data.error);
     if (data.message) hotToast.success(data.message);
@@ -74,7 +74,7 @@ export const delWlistp = async (
   setProducts(newAllProducts);
   const newcart = await wishlist.filter((i) => i.id !== id);
   setWishlist(newcart);
-  hotToast.success("Removed");
+  hotToast.success('Removed');
 };
 
 export const addCart = async (addToCart, setAddToCart, setCount, pid) => {
@@ -83,11 +83,11 @@ export const addCart = async (addToCart, setAddToCart, setCount, pid) => {
       `${process.env.REACT_APP_API_URL}/addtocart/${pid}`,
       {
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
     if (data.error) {
-      if (data.error === "Already added!") hotToast.error(data.error);
+      if (data.error === 'Already added!') hotToast.error(data.error);
       else toast.error(data.error);
     }
     setCount(addToCart.length);
@@ -118,7 +118,7 @@ export const addToWishlist = async (
   try {
     const { data } = await axios.get(
       `${process.env.REACT_APP_API_URL}/wishlist/${pid}`,
-      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      { withCredentials: true, headers: { 'Content-Type': 'application/json' } }
     );
     if (data.error) toast.error(data.error);
     if (data.message) hotToast.success(data.message);
@@ -178,7 +178,7 @@ export const productDetails = async (setProductDetail, id) => {
       `${process.env.REACT_APP_API_URL}/productdetails/${id}`,
       {
         withCredentials: true,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
     if (data.error) {
