@@ -20,7 +20,7 @@ export const setCookies = async (res, user, message) => {
       .cookie('token', token, {
         httpOnly: true,
         secure: true,
-        sameSite: 'None',
+        sameSite: 'Lax',
         maxAge: 90000000,
         // expires: new Date(Date.now() + 60 * 1000),
       })
@@ -45,6 +45,7 @@ export const setAdminCookies = async (res, admin, message) => {
       .cookie('adminToken', token, {
         httpOnly: true,
         secure: true,
+        sameSite: 'Lax',
         maxAge: 90000000,
         // expires: new Date(Date.now() + 60 * 1000),
       })
