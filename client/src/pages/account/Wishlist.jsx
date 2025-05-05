@@ -1,14 +1,19 @@
-import Profile from "../../components/Profile";
-import { RxCross2 } from "react-icons/rx";
-import { Link } from "react-router-dom";
-import { addCart, addToWishlist, productDetails } from "../../logics";
-import { useContext, useEffect } from "react";
-import productContext from "../../contexts/ProductContext";
-import userContext from "../../contexts/UserContext";
-import Nav from "../../components/Nav";
-import Footer from "../../components/Footer";
-import Loader from "../../components/Loader";
-import axios from "axios";
+import Profile from '../../components/Profile';
+import { RxCross2 } from 'react-icons/rx';
+import { Link } from 'react-router-dom';
+import {
+  addCart,
+  addToWishlist,
+  delWlistp,
+  productDetails,
+} from '../../logics';
+import { useContext, useEffect } from 'react';
+import productContext from '../../contexts/ProductContext';
+import userContext from '../../contexts/UserContext';
+import Nav from '../../components/Nav';
+import Footer from '../../components/Footer';
+import Loader from '../../components/Loader';
+import axios from 'axios';
 
 const Wishlist = () => {
   const {
@@ -22,9 +27,9 @@ const Wishlist = () => {
   } = useContext(productContext);
   const { setCount } = useContext(userContext);
 
-  const delProduct = async (pid) => {
-    // delWlistp(wishlist, setWishlist, id, allProducts, setProducts);
-    addToWishlist(wishlist, setWishlist, allProducts, setProducts, pid);
+  const delProduct = async (id) => {
+    delWlistp(wishlist, setWishlist, id, allProducts, setProducts);
+    // addToWishlist(wishlist, setWishlist, allProducts, setProducts, pid);
   };
 
   const handleProduct = (id) => {
@@ -71,8 +76,8 @@ const Wishlist = () => {
             <div
               className={
                 wishlist && wishlist?.length !== 0
-                  ? "w-full h-[400px] overflow-y-scroll mt-6 sm:m-0"
-                  : "w-full h-[400px] overflow-y-scroll mt-6 sm:m-0 flex flex-col justify-center items-center"
+                  ? 'w-full h-[400px] overflow-y-scroll mt-6 sm:m-0'
+                  : 'w-full h-[400px] overflow-y-scroll mt-6 sm:m-0 flex flex-col justify-center items-center'
               }
             >
               {!wishlist ? (

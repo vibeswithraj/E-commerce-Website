@@ -6,7 +6,7 @@ dotenv.config({ path: './config.env' });
 
 export const setCookies = async (res, user, message) => {
   try {
-    const token = await Jwt.sign(
+    const token = Jwt.sign(
       { email: user.email, id: user._id },
       process.env.JWT_SCRETE,
       { expiresIn: '2d' }
@@ -32,7 +32,7 @@ export const setCookies = async (res, user, message) => {
 
 export const setAdminCookies = async (res, admin, message) => {
   try {
-    const token = await Jwt.sign(
+    const token = Jwt.sign(
       { email: admin.email, id: admin._id },
       process.env.JWT_SCRETE
     );
