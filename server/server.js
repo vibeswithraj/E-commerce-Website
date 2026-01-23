@@ -15,13 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 // app.options('*', cors()); // Handle preflight requests
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'https://e-commerce-website-xi-wine.vercel.app',
-    ],
+    origin: 'https://e-commerce-website-xi-wine.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
-  })
+  }),
 );
 app.use('/', userRouter);
 app.use('/', adminRouter);

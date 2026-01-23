@@ -9,7 +9,7 @@ export const setCookies = async (res, user, message) => {
     const token = Jwt.sign(
       { email: user.email, id: user._id },
       process.env.JWT_SCRETE,
-      { expiresIn: '2d' }
+      { expiresIn: '2d' },
     );
 
     const oneUser = await userData
@@ -18,11 +18,10 @@ export const setCookies = async (res, user, message) => {
 
     res
       .cookie('token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'Lax',
-        maxAge: 90000000,
-        // expires: new Date(Date.now() + 60 * 1000),
+        httpOnly: true, // Not accessible via JS
+        secure: true, // Works only over HTTPS
+        sameSite: 'none', // Required for cross-origin cookies
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
       })
       .json({ message, success: true, oneUser });
   } catch (err) {
@@ -34,7 +33,7 @@ export const setAdminCookies = async (res, admin, message) => {
   try {
     const token = Jwt.sign(
       { email: admin.email, id: admin._id },
-      process.env.JWT_SCRETE
+      process.env.JWT_SCRETE,
     );
 
     const oneAdmin = await adminData

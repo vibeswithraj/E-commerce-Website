@@ -19,13 +19,10 @@ import { checkAuth } from '../helpers/userAuth.js';
 // router.options('*', cors()); // Handle preflight requests
 router.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'https://e-commerce-website-xi-wine.vercel.app',
-    ],
+    origin: 'https://e-commerce-website-xi-wine.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
-  })
+  }),
 );
 
 router.use(cookieParser());
